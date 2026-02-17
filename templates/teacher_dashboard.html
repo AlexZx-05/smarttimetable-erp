@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- FullCalendar -->
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css' rel='stylesheet' />
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+
+    <style>
+        :root {
+            --bg-1: #f5f7fb;
+            --bg-2: #e9edf7;
+            --ink: #14213d;
+            --muted: #5b6787;
+            --side-1: #0b132b;
+            --side-2: #1c2541;
+            --line: #dfe5f1;
+            --card: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Space Grotesk', sans-serif;
+            background:
+                radial-gradient(circle at 18% 22%, #ffffff 0%, rgba(255,255,255,0) 35%),
+                radial-gradient(circle at 82% 2%, #edf2ff 0%, rgba(237,242,255,0) 28%),
+                linear-gradient(120deg, var(--bg-1), var(--bg-2));
+            color: var(--ink);
+        }
+
+        /* ===== LAYOUT ===== */
+        .layout {
+            display: flex;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 78px;
+            background: linear-gradient(175deg, var(--side-1), var(--side-2));
+            color: white;
+            height: 100vh;
+            position: fixed;
+            transition: width 0.3s ease;
+            overflow: hidden;
+            box-shadow: 10px 0 30px rgba(3, 7, 18, 0.2);
+            border-right: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .sidebar.expanded {
+            width: 260px;
+        }
+
+        .sidebar-header {
+            padding: 18px;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .sidebar-profile {
+            margin: 12px 10px 8px 10px;
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #5c9dff, #2d6cdf);
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            flex-shrink: 0;
+            box-shadow: 0 6px 14px rgba(31, 90, 204, 0.3);
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .sidebar-profile-meta {
+            min-width: 0;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .sidebar.expanded .sidebar-profile-meta {
+            opacity: 1;
+        }
+
+        .sidebar-profile-meta .name {
+            color: #eef2ff;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar-profile-meta .role {
+            color: #b9c6ef;
+            font-size: 11px;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #d8e1ff;
+            padding: 14px 18px;
+            margin: 8px 10px;
+            border-radius: 12px;
+            transition: 0.22s ease;
+            white-space: nowrap;
+        }
+
+        .sidebar a:hover {
+            background: rgba(89, 134, 255, 0.2);
+            color: white;
+        }
+
+        .sidebar a.active {
+            background: linear-gradient(90deg, rgba(45,108,223,0.85), rgba(84,122,255,0.95));
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(45,108,223,0.25);
+        }
+
+        .sidebar svg {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2;
+            margin-right: 15px;
+            min-width: 20px;
+        }
+
+        .sidebar span {
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            font-weight: 500;
+        }
+
+        .sidebar.expanded span {
+            opacity: 1;
+        }
+
+        /* ===== MAIN ===== */
+        .main {
+            margin-left: 78px;
+            padding: 26px 28px 40px 28px;
+            flex: 1;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main.shifted {
+            margin-left: 260px;
+        }
+
+        .top-bar {
+            position: sticky;
+            top: 14px;
+            z-index: 20;
+            margin-bottom: 24px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.88);
+            backdrop-filter: blur(8px);
+            border-radius: 14px;
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.06);
+        }
+
+        .top-brand h1 {
+            margin: 0;
+            font-size: 22px;
+            letter-spacing: 0.2px;
+        }
+
+        .top-brand p {
+            margin: 2px 0 0 0;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .top-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .top-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #eef4ff;
+            color: #1747a6;
+            border: 1px solid #cfe0ff;
+            border-radius: 999px;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .profile-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px 6px 6px;
+            border: 1px solid #d4deee;
+            border-radius: 999px;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .profile-chip .avatar {
+            width: 30px;
+            height: 30px;
+            font-size: 11px;
+        }
+
+        .profile-chip .meta {
+            line-height: 1.1;
+        }
+
+        .profile-chip .meta .name {
+            font-size: 12px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .profile-chip .meta .role {
+            font-size: 10px;
+            color: #64748b;
+        }
+
+        .profile-panel {
+            display: none;
+            position: fixed;
+            top: 90px;
+            right: 24px;
+            width: 290px;
+            z-index: 220;
+            background: #fff;
+            border: 1px solid #dfe5f1;
+            border-radius: 12px;
+            box-shadow: 0 16px 30px rgba(15, 23, 42, 0.16);
+            padding: 14px;
+        }
+
+        .profile-panel.show {
+            display: block;
+        }
+
+        .profile-panel h4 {
+            margin: 0 0 10px 0;
+        }
+
+        .profile-row {
+            font-size: 13px;
+            color: #334155;
+            margin: 6px 0;
+        }
+
+        .profile-panel label {
+            display: block;
+            font-size: 12px;
+            color: #475569;
+            margin-top: 8px;
+        }
+
+        .profile-panel input,
+        .profile-panel select {
+            width: 100%;
+            margin-top: 4px;
+            padding: 8px 9px;
+            border-radius: 8px;
+            border: 1px solid #d2daeb;
+        }
+
+        .profile-panel button {
+            margin-top: 10px;
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            background: #2d6cdf;
+            color: #fff;
+            padding: 9px 10px;
+            cursor: pointer;
+        }
+
+        .profile-erp {
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .profile-hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            padding: 18px 20px;
+            background:
+                radial-gradient(circle at 0% 0%, rgba(255,255,255,0.65), rgba(255,255,255,0)),
+                linear-gradient(90deg, #edf3ff, #e2ecff);
+            border-bottom: 1px solid #d7e3fb;
+        }
+
+        .profile-hero h3 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .profile-hero p {
+            margin: 4px 0 0 0;
+            color: #4b5f8f;
+            font-size: 13px;
+        }
+
+        .profile-main {
+            display: grid;
+            grid-template-columns: 230px 1fr;
+            gap: 18px;
+            padding: 18px;
+        }
+
+        .profile-side {
+            border: 1px solid #e0e8f6;
+            border-radius: 12px;
+            background: #f8fbff;
+            padding: 14px;
+        }
+
+        .profile-avatar-lg {
+            width: 94px;
+            height: 94px;
+            border-radius: 50%;
+            margin: 0 auto 10px auto;
+            background: linear-gradient(135deg, #5c9dff, #2d6cdf);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 34px;
+            box-shadow: 0 12px 24px rgba(45, 108, 223, 0.25);
+            overflow: hidden;
+        }
+
+        .profile-avatar-lg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-side .meta-line {
+            font-size: 13px;
+            color: #334155;
+            margin: 7px 0;
+        }
+
+        .profile-form {
+            border: 1px solid #e0e8f6;
+            border-radius: 12px;
+            background: #fff;
+            padding: 14px;
+        }
+
+        .profile-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .profile-form-grid .full {
+            grid-column: 1 / -1;
+        }
+
+        .profile-form label {
+            display: block;
+            font-size: 12px;
+            color: #475569;
+            margin-bottom: 5px;
+        }
+
+        .profile-form input,
+        .profile-form select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #d0dbef;
+            font-family: 'Space Grotesk', sans-serif;
+            box-sizing: border-box;
+        }
+
+        .profile-form input:focus,
+        .profile-form select:focus {
+            outline: none;
+            border-color: #2d6cdf;
+            box-shadow: 0 0 0 3px rgba(45,108,223,0.15);
+        }
+
+        .profile-form .submit-btn {
+            margin-top: 12px;
+            width: 100%;
+            border: none;
+            border-radius: 10px;
+            padding: 11px;
+            background: linear-gradient(90deg, #2d6cdf, #4d83f6);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        @media (max-width: 860px) {
+            .profile-main {
+                grid-template-columns: 1fr;
+            }
+            .profile-form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== SECTION CONTROL ===== */
+        .section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== CARD ===== */
+        .card {
+            background: var(--card);
+            padding: 25px;
+            border-radius: 14px;
+            border: 1px solid var(--line);
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+            margin-bottom: 30px;
+        }
+
+        /* ===== TABLE ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f5f7fc;
+            padding: 12px;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        .tt-day-card {
+            border: 1px solid #dfe7f6;
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 12px;
+            background: linear-gradient(180deg, #ffffff, #f9fbff);
+            box-shadow: 0 8px 20px rgba(18, 33, 77, 0.04);
+        }
+
+        .tt-day-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .tt-day-head h4 {
+            margin: 0;
+            color: #182540;
+            font-size: 16px;
+        }
+
+        .tt-count {
+            font-size: 11px;
+            padding: 4px 9px;
+            border-radius: 999px;
+            background: #e9f0ff;
+            color: #1e429f;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .tt-list {
+            display: grid;
+            gap: 8px;
+        }
+
+        .tt-item {
+            border: 1px solid #e3e9f5;
+            border-radius: 10px;
+            padding: 10px 12px;
+            background: #fff;
+            display: grid;
+            grid-template-columns: 58px 1fr;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tt-slot {
+            border-radius: 8px;
+            padding: 6px 0;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: #0f2f74;
+            background: #e8f0ff;
+        }
+
+        .tt-subject {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 2px;
+        }
+
+        .tt-meta {
+            font-size: 12px;
+            color: #4a5a7a;
+        }
+
+        .tt-label {
+            display: inline-block;
+            margin-left: 6px;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 11px;
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        /* ===== FORM ===== */
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        /* ===== CARD HEADER ===== */
+        .card-header h3 {
+            margin: 0;
+            font-size: 20px;
+            color: #1e293b;
+        }
+
+        .card-subtitle {
+            margin-top: 6px;
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        /* ===== FORM STRUCTURE ===== */
+        .form-layout {
+            margin-top: 25px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: #334155;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            font-size: 14px;
+            transition: 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #2563eb;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        /* ===== DIVIDER ===== */
+        .divider {
+            height: 1px;
+            background: #e2e8f0;
+            margin: 30px 0;
+        }
+
+        /* ===== PREFERENCE GRID ===== */
+        .preferences-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        /* ===== INDIVIDUAL CLASS CARD ===== */
+        .preference-card {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            transition: 0.2s ease;
+        }
+
+        .preference-card:hover {
+            border-color: #2563eb;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+        }
+
+        .preference-header {
+            margin-bottom: 15px;
+        }
+
+        .preference-header h4 {
+            margin: 0;
+            font-size: 15px;
+            color: #1e293b;
+        }
+
+        .preference-header span {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        /* ===== ACTION BUTTON ===== */
+        .form-actions {
+            margin-top: 30px;
+            text-align: right;
+        }
+
+        .primary-btn {
+            background: #2563eb;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .primary-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .calendar-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 12px;
+            border: 1px solid #dfe7f6;
+            border-radius: 12px;
+            background: linear-gradient(180deg, #ffffff, #f8fbff);
+        }
+
+        .calendar-toolbar h4 {
+            margin: 0;
+            font-size: 15px;
+            color: #162544;
+        }
+
+        .calendar-toolbar p {
+            margin: 3px 0 0 0;
+            font-size: 12px;
+            color: #5f6f92;
+        }
+
+        .calendar-action-msg {
+            font-size: 12px;
+            color: #1e429f;
+            min-height: 18px;
+        }
+
+        .event-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(8, 15, 35, 0.52);
+            backdrop-filter: blur(2px);
+            z-index: 240;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .event-modal-overlay.show {
+            display: flex;
+        }
+
+        .event-modal {
+            width: 100%;
+            max-width: 520px;
+            background: #fff;
+            border: 1px solid #dbe5f6;
+            border-radius: 14px;
+            box-shadow: 0 24px 40px rgba(15, 23, 42, 0.2);
+            overflow: hidden;
+        }
+
+        .event-modal-head {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e5ecf8;
+            background: linear-gradient(90deg, #edf3ff, #e1ebff);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .event-modal-head h4 {
+            margin: 0;
+            font-size: 17px;
+            color: #18294d;
+        }
+
+        .event-modal-close {
+            border: none;
+            background: #ffffff;
+            color: #334155;
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0;
+        }
+
+        .event-modal-body {
+            padding: 14px 16px 16px 16px;
+        }
+
+        .event-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .event-grid .full {
+            grid-column: 1 / -1;
+        }
+
+        .event-grid label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 12px;
+            color: #475569;
+        }
+
+        .event-grid input,
+        .event-grid select {
+            width: 100%;
+            margin: 0;
+            padding: 10px;
+            border-radius: 9px;
+            border: 1px solid #cfdaef;
+            font-family: 'Space Grotesk', sans-serif;
+            box-sizing: border-box;
+        }
+
+        .event-grid input:focus,
+        .event-grid select:focus {
+            outline: none;
+            border-color: #2d6cdf;
+            box-shadow: 0 0 0 3px rgba(45,108,223,0.14);
+        }
+
+        .event-actions {
+            margin-top: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .event-actions-right {
+            display: flex;
+            gap: 8px;
+        }
+
+        .danger-btn {
+            border: none;
+            border-radius: 9px;
+            background: #b42318;
+            color: #fff;
+            padding: 9px 12px;
+            cursor: pointer;
+        }
+
+        .light-btn {
+            border: 1px solid #d4deee;
+            border-radius: 9px;
+            background: #fff;
+            color: #334155;
+            padding: 9px 12px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 860px) {
+            .event-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <div class="sidebar" id="sidebar">
+
+            <div class="sidebar-header" onclick="toggleSidebar()">
+                <i data-lucide="menu"></i>
+            </div>
+
+            <div class="sidebar-profile" onclick="openProfileSection(event)">
+                <div class="avatar">
+                    {% if teacher_profile_pic %}
+                    <img src="{{ url_for('static', filename=teacher_profile_pic) }}" alt="Profile">
+                    {% else %}
+                    {{ teacher[:1] | upper }}
+                    {% endif %}
+                </div>
+                <div class="sidebar-profile-meta">
+                    <div class="name">{{ teacher }}</div>
+                    <div class="role">{{ teacher_department }} Faculty</div>
+                </div>
+            </div>
+
+            <a href="#" class="nav-link active" data-section="dashboard" onclick="showSection('dashboard', this)">
+                <i data-lucide="layout-dashboard"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="#" class="nav-link" data-section="courses" onclick="showSection('courses', this)">
+                <i data-lucide="book-open"></i>
+                <span>My Courses</span>
+            </a>
+
+            <a href="#" class="nav-link" data-section="preferences" onclick="showSection('preferences', this)">
+                <i data-lucide="edit-3"></i>
+                <span>Add / Update Preferences</span>
+            </a>
+
+            <a href="#" class="nav-link" data-section="my-timetable" onclick="showSection('my-timetable', this)">
+                <i data-lucide="calendar-check"></i>
+                <span>My Timetable</span>
+            </a>
+
+            <a href="#" class="nav-link" data-section="institute-timetable" onclick="showSection('institute-timetable', this)">
+                <i data-lucide="building-2"></i>
+                <span>Institute Timetable</span>
+            </a>
+
+            <a href="#" class="nav-link" data-section="calendar" onclick="showSection('calendar', this)">
+                <i data-lucide="calendar-days"></i>
+                <span>Academic Calendar</span>
+            </a>
+
+            <a href="/logout">
+                <i data-lucide="log-out"></i>
+                <span>Logout</span>
+            </a>
+
+        </div>
+
+        <!-- MAIN -->
+        <div class="main" id="main">
+
+            <div class="top-bar">
+                <div class="top-brand">
+                    <h1>Welcome, {{ teacher }}</h1>
+                    <p>SmartTimetable Faculty Workspace</p>
+                </div>
+                <div class="top-right">
+                    <div class="top-pill">
+                        <i data-lucide="briefcase"></i>
+                        {{ teacher_department }} | Faculty Portal
+                    </div>
+                    <div class="profile-chip" onclick="openProfileSection(event)">
+                        <div class="avatar">
+                            {% if teacher_profile_pic %}
+                            <img src="{{ url_for('static', filename=teacher_profile_pic) }}" alt="Profile">
+                            {% else %}
+                            {{ teacher[:1] | upper }}
+                            {% endif %}
+                        </div>
+                        <div class="meta">
+                            <div class="name">{{ teacher }}</div>
+                            <div class="role">Teacher</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROFILE -->
+            <div id="profile" class="section">
+                <div class="card profile-erp">
+                    <div class="profile-hero">
+                        <div>
+                            <h3>My Profile</h3>
+                            <p>Manage your faculty identity and account settings</p>
+                        </div>
+                        <div class="top-pill">
+                            <i data-lucide="sparkles"></i>
+                            Faculty ERP Profile
+                        </div>
+                    </div>
+
+                    <div class="profile-main">
+                        <div class="profile-side">
+                            <div class="profile-avatar-lg">
+                                {% if teacher_profile_pic %}
+                                <img src="{{ url_for('static', filename=teacher_profile_pic) }}" alt="Profile">
+                                {% else %}
+                                {{ teacher[:1] | upper }}
+                                {% endif %}
+                            </div>
+                            <div class="meta-line"><b>Name:</b> {{ teacher }}</div>
+                            <div class="meta-line"><b>Email:</b> {{ teacher_email }}</div>
+                            <div class="meta-line"><b>Role:</b> Teacher</div>
+                            <div class="meta-line"><b>Department:</b> {{ teacher_department }}</div>
+                        </div>
+
+                        <form class="profile-form" action="/profile/update" method="POST" enctype="multipart/form-data">
+                            <div class="profile-form-grid">
+                                <div class="full">
+                                    <label>Name</label>
+                                    <input type="text" name="name" value="{{ teacher }}" required>
+                                </div>
+
+                                <div>
+                                    <label>Department</label>
+                                    <select name="department">
+                                        <option {% if teacher_department == 'ALL' %}selected{% endif %}>ALL</option>
+                                        <option {% if teacher_department == 'CSE' %}selected{% endif %}>CSE</option>
+                                        <option {% if teacher_department == 'ECE' %}selected{% endif %}>ECE</option>
+                                        <option {% if teacher_department == 'IT' %}selected{% endif %}>IT</option>
+                                        <option {% if teacher_department == 'ME' %}selected{% endif %}>ME</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label>Profile Picture</label>
+                                    <input type="file" name="profile_pic" accept="image/*">
+                                </div>
+                            </div>
+                            <button class="submit-btn" type="submit">Update Profile</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- DASHBOARD -->
+            <div id="dashboard" class="section active">
+                <div class="card">
+                    <h3>Teacher Overview</h3>
+                    <p>
+                        Manage your courses, submit preferences and schedule academic events
+                        using the navigation menu.
+                    </p>
+                </div>
+                <div class="card">
+                    <h3>Today's Teaching Plan ({{ today_name }})</h3>
+                    <p style="color:#64748b; margin-top:0;">
+                        Total classes today: <b>{{ today_classes | length }}</b>
+                    </p>
+                    {% if today_classes %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Slot</th>
+                                <th>Subject</th>
+                                <th>Department</th>
+                                <th>Room</th>
+                                <th>Label</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in today_classes %}
+                            <tr>
+                                <td>{{ row.slot }}</td>
+                                <td>{{ row.subject }}</td>
+                                <td>{{ row.target }}</td>
+                                <td>{{ row.room }}</td>
+                                <td>{{ row.label if row.label else "-" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p style="color:#64748b;">No classes assigned today.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- COURSES -->
+            <div id="courses" class="section">
+                <div class="card">
+                    <h3>Your Submitted Courses</h3>
+
+                    {% if rows %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Students</th>
+                                <th>Target</th>
+                                <th>Preferences</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in rows %}
+                            <tr>
+                                <td>{{ row.subject }}</td>
+                                <td>{{ row.students }}</td>
+                                <td>{{ row.target }}</td>
+                                <td>{{ row.prefs | join(", ") }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p style="color:#64748b;">No courses submitted yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- PREFERENCES -->
+            <div id="preferences" class="section">
+                <div class="card">
+
+                    <div class="card-header">
+                        <h3>Add / Update Preferences</h3>
+                        <p class="card-subtitle">
+                            Configure subject details and preferred class slots.
+                        </p>
+                    </div>
+
+                    <form action="/submit_teacher" method="post" class="form-layout">
+
+                        <input type="hidden" name="teacher" value="{{ teacher }}">
+
+                        <!-- BASIC DETAILS -->
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Subject</label>
+                                <input type="text" name="subject" placeholder="e.g. Computer Architecture" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Number of Students</label>
+                                <input type="number" name="students" placeholder="e.g. 60" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Target Department</label>
+                                <select name="target">
+                                    <option>ALL</option>
+                                    <option>CSE</option>
+                                    <option>ECE</option>
+                                    <option>IT</option>
+                                    <option>ME</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <!-- CLASS PREFERENCES GRID -->
+                        <div class="preferences-grid">
+
+                            {% for i in [1,2,3] %}
+                            <div class="preference-card">
+
+                                <div class="preference-header">
+                                    <h4>Class {{ i }}</h4>
+                                    <span>Weekly Preference</span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Day</label>
+                                    <select name="day{{ i }}">
+                                        <option>-</option>
+                                        <option>Mon</option>
+                                        <option>Tue</option>
+                                        <option>Wed</option>
+                                        <option>Thu</option>
+                                        <option>Fri</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Slot</label>
+                                    <select name="slot{{ i }}">
+                                        <option>-</option>
+                                        <option>S1</option>
+                                        <option>S2</option>
+                                        <option>S3</option>
+                                        <option>S4</option>
+                                    </select>
+                                </div>
+
+                            </div>
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="primary-btn">
+                                Submit For Admin Approval
+                            </button>
+                        </div>
+
+                    </form>
+
+                    {% if pending_rows %}
+                    <div class="divider"></div>
+                    <h3>Pending Preference Requests</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Students</th>
+                                <th>Target</th>
+                                <th>Preferences</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in pending_rows %}
+                            <tr>
+                                <td>{{ row.subject }}</td>
+                                <td>{{ row.students }}</td>
+                                <td>{{ row.target }}</td>
+                                <td>{{ row.prefs | join(", ") }}</td>
+                                <td>Pending Admin Review</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+
+                </div>
+            </div>
+
+            <!-- MY TIMETABLE -->
+            <div id="my-timetable" class="section">
+                <div class="card">
+                    <h3>My Timetable</h3>
+                    <div id="teacherMyTimetableSummary"></div>
+                </div>
+            </div>
+
+            <!-- INSTITUTE TIMETABLE -->
+            <div id="institute-timetable" class="section">
+                <div class="card">
+                    <h3>Institute Timetable</h3>
+                    <div style="max-width:360px; margin-bottom:14px;">
+                        <label style="font-size:13px; color:#475569;">Filter by Department</label>
+                        <div style="display:flex; gap:8px; margin-top:6px;">
+                            <select id="teacherDeptFilter" style="flex:1; padding:9px 10px; border-radius:8px; border:1px solid #cfd8eb;">
+                                <option value="ALL">All Departments</option>
+                            </select>
+                            <button id="teacherDeptReset" type="button" style="border:none; border-radius:8px; background:#dde6f7; color:#1e293b; padding:9px 12px; cursor:pointer;">Reset</button>
+                        </div>
+                        <div id="teacherFilterCount" style="margin-top:8px; font-size:12px; color:#334155;"></div>
+                    </div>
+                    <div id="teacherInstituteTimetableSummary"></div>
+                </div>
+            </div>
+
+            <!-- CALENDAR -->
+            <div id="calendar" class="section">
+                <div class="card">
+                    <h3>Academic Calendar</h3>
+                    <div class="calendar-toolbar">
+                        <div>
+                            <h4>Faculty Event Planner</h4>
+                            <p>Click any date to create an event. Click your event to edit or delete.</p>
+                        </div>
+                        <div id="calendarActionMsg" class="calendar-action-msg"></div>
+                    </div>
+                    <div id="calendarUI"></div>
+                    <div style="margin-top:14px;">
+                        <h4 style="margin:0 0 8px 0;">Upcoming Vacations</h4>
+                        {% if vacations %}
+                            {% for v in vacations %}
+                            <div style="font-size:13px; color:#334155; margin:4px 0;">
+                                {{ v.date }} | {{ v.title }}
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div style="font-size:13px; color:#64748b;">No vacation events yet.</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="event-modal-overlay" id="teacherEventModalOverlay">
+                <div class="event-modal">
+                    <div class="event-modal-head">
+                        <h4 id="teacherEventModalTitle">Add Event</h4>
+                        <button type="button" class="event-modal-close" onclick="closeTeacherEventModal()">x</button>
+                    </div>
+                    <div class="event-modal-body">
+                        <div class="event-grid">
+                            <div class="full">
+                                <label for="teacherEventName">Event Title</label>
+                                <input id="teacherEventName" type="text" placeholder="e.g. Quiz 1, Midterm Revision, Lab Assessment">
+                            </div>
+                            <div class="full">
+                                <label for="teacherEventSubject">Subject</label>
+                                <input id="teacherEventSubject" type="text" placeholder="e.g. Data Structures">
+                            </div>
+                            <div>
+                                <label for="teacherEventDate">Date</label>
+                                <input id="teacherEventDate" type="date">
+                            </div>
+                            <div>
+                                <label for="teacherEventType">Type</label>
+                                <select id="teacherEventType">
+                                    <option value="general">General</option>
+                                    <option value="test">Test</option>
+                                    <option value="exam">Exam</option>
+                                </select>
+                            </div>
+                            <div class="full">
+                                <label for="teacherEventImportant">Priority</label>
+                                <select id="teacherEventImportant">
+                                    <option value="no">Normal</option>
+                                    <option value="yes">Important</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="event-actions">
+                            <button type="button" class="danger-btn" id="teacherEventDeleteBtn" style="display:none;" onclick="deleteTeacherEvent()">Delete Event</button>
+                            <div class="event-actions-right">
+                                <button type="button" class="light-btn" onclick="closeTeacherEventModal()">Cancel</button>
+                                <button type="button" onclick="saveTeacherEvent()">Save Event</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+
+        let calendar = null;
+        let calendarInitialized = false;
+        const teacherMyRows = {{ my_timetable | tojson }};
+        const teacherInstituteRows = {{ institute_timetable | tojson }};
+        const dayOrder = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5 };
+        const slotOrder = { S1: 1, S2: 2, S3: 3, S4: 4 };
+        const fullDayName = { Mon: "Monday", Tue: "Tuesday", Wed: "Wednesday", Thu: "Thursday", Fri: "Friday" };
+        let teacherEventMode = "add";
+        let teacherEditingEventId = "";
+
+        function sortRows(rows) {
+            return rows.slice().sort((a, b) => {
+                const d = (dayOrder[a.day] || 99) - (dayOrder[b.day] || 99);
+                if (d !== 0) return d;
+                return (slotOrder[a.slot] || 99) - (slotOrder[b.slot] || 99);
+            });
+        }
+
+        function groupByDay(rows) {
+            const groups = {};
+            sortRows(rows).forEach(r => {
+                if (!groups[r.day]) groups[r.day] = [];
+                groups[r.day].push(r);
+            });
+            return groups;
+        }
+
+        function renderTeacherTimetable() {
+            const container = document.getElementById("teacherMyTimetableSummary");
+            if (!teacherMyRows.length) {
+                container.innerHTML = "<p style='color:#64748b;'>No timetable generated for your courses yet.</p>";
+                return;
+            }
+
+            const grouped = groupByDay(teacherMyRows);
+            const orderedDays = Object.keys(grouped).sort((a, b) => (dayOrder[a] || 99) - (dayOrder[b] || 99));
+            let html = "";
+
+            orderedDays.forEach(day => {
+                html += `<div class="tt-day-card">
+                            <div class="tt-day-head">
+                                <h4>On ${fullDayName[day] || day}, you have:</h4>
+                                <span class="tt-count">${grouped[day].length} class(es)</span>
+                            </div>
+                            <div class="tt-list">`;
+                grouped[day].forEach(r => {
+                    const label = r.label ? `<span class="tt-label">${r.label}</span>` : "";
+                    html += `<div class="tt-item">
+                                <div class="tt-slot">${r.slot}</div>
+                                <div>
+                                    <div class="tt-subject">${r.subject}${label}</div>
+                                    <div class="tt-meta">Room ${r.room} | Department: ${r.target}</div>
+                                </div>
+                            </div>`;
+                });
+                html += "</div></div>";
+            });
+
+            container.innerHTML = html;
+        }
+
+        function renderInstituteTimetable() {
+            const filterEl = document.getElementById("teacherDeptFilter");
+            const selectedDept = filterEl ? filterEl.value : "ALL";
+            const rows = selectedDept === "ALL"
+                ? teacherInstituteRows
+                : teacherInstituteRows.filter(r => (r.target || "ALL").toUpperCase() === selectedDept);
+
+            const container = document.getElementById("teacherInstituteTimetableSummary");
+            const countEl = document.getElementById("teacherFilterCount");
+            if (countEl) {
+                countEl.textContent = `Showing ${rows.length} class(es)`;
+            }
+
+            if (!rows.length) {
+                container.innerHTML = "<p style='color:#64748b;'>Institute timetable not generated yet.</p>";
+                return;
+            }
+
+            const grouped = groupByDay(rows);
+            const orderedDays = Object.keys(grouped).sort((a, b) => (dayOrder[a] || 99) - (dayOrder[b] || 99));
+            let html = "";
+
+            orderedDays.forEach(day => {
+                html += `<div class="tt-day-card">
+                            <div class="tt-day-head">
+                                <h4>On ${fullDayName[day] || day}, institute classes are:</h4>
+                                <span class="tt-count">${grouped[day].length} class(es)</span>
+                            </div>
+                            <div class="tt-list">`;
+                grouped[day].forEach(r => {
+                    const label = r.label ? `<span class="tt-label">${r.label}</span>` : "";
+                    html += `<div class="tt-item">
+                                <div class="tt-slot">${r.slot}</div>
+                                <div>
+                                    <div class="tt-subject">${r.subject}${label}</div>
+                                    <div class="tt-meta">${r.teacher} | Room ${r.room} | Department: ${r.target}</div>
+                                </div>
+                            </div>`;
+                });
+                html += "</div></div>";
+            });
+
+            container.innerHTML = html;
+        }
+
+        function initInstituteFilter() {
+            const filter = document.getElementById("teacherDeptFilter");
+            const reset = document.getElementById("teacherDeptReset");
+            if (!filter || !reset) return;
+
+            const depts = [...new Set(teacherInstituteRows.map(r => (r.target || "ALL").toUpperCase()))].sort();
+            depts.forEach(d => {
+                if (d === "ALL") return;
+                const opt = document.createElement("option");
+                opt.value = d;
+                opt.textContent = d;
+                filter.appendChild(opt);
+            });
+
+            filter.onchange = renderInstituteTimetable;
+            reset.onclick = () => {
+                filter.value = "ALL";
+                renderInstituteTimetable();
+            };
+        }
+
+        function setCalendarMessage(message, tone = "info") {
+            const msg = document.getElementById("calendarActionMsg");
+            if (!msg) return;
+            msg.textContent = message || "";
+            msg.style.color = tone === "error" ? "#b42318" : "#1e429f";
+        }
+
+        function openTeacherEventModal(mode, data = {}) {
+            teacherEventMode = mode;
+            teacherEditingEventId = data.id || "";
+
+            document.getElementById("teacherEventModalTitle").textContent = mode === "edit" ? "Edit Event" : "Add Event";
+            document.getElementById("teacherEventName").value = data.title || "";
+            document.getElementById("teacherEventSubject").value = data.subject || "";
+            document.getElementById("teacherEventDate").value = data.date || "";
+            document.getElementById("teacherEventType").value = data.type || "general";
+            document.getElementById("teacherEventImportant").value = data.important ? "yes" : "no";
+            document.getElementById("teacherEventDeleteBtn").style.display = mode === "edit" ? "inline-block" : "none";
+            document.getElementById("teacherEventModalOverlay").classList.add("show");
+        }
+
+        function closeTeacherEventModal() {
+            document.getElementById("teacherEventModalOverlay").classList.remove("show");
+        }
+
+        function saveTeacherEvent() {
+            const title = document.getElementById("teacherEventName").value.trim();
+            const subject = document.getElementById("teacherEventSubject").value.trim();
+            const date = document.getElementById("teacherEventDate").value;
+            const eventType = document.getElementById("teacherEventType").value;
+            const important = document.getElementById("teacherEventImportant").value;
+
+            if (!title || !date) {
+                setCalendarMessage("Please fill event title and date.", "error");
+                return;
+            }
+
+            const endpoint = teacherEventMode === "edit" ? "/teacher/update_event" : "/teacher/add_event";
+            let body = `title=${encodeURIComponent(title)}&subject=${encodeURIComponent(subject)}&date=${encodeURIComponent(date)}&event_type=${encodeURIComponent(eventType)}&important=${encodeURIComponent(important)}`;
+            if (teacherEventMode === "edit") {
+                body = `id=${encodeURIComponent(teacherEditingEventId)}&` + body;
+            }
+
+            fetch(endpoint, {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body
+            }).then(() => {
+                closeTeacherEventModal();
+                setCalendarMessage("Calendar event saved successfully.");
+                if (calendar) calendar.refetchEvents();
+            });
+        }
+
+        function deleteTeacherEvent() {
+            if (!teacherEditingEventId) return;
+
+            fetch("/teacher/delete_event", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `id=${encodeURIComponent(teacherEditingEventId)}`
+            }).then(() => {
+                closeTeacherEventModal();
+                setCalendarMessage("Event deleted.");
+                if (calendar) calendar.refetchEvents();
+            });
+        }
+
+        function toggleSidebar() {
+            document.getElementById("sidebar").classList.toggle("expanded");
+            document.getElementById("main").classList.toggle("shifted");
+        }
+
+        function showSection(id, el = null) {
+
+            // Hide all sections
+            document.querySelectorAll(".section").forEach(sec => {
+                sec.classList.remove("active");
+            });
+
+            // Show selected section
+            document.getElementById(id).classList.add("active");
+
+            document.querySelectorAll(".nav-link").forEach(link => link.classList.remove("active"));
+            if (el) {
+                el.classList.add("active");
+            } else {
+                const matched = document.querySelector(`.nav-link[data-section="${id}"]`);
+                if (matched) matched.classList.add("active");
+            }
+
+            // ===== ENTERPRISE CALENDAR LOGIC =====
+            if (id === "calendar") {
+
+                // Initialize only once
+                if (!calendarInitialized) {
+
+                    const calendarEl = document.getElementById('calendarUI');
+
+                    calendar = new FullCalendar.Calendar(calendarEl, {
+                        initialView: 'dayGridMonth',
+                        height: 650,
+                        events: '/events',
+
+                        dateClick: function (info) {
+                            setCalendarMessage("");
+                            openTeacherEventModal("add", { date: info.dateStr, type: "general", important: false });
+                        },
+
+                        eventClick: function(info) {
+                            const ev = info.event;
+                            const isOwner = ev.extendedProps && ev.extendedProps.is_owner;
+                            if (!isOwner) {
+                                setCalendarMessage("You can edit or delete only events created by you.", "error");
+                                return;
+                            }
+                            setCalendarMessage("");
+                            openTeacherEventModal("edit", {
+                                id: ev.id,
+                                title: ev.title,
+                                subject: ev.extendedProps.subject || "",
+                                date: ev.startStr.slice(0, 10),
+                                type: ev.extendedProps.type || "general",
+                                important: !!ev.extendedProps.important
+                            });
+                        }
+                    });
+
+                    calendar.render();
+                    calendarInitialized = true;
+
+                } else {
+
+                    // If already initialized, just fix layout
+                    setTimeout(() => {
+                        calendar.updateSize();
+                    }, 150);
+                }
+            }
+        }
+
+        function openProfileSection(e) {
+            if (e) e.preventDefault();
+            const profileNav = document.getElementById("profileNavLink");
+            showSection("profile", profileNav);
+        }
+
+        lucide.createIcons();
+        renderTeacherTimetable();
+        initInstituteFilter();
+        renderInstituteTimetable();
+
+    </script>
+
+</body>
+
+</html>

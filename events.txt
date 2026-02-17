@@ -1,0 +1,1 @@
+{"id": "07629ee3-c346-4676-a9ee-de4ec9aba5a2", "title": "Lab session", "subject": "Embedded", "date": "2026-02-16", "type": "general", "important": true, "creator_name": "Janhvi Tiwari", "creator_email": "janhvi@iiitr.ac.in", "creator_role": "teacher"}
