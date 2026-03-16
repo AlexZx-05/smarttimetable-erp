@@ -257,6 +257,142 @@ body {
     margin-bottom: 30px;
 }
 
+.dashboard-shell {
+    display: grid;
+    gap: 22px;
+}
+
+.overview-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #d7e4fb;
+    background:
+        radial-gradient(circle at 90% 10%, rgba(127, 170, 255, 0.22), rgba(127, 170, 255, 0)),
+        radial-gradient(circle at 10% 110%, rgba(68, 130, 246, 0.18), rgba(68, 130, 246, 0)),
+        linear-gradient(120deg, #ffffff, #f6faff);
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+}
+
+.overview-card::after {
+    content: "";
+    position: absolute;
+    right: -48px;
+    top: -48px;
+    width: 170px;
+    height: 170px;
+    background: radial-gradient(circle, rgba(45, 108, 223, 0.18), rgba(45, 108, 223, 0));
+    pointer-events: none;
+}
+
+.overview-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.overview-header h3 {
+    margin: 0;
+    font-size: 31px;
+    letter-spacing: -0.4px;
+}
+
+.overview-sub {
+    margin: 8px 0 0 0;
+    color: #506080;
+    font-size: 14px;
+    max-width: 680px;
+    line-height: 1.6;
+}
+
+.overview-pill {
+    white-space: nowrap;
+    font-size: 11px;
+    font-weight: 700;
+    color: #1f4297;
+    border: 1px solid #cfe0ff;
+    background: #eef4ff;
+    border-radius: 999px;
+    padding: 8px 12px;
+}
+
+.overview-kpis {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+.kpi-card {
+    border: 1px solid #dbe7fb;
+    border-radius: 12px;
+    padding: 12px 13px;
+    background: rgba(255, 255, 255, 0.92);
+}
+
+.kpi-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #61739a;
+    margin-bottom: 6px;
+}
+
+.kpi-value {
+    font-size: 26px;
+    font-weight: 700;
+    color: #12264f;
+    line-height: 1;
+}
+
+.kpi-meta {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #42547a;
+}
+
+.today-card {
+    border: 1px solid #dbe4f5;
+    background: linear-gradient(180deg, #ffffff, #f9fbff);
+}
+
+.today-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.today-head h3 {
+    margin: 0;
+    font-size: 30px;
+    letter-spacing: -0.3px;
+}
+
+.today-badge {
+    font-size: 11px;
+    font-weight: 700;
+    color: #1f4297;
+    border-radius: 999px;
+    border: 1px solid #d2e1ff;
+    background: #eef4ff;
+    padding: 6px 10px;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+.empty-note {
+    border: 1px dashed #cbdaf2;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #fbfdff, #f4f8ff);
+    color: #4c628e;
+    padding: 14px;
+    font-size: 14px;
+}
+
 /* ===== TABLE ===== */
 table {
     width: 100%;
@@ -589,7 +725,6 @@ td {
 }
 
 .calendar-event-card {
-    margin-top: 14px;
     border: 1px solid #dce6f7;
     border-radius: 12px;
     background: linear-gradient(180deg, #ffffff, #f8fbff);
@@ -627,11 +762,338 @@ td {
     font-weight: 600;
 }
 
+.calendar-workspace {
+    border: 1px solid #dbe5f6;
+    border-radius: 14px;
+    background:
+        radial-gradient(circle at 88% -8%, rgba(107, 155, 255, 0.2), rgba(107, 155, 255, 0)),
+        linear-gradient(180deg, #ffffff, #f8fbff);
+    padding: 16px;
+}
+
+.calendar-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.calendar-head h3 {
+    margin: 0;
+    font-size: 28px;
+    letter-spacing: -0.4px;
+}
+
+.calendar-head p {
+    margin: 5px 0 0 0;
+    color: #4f638d;
+    font-size: 13px;
+}
+
+.calendar-chip {
+    white-space: nowrap;
+    border: 1px solid #cde1ff;
+    background: #edf4ff;
+    color: #1a4aa6;
+    border-radius: 999px;
+    padding: 7px 11px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+}
+
+#calendarUI {
+    border: 1px solid #dce6f8;
+    border-radius: 12px;
+    background: #fff;
+    padding: 8px;
+}
+
+.calendar-side-grid {
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 12px;
+}
+
+.holiday-stream {
+    border: 1px solid #f1dfc4;
+    border-radius: 12px;
+    padding: 12px;
+    background: linear-gradient(180deg, #fffdf8, #fff7ec);
+}
+
+.holiday-stream h4 {
+    margin: 0 0 9px 0;
+    font-size: 15px;
+    color: #623a09;
+}
+
+.holiday-list {
+    display: grid;
+    gap: 8px;
+}
+
+.holiday-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #f0dfc6;
+    border-radius: 10px;
+    padding: 8px 9px;
+    background: #ffffff;
+}
+
+.holiday-date {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 96px;
+    border-radius: 999px;
+    padding: 4px 8px;
+    background: #fff0da;
+    color: #8b4b04;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+}
+
+.holiday-title {
+    font-size: 13px;
+    color: #4a2f0c;
+    font-weight: 700;
+}
+
+.holiday-empty {
+    border: 1px dashed #e6d1b1;
+    border-radius: 10px;
+    padding: 11px;
+    background: #fffdf8;
+    color: #85613c;
+    font-size: 13px;
+}
+
+.calendar-action-row {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.calendar-action-msg {
+    font-size: 12px;
+    color: #1f4297;
+}
+
+.calendar-add-btn {
+    border: 1px solid #cfe0ff;
+    background: linear-gradient(90deg, #2d6cdf, #4f86f8);
+    color: #fff;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.calendar-add-btn:hover {
+    filter: brightness(1.03);
+}
+
+.student-event-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(9, 14, 32, 0.52);
+    backdrop-filter: blur(2px);
+    z-index: 260;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.student-event-modal-overlay.show {
+    display: flex;
+}
+
+.student-event-modal {
+    width: 100%;
+    max-width: 520px;
+    border-radius: 14px;
+    border: 1px solid #d7e2f8;
+    background: #fff;
+    box-shadow: 0 18px 36px rgba(15, 23, 42, 0.28);
+    overflow: hidden;
+}
+
+.student-event-modal-head {
+    padding: 12px 14px;
+    border-bottom: 1px solid #dde6f8;
+    background: linear-gradient(90deg, #edf3ff, #e1ebff);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.student-event-modal-head h4 {
+    margin: 0;
+    font-size: 17px;
+    color: #18294d;
+}
+
+.student-event-modal-close {
+    border: none;
+    background: #fff;
+    color: #334155;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.student-event-modal-body {
+    padding: 14px 16px 16px 16px;
+}
+
+.student-event-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.student-event-grid .full {
+    grid-column: 1 / -1;
+}
+
+.student-event-grid label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 12px;
+    color: #475569;
+}
+
+.student-event-grid input,
+.student-event-grid select {
+    width: 100%;
+    margin: 0;
+    padding: 10px;
+    border-radius: 9px;
+    border: 1px solid #cfdaef;
+    font-family: 'Space Grotesk', sans-serif;
+    box-sizing: border-box;
+}
+
+.student-event-grid input:focus,
+.student-event-grid select:focus {
+    outline: none;
+    border-color: #2d6cdf;
+    box-shadow: 0 0 0 3px rgba(45,108,223,0.14);
+}
+
+.student-color-picker {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 8px;
+    border: 1px solid #d8e2f2;
+    border-radius: 10px;
+    background: #f8fbff;
+}
+
+.student-color-chip {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.15);
+    cursor: pointer;
+}
+
+.student-color-chip.active {
+    box-shadow: 0 0 0 2px rgba(45, 108, 223, 0.65), 0 4px 12px rgba(45, 108, 223, 0.25);
+}
+
+.student-color-auto {
+    border: 1px solid #ccd7eb;
+    background: #fff;
+    color: #334155;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.student-color-auto.active {
+    border-color: #2d6cdf;
+    color: #1e429f;
+    background: #ecf3ff;
+}
+
+.student-event-actions {
+    margin-top: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.student-event-actions-right {
+    display: flex;
+    gap: 8px;
+}
+
+.student-danger-btn {
+    border: none;
+    border-radius: 9px;
+    background: #b42318;
+    color: #fff;
+    padding: 9px 12px;
+    cursor: pointer;
+}
+
+.student-light-btn {
+    border: 1px solid #d4deee;
+    border-radius: 9px;
+    background: #fff;
+    color: #334155;
+    padding: 9px 12px;
+    cursor: pointer;
+}
+
 @media (max-width: 860px) {
+    .overview-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .overview-header h3,
+    .today-head h3 {
+        font-size: 24px;
+    }
+    .overview-kpis {
+        grid-template-columns: 1fr;
+    }
     .profile-main {
         grid-template-columns: 1fr;
     }
     .profile-form-grid {
+        grid-template-columns: 1fr;
+    }
+    .calendar-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .calendar-head h3 {
+        font-size: 24px;
+    }
+    .calendar-side-grid {
+        grid-template-columns: 1fr;
+    }
+    .student-event-grid {
         grid-template-columns: 1fr;
     }
 }
@@ -780,22 +1242,41 @@ td {
 
     <!-- DASHBOARD -->
     <div id="dashboard" class="section active">
-        <div class="card">
-            <h3>Student Overview</h3>
-            <p>
-                Access your timetable and academic calendar from the navigation menu.
-            </p>
-            <p style="color:#334155; margin-top:12px;">
-                Department: <b>{{ student_department }}</b>
-            </p>
-            <p style="color:#334155;">
-                Classes in your custom timetable: <b>{{ my_timetable | length }}</b>
-            </p>
+        <div class="dashboard-shell">
+        <div class="card overview-card">
+            <div class="overview-header">
+                <div>
+                    <h3>Student Command Center</h3>
+                    <p class="overview-sub">Track today's learning load, stay aligned with your department schedule, and keep your academic calendar in sync from one place.</p>
+                </div>
+                <span class="overview-pill">{{ today_name }} Briefing</span>
+            </div>
+            <div class="overview-kpis">
+                <div class="kpi-card">
+                    <div class="kpi-label">Department</div>
+                    <div class="kpi-value">{{ student_department }}</div>
+                    <div class="kpi-meta">Active academic stream</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">My Timetable</div>
+                    <div class="kpi-value">{{ my_timetable | length }}</div>
+                    <div class="kpi-meta">Total classes mapped</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Today's Classes</div>
+                    <div class="kpi-value">{{ my_today | length }}</div>
+                    <div class="kpi-meta">For your branch</div>
+                </div>
+            </div>
         </div>
 
-        <div class="card">
-            <h3>My Classes Today ({{ today_name }})</h3>
+        <div class="card today-card">
+            <div class="today-head">
+                <h3>My Classes Today ({{ today_name }})</h3>
+                <span class="today-badge">{{ my_today | length }} scheduled</span>
+            </div>
             {% if my_today %}
+            <div class="table-wrap">
             <table>
                 <thead>
                     <tr>
@@ -818,14 +1299,19 @@ td {
                     {% endfor %}
                 </tbody>
             </table>
+            </div>
             {% else %}
-            <p style="color:#64748b;">No classes today for your branch.</p>
+            <div class="empty-note">No classes are scheduled today for your branch. Use the Institute Timetable tab to explore other department sessions.</div>
             {% endif %}
         </div>
 
-        <div class="card">
-            <h3>Institute Classes Today ({{ today_name }})</h3>
+        <div class="card today-card">
+            <div class="today-head">
+                <h3>Institute Classes Today ({{ today_name }})</h3>
+                <span class="today-badge">{{ institute_today | length }} active</span>
+            </div>
             {% if institute_today %}
+            <div class="table-wrap">
             <table>
                 <thead>
                     <tr>
@@ -850,9 +1336,11 @@ td {
                     {% endfor %}
                 </tbody>
             </table>
+            </div>
             {% else %}
-            <p style="color:#64748b;">No institute classes today.</p>
+            <div class="empty-note">No institute-wide classes are scheduled today.</div>
             {% endif %}
+        </div>
         </div>
     </div>
 
@@ -887,23 +1375,40 @@ td {
     <!-- CALENDAR -->
     <div id="calendar" class="section">
         <div class="card">
-            <h3>Academic Calendar</h3>
-            <div id="calendarUI"></div>
-            <div id="studentEventDetails" class="calendar-event-card">
-                <h4>Event Details</h4>
-                <div style="font-size:13px; color:#64748b;">Click any event on calendar to view creator and subject details.</div>
+            <div class="calendar-workspace">
+            <div class="calendar-head">
+                <div>
+                    <h3>Academic Calendar</h3>
+                    <p>Track institute milestones, celebration days, and class-impacting notices in one place.</p>
+                </div>
+                <span class="calendar-chip">{{ vacations | length }} upcoming highlights</span>
             </div>
-            <div style="margin-top:14px;">
-                <h4 style="margin:0 0 8px 0;">Upcoming Vacations</h4>
-                {% if vacations %}
-                    {% for v in vacations %}
-                    <div style="font-size:13px; color:#334155; margin:4px 0;">
-                        {{ v.date }} | {{ v.title }}
+            <div class="calendar-action-row">
+                <div id="studentCalendarActionMsg" class="calendar-action-msg"></div>
+                <button type="button" class="calendar-add-btn" onclick="openStudentEventModal('add', { date: '' })">Add Event</button>
+            </div>
+            <div id="calendarUI"></div>
+            <div class="calendar-side-grid">
+                <div id="studentEventDetails" class="calendar-event-card">
+                    <h4>Event Insights</h4>
+                    <div style="font-size:13px; color:#64748b;">Select any event on the calendar to view complete details.</div>
+                </div>
+                <div class="holiday-stream">
+                    <h4>Upcoming Celebration Days & Official Holidays</h4>
+                    {% if vacations %}
+                    <div class="holiday-list">
+                        {% for v in vacations %}
+                        <div class="holiday-item">
+                            <span class="holiday-date">{{ v.date }}</span>
+                            <span class="holiday-title">{{ v.title }}</span>
+                        </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
-                {% else %}
-                    <div style="font-size:13px; color:#64748b;">No vacation events yet.</div>
-                {% endif %}
+                    {% else %}
+                    <div class="holiday-empty">No holiday or leave announcements available at the moment.</div>
+                    {% endif %}
+                </div>
+            </div>
             </div>
         </div>
     </div>
@@ -911,6 +1416,67 @@ td {
 </div>
 </div>
 
+<div class="student-event-modal-overlay" id="studentEventModalOverlay">
+    <div class="student-event-modal">
+        <div class="student-event-modal-head">
+            <h4 id="studentEventModalTitle">Add Event</h4>
+            <button type="button" class="student-event-modal-close" onclick="closeStudentEventModal()">x</button>
+        </div>
+        <div class="student-event-modal-body">
+            <div class="student-event-grid">
+                <div class="full">
+                    <label for="studentEventName">Event Title</label>
+                    <input id="studentEventName" type="text" placeholder="e.g. Study Sprint, Project Review">
+                </div>
+                <div class="full">
+                    <label for="studentEventSubject">Subject</label>
+                    <input id="studentEventSubject" type="text" placeholder="e.g. Embedded Systems">
+                </div>
+                <div>
+                    <label for="studentEventDate">Date</label>
+                    <input id="studentEventDate" type="date">
+                </div>
+                <div>
+                    <label for="studentEventType">Type</label>
+                    <select id="studentEventType">
+                        <option value="general">General</option>
+                        <option value="test">Test</option>
+                        <option value="exam">Exam</option>
+                    </select>
+                </div>
+                <div class="full">
+                    <label for="studentEventImportant">Priority</label>
+                    <select id="studentEventImportant">
+                        <option value="no">Normal</option>
+                        <option value="yes">Important</option>
+                    </select>
+                </div>
+                <div class="full">
+                    <label>Event Label Color</label>
+                    <div class="student-color-picker" id="studentEventColorPicker">
+                        <button type="button" class="student-color-auto active" id="studentColorAutoBtn" onclick="selectStudentEventColor('')">Auto by Type</button>
+                        <button type="button" class="student-color-chip" data-color="#2563eb" style="background:#2563eb;" onclick="selectStudentEventColor('#2563eb')"></button>
+                        <button type="button" class="student-color-chip" data-color="#0f766e" style="background:#0f766e;" onclick="selectStudentEventColor('#0f766e')"></button>
+                        <button type="button" class="student-color-chip" data-color="#047857" style="background:#047857;" onclick="selectStudentEventColor('#047857')"></button>
+                        <button type="button" class="student-color-chip" data-color="#b45309" style="background:#b45309;" onclick="selectStudentEventColor('#b45309')"></button>
+                        <button type="button" class="student-color-chip" data-color="#c2410c" style="background:#c2410c;" onclick="selectStudentEventColor('#c2410c')"></button>
+                        <button type="button" class="student-color-chip" data-color="#9f1239" style="background:#9f1239;" onclick="selectStudentEventColor('#9f1239')"></button>
+                        <button type="button" class="student-color-chip" data-color="#6d28d9" style="background:#6d28d9;" onclick="selectStudentEventColor('#6d28d9')"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="student-event-actions">
+                <button type="button" class="student-danger-btn" id="studentEventDeleteBtn" style="display:none;" onclick="deleteStudentEvent()">Delete Event</button>
+                <div class="student-event-actions-right">
+                    <button type="button" class="student-light-btn" onclick="closeStudentEventModal()">Cancel</button>
+                    <button type="button" class="calendar-add-btn" onclick="saveStudentEvent()">Save Event</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script id="studentMyRowsData" type="application/json">{{ my_timetable | tojson }}</script>
+<script id="studentInstituteRowsData" type="application/json">{{ institute_timetable | tojson }}</script>
 <script>
 
 let calendar = null;
@@ -918,8 +1484,11 @@ let calendarInitialized = false;
 const dayOrder = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5 };
 const slotOrder = { S1: 1, S2: 2, S3: 3, S4: 4 };
 const fullDayName = { Mon: "Monday", Tue: "Tuesday", Wed: "Wednesday", Thu: "Thursday", Fri: "Friday" };
-const myTimetableRows = {{ my_timetable | tojson }};
-const instituteRows = {{ institute_timetable | tojson }};
+const myTimetableRows = JSON.parse(document.getElementById("studentMyRowsData").textContent || "[]");
+const instituteRows = JSON.parse(document.getElementById("studentInstituteRowsData").textContent || "[]");
+let studentEventMode = "add";
+let studentEditingEventId = "";
+let studentEventLabelColor = "";
 
 function sortRows(rows) {
     return rows.slice().sort((a, b) => {
@@ -1013,6 +1582,83 @@ function toggleSidebar() {
     document.getElementById("main").classList.toggle("shifted");
 }
 
+function setStudentCalendarMessage(message, tone = "info") {
+    const msg = document.getElementById("studentCalendarActionMsg");
+    if (!msg) return;
+    msg.textContent = message || "";
+    msg.style.color = tone === "error" ? "#b42318" : "#1e429f";
+}
+
+function selectStudentEventColor(color) {
+    studentEventLabelColor = color || "";
+    const autoBtn = document.getElementById("studentColorAutoBtn");
+    const chips = document.querySelectorAll("#studentEventColorPicker .student-color-chip");
+    if (autoBtn) autoBtn.classList.toggle("active", !studentEventLabelColor);
+    chips.forEach(chip => {
+        chip.classList.toggle("active", chip.dataset.color === studentEventLabelColor);
+    });
+}
+
+function openStudentEventModal(mode, data = {}) {
+    studentEventMode = mode;
+    studentEditingEventId = data.id || "";
+    document.getElementById("studentEventModalTitle").textContent = mode === "edit" ? "Edit Event" : "Add Event";
+    document.getElementById("studentEventName").value = data.title || "";
+    document.getElementById("studentEventSubject").value = data.subject || "";
+    document.getElementById("studentEventDate").value = data.date || "";
+    document.getElementById("studentEventType").value = data.type || "general";
+    document.getElementById("studentEventImportant").value = data.important ? "yes" : "no";
+    selectStudentEventColor(data.customColor || "");
+    document.getElementById("studentEventDeleteBtn").style.display = mode === "edit" ? "inline-block" : "none";
+    document.getElementById("studentEventModalOverlay").classList.add("show");
+}
+
+function closeStudentEventModal() {
+    document.getElementById("studentEventModalOverlay").classList.remove("show");
+}
+
+function saveStudentEvent() {
+    const title = document.getElementById("studentEventName").value.trim();
+    const subject = document.getElementById("studentEventSubject").value.trim();
+    const date = document.getElementById("studentEventDate").value;
+    const eventType = document.getElementById("studentEventType").value;
+    const important = document.getElementById("studentEventImportant").value;
+
+    if (!title || !date) {
+        setStudentCalendarMessage("Please provide event title and date.", "error");
+        return;
+    }
+
+    const endpoint = studentEventMode === "edit" ? "/student/update_event" : "/student/add_event";
+    let body = `title=${encodeURIComponent(title)}&subject=${encodeURIComponent(subject)}&date=${encodeURIComponent(date)}&event_type=${encodeURIComponent(eventType)}&important=${encodeURIComponent(important)}&label_color=${encodeURIComponent(studentEventLabelColor)}`;
+    if (studentEventMode === "edit") {
+        body = `id=${encodeURIComponent(studentEditingEventId)}&` + body;
+    }
+
+    fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body
+    }).then(() => {
+        closeStudentEventModal();
+        setStudentCalendarMessage("Calendar event saved.");
+        if (calendar) calendar.refetchEvents();
+    });
+}
+
+function deleteStudentEvent() {
+    if (!studentEditingEventId) return;
+    fetch("/student/delete_event", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `id=${encodeURIComponent(studentEditingEventId)}`
+    }).then(() => {
+        closeStudentEventModal();
+        setStudentCalendarMessage("Event deleted.");
+        if (calendar) calendar.refetchEvents();
+    });
+}
+
 function showSection(id, el = null) {
 
     document.querySelectorAll(".section").forEach(sec => {
@@ -1039,22 +1685,43 @@ function showSection(id, el = null) {
                 initialView: 'dayGridMonth',
                 height: 650,
                 events: '/events',
+                dateClick: function(info) {
+                    setStudentCalendarMessage("");
+                    openStudentEventModal("add", { date: info.dateStr, type: "general", important: false });
+                },
                 eventClick: function(info) {
                     const ext = info.event.extendedProps || {};
+                    if (ext.is_owner) {
+                        setStudentCalendarMessage("");
+                        openStudentEventModal("edit", {
+                            id: info.event.id,
+                            title: info.event.title || "",
+                            subject: ext.subject || "",
+                            date: (info.event.startStr || "").slice(0, 10),
+                            type: ext.type || "general",
+                            important: !!ext.important,
+                            customColor: ext.custom_color || ""
+                        });
+                        return;
+                    }
                     const subject = ext.subject || info.event.title || "-";
                     const createdBy = ext.creator_name || ext.creator_email || "Unknown";
+                    const assignedByLabel = ext.assigned_by_label || "Published by";
+                    const audience = ext.target || "ALL";
                     const eventType = ext.type || "general";
+                    const eventTypeLabel = ext.type_label || eventType.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
                     const priority = ext.important ? "Important" : "Normal";
                     const dateStr = (info.event.startStr || "").slice(0, 10) || "-";
                     const box = document.getElementById("studentEventDetails");
                     box.innerHTML = `
-                        <h4>Event Details</h4>
+                        <h4>Event Insights</h4>
                         <div class="calendar-event-grid">
                             <div class="calendar-event-item"><div class="k">Title</div><div class="v">${info.event.title || "-"}</div></div>
                             <div class="calendar-event-item"><div class="k">Subject</div><div class="v">${subject}</div></div>
-                            <div class="calendar-event-item"><div class="k">Created By</div><div class="v">${createdBy}</div></div>
+                            <div class="calendar-event-item"><div class="k">${assignedByLabel}</div><div class="v">${createdBy}</div></div>
                             <div class="calendar-event-item"><div class="k">Date</div><div class="v">${dateStr}</div></div>
-                            <div class="calendar-event-item"><div class="k">Type</div><div class="v">${eventType.toUpperCase()}</div></div>
+                            <div class="calendar-event-item"><div class="k">Audience</div><div class="v">${audience}</div></div>
+                            <div class="calendar-event-item"><div class="k">Type</div><div class="v">${eventTypeLabel}</div></div>
                             <div class="calendar-event-item"><div class="k">Priority</div><div class="v">${priority}</div></div>
                         </div>
                     `;

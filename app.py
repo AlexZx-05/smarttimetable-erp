@@ -6,6 +6,7 @@ import os
 from datetime import datetime
 import json
 import uuid
+import re
 
 app = Flask(__name__)
 app.secret_key = "very-secret-key"
@@ -28,6 +29,13 @@ SEMESTER_OPTIONS = [
     ("aug_nov", "Aug-Nov Semester"),
     ("dec_vacation", "December Vacation"),
     ("jan_may", "Jan-May Semester")
+]
+ALLOWED_DEPARTMENTS = {"ALL", "CSE", "ECE", "IT", "ME"}
+GOVERNMENT_HOLIDAYS = [
+    ("01-26", "Republic Day"),
+    ("08-15", "Independence Day"),
+    ("10-02", "Gandhi Jayanti"),
+    ("12-25", "Christmas")
 ]
 
 
@@ -440,6 +448,52 @@ def save_events(events):
             f.write(json.dumps(e) + "\n")
 
 
+def build_government_holidays(year):
+    holidays = []
+    year_str = str(year).strip()
+    for mm_dd, title in GOVERNMENT_HOLIDAYS:
+        date_str = f"{year_str}-{mm_dd}"
+        slug = title.lower().replace(" ", "-")
+        holidays.append({
+            "id": f"gov-{date_str}-{slug}",
+            "title": title,
+            "subject": title,
+            "date": date_str,
+            "type": "government_holiday",
+            "important": True,
+            "target": "ALL",
+            "creator_name": "System",
+            "creator_email": "system@smarttimetable.local",
+            "creator_role": "system"
+        })
+    return holidays
+
+
+def load_calendar_events():
+    all_events = load_events()
+    now_year = datetime.now().year
+    # Keep holiday generation practical for current academic usage.
+    year_range = range(now_year - 1, now_year + 3)
+    generated = []
+    for year in year_range:
+        generated.extend(build_government_holidays(year))
+
+    seen = set()
+    merged = []
+    for event in all_events + generated:
+        key = (
+            event.get("title", "").strip().lower(),
+            event.get("date", "").strip()
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        merged.append(event)
+
+    merged.sort(key=lambda e: (e.get("date", ""), e.get("title", "")))
+    return merged
+
+
 def load_timetable_history():
     history = []
     if os.path.exists(TIMETABLE_HISTORY_FILE):
@@ -502,24 +556,67 @@ def event_color(event_type):
         "exam": "#dc2626",
         "test": "#f59e0b",
         "vacation": "#16a34a",
+        "government_holiday": "#0d9488",
         "general": "#2563eb"
     }
     return palette.get(event_type, "#2563eb")
 
 
+def sanitize_label_color(color_value):
+    value = (color_value or "").strip()
+    if not value:
+        return ""
+    if re.fullmatch(r"#[0-9a-fA-F]{6}", value):
+        return value.lower()
+    return ""
+
+
+def sanitize_target_department(value, default="ALL"):
+    dept = (value or default).strip().upper()
+    if dept in ALLOWED_DEPARTMENTS:
+        return dept
+    return default
+
+
+def event_type_label(event_type):
+    labels = {
+        "general": "General",
+        "test": "Test",
+        "exam": "Exam",
+        "vacation": "Official Holiday / Leave Day",
+        "government_holiday": "National Celebration Day"
+    }
+    return labels.get(event_type, "General")
+
+
 def to_calendar_event(event, viewer_email):
+    custom_color = sanitize_label_color(event.get("custom_color", ""))
+    creator_role = event.get("creator_role", "")
+    if creator_role == "teacher":
+        assigned_by_label = "Assigned by Faculty"
+    elif creator_role == "admin":
+        assigned_by_label = "Published by Administration"
+    elif creator_role == "student":
+        assigned_by_label = "Created by Student"
+    else:
+        assigned_by_label = "Published by System"
     return {
         "id": event["id"],
         "title": event["title"],
         "start": event["date"],
         "allDay": True,
-        "color": event_color(event.get("type", "general")),
+        "color": custom_color if custom_color else event_color(event.get("type", "general")),
         "extendedProps": {
             "type": event.get("type", "general"),
+            "type_label": event_type_label(event.get("type", "general")),
             "important": event.get("important", False),
+            "custom_color": custom_color,
             "subject": event.get("subject", event.get("title", "")),
             "creator_name": event.get("creator_name", ""),
             "creator_email": event.get("creator_email", ""),
+            "creator_role": creator_role,
+            "target": sanitize_target_department(event.get("target", "ALL")),
+            "assigned_by_label": assigned_by_label,
             "is_owner": event.get("creator_email", "") == viewer_email
         }
     }
@@ -528,8 +625,8 @@ def to_calendar_event(event, viewer_email):
 def get_upcoming_vacations(limit=10):
     today = datetime.now().strftime("%Y-%m-%d")
     vacations = []
-    for e in load_events():
-        if e.get("type", "") == "vacation" and e.get("date", "") >= today:
+    for e in load_calendar_events():
+        if e.get("type", "") in ("vacation", "government_holiday") and e.get("date", "") >= today:
             vacations.append(e)
     vacations.sort(key=lambda x: x.get("date", ""))
     return vacations[:limit]
@@ -675,7 +772,7 @@ def admin_dashboard():
     default_semester_year = now.year
     admin_events = load_events()
     admin_events.sort(key=lambda x: x.get("date", ""))
-    vacations = [e for e in admin_events if e.get("type", "") == "vacation"]
+    vacations = get_upcoming_vacations()
     users = load_users()
     courses = load_courses()
     teacher_cards = []
@@ -1224,7 +1321,19 @@ def events():
     if role not in ("admin", "teacher", "student"):
         return jsonify([])
 
-    all_events = load_events()
+    all_events = load_calendar_events()
+    if role in ("teacher", "student"):
+        viewer_dept = sanitize_target_department(
+            session.get("department", "") or infer_department_from_email(email),
+            default="ALL"
+        )
+        filtered = []
+        for e in all_events:
+            target = sanitize_target_department(e.get("target", "ALL"), default="ALL")
+            is_owner = e.get("creator_email", "") == email
+            if target == "ALL" or target == viewer_dept or is_owner:
+                filtered.append(e)
+        all_events = filtered
     payload = [to_calendar_event(e, email) for e in all_events]
     return jsonify(payload)
 
@@ -1239,6 +1348,8 @@ def add_teacher_event():
     date = request.form.get("date", "").strip()
     event_type = request.form.get("event_type", "general").strip().lower()
     important = request.form.get("important", "no").strip().lower() == "yes"
+    custom_color = sanitize_label_color(request.form.get("label_color", ""))
+    target = sanitize_target_department(request.form.get("target", "ALL"), default="ALL")
 
     if not title or not date:
         return "Missing title/date", 400
@@ -1253,6 +1364,8 @@ def add_teacher_event():
         "date": date,
         "type": event_type,
         "important": important,
+        "custom_color": custom_color,
+        "target": target,
         "creator_name": session.get("name", ""),
         "creator_email": session.get("email", ""),
         "creator_role": "teacher"
@@ -1272,6 +1385,8 @@ def update_teacher_event():
     date = request.form.get("date", "").strip()
     event_type = request.form.get("event_type", "general").strip().lower()
     important = request.form.get("important", "no").strip().lower() == "yes"
+    custom_color = sanitize_label_color(request.form.get("label_color", ""))
+    target = sanitize_target_department(request.form.get("target", "ALL"), default="ALL")
 
     all_events = load_events()
     updated = False
@@ -1288,6 +1403,8 @@ def update_teacher_event():
             if event_type in ("general", "test", "exam"):
                 e["type"] = event_type
             e["important"] = important
+            e["custom_color"] = custom_color
+            e["target"] = target
             updated = True
             break
 
@@ -1301,6 +1418,107 @@ def update_teacher_event():
 @app.route("/teacher/delete_event", methods=["POST"])
 def delete_teacher_event():
     if session.get("role") != "teacher":
+        return "Unauthorized", 401
+
+    event_id = request.form.get("id", "").strip()
+    all_events = load_events()
+    kept = []
+    deleted = False
+    for e in all_events:
+        if e.get("id") == event_id:
+            if e.get("creator_email", "") != session.get("email", ""):
+                return "Forbidden", 403
+            deleted = True
+            continue
+        kept.append(e)
+
+    if not deleted:
+        return "Event not found", 404
+
+    save_events(kept)
+    return "OK", 200
+
+
+@app.route("/student/add_event", methods=["POST"])
+def add_student_event():
+    if session.get("role") != "student":
+        return "Unauthorized", 401
+
+    title = request.form.get("title", "").strip()
+    subject = request.form.get("subject", "").strip()
+    date = request.form.get("date", "").strip()
+    event_type = request.form.get("event_type", "general").strip().lower()
+    important = request.form.get("important", "no").strip().lower() == "yes"
+    custom_color = sanitize_label_color(request.form.get("label_color", ""))
+    target = sanitize_target_department(request.form.get("target", "ALL"), default="ALL")
+
+    if not title or not date:
+        return "Missing title/date", 400
+    if event_type not in ("general", "test", "exam"):
+        event_type = "general"
+
+    all_events = load_events()
+    all_events.append({
+        "id": str(uuid.uuid4()),
+        "title": title,
+        "subject": subject if subject else title,
+        "date": date,
+        "type": event_type,
+        "important": important,
+        "custom_color": custom_color,
+        "target": target,
+        "creator_name": session.get("name", ""),
+        "creator_email": session.get("email", ""),
+        "creator_role": "student"
+    })
+    save_events(all_events)
+    return "OK", 200
+
+
+@app.route("/student/update_event", methods=["POST"])
+def update_student_event():
+    if session.get("role") != "student":
+        return "Unauthorized", 401
+
+    event_id = request.form.get("id", "").strip()
+    title = request.form.get("title", "").strip()
+    subject = request.form.get("subject", "").strip()
+    date = request.form.get("date", "").strip()
+    event_type = request.form.get("event_type", "general").strip().lower()
+    important = request.form.get("important", "no").strip().lower() == "yes"
+    custom_color = sanitize_label_color(request.form.get("label_color", ""))
+    target = sanitize_target_department(request.form.get("target", "ALL"), default="ALL")
+
+    all_events = load_events()
+    updated = False
+    for e in all_events:
+        if e.get("id") == event_id:
+            if e.get("creator_email", "") != session.get("email", ""):
+                return "Forbidden", 403
+            if title:
+                e["title"] = title
+            if subject:
+                e["subject"] = subject
+            if date:
+                e["date"] = date
+            if event_type in ("general", "test", "exam"):
+                e["type"] = event_type
+            e["important"] = important
+            e["custom_color"] = custom_color
+            e["target"] = target
+            updated = True
+            break
+
+    if not updated:
+        return "Event not found", 404
+
+    save_events(all_events)
+    return "OK", 200
+
+
+@app.route("/student/delete_event", methods=["POST"])
+def delete_student_event():
+    if session.get("role") != "student":
         return "Unauthorized", 401
 
     event_id = request.form.get("id", "").strip()
@@ -1400,6 +1618,53 @@ def admin_edit_event():
         return redirect("/admin/dashboard?message=Event+updated.")
 
     return render_template("admin_edit_event.html", event=target)
+
+
+@app.route("/admin/events/update_api", methods=["POST"])
+def admin_update_event_api():
+    if session.get("role") != "admin":
+        return jsonify({"ok": False, "error": "Unauthorized"}), 401
+
+    event_id = request.form.get("id", "").strip()
+    title = request.form.get("title", "").strip()
+    date = request.form.get("date", "").strip()
+    event_type = request.form.get("event_type", "general").strip().lower()
+    important = request.form.get("important", "no").strip().lower() == "yes"
+
+    if not event_id:
+        return jsonify({"ok": False, "error": "Event id is required"}), 400
+    if not title or not date:
+        return jsonify({"ok": False, "error": "Title and date are required"}), 400
+    if event_type not in ("general", "test", "exam", "vacation"):
+        event_type = "general"
+
+    all_events = load_events()
+    updated = None
+    for e in all_events:
+        if e.get("id", "") == event_id:
+            e["title"] = title
+            e["subject"] = e.get("subject", title) or title
+            e["date"] = date
+            e["type"] = event_type
+            e["important"] = important
+            updated = e
+            break
+
+    if updated is None:
+        return jsonify({"ok": False, "error": "Event not found"}), 404
+
+    save_events(all_events)
+    return jsonify({
+        "ok": True,
+        "event": {
+            "id": updated.get("id", ""),
+            "title": updated.get("title", ""),
+            "date": updated.get("date", ""),
+            "type": updated.get("type", "general"),
+            "creator_name": updated.get("creator_name", ""),
+            "important": bool(updated.get("important", False))
+        }
+    })
 
 
 # =====================================================

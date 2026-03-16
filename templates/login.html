@@ -4,128 +4,244 @@
 <head>
     <title>SmartTimetable Portal</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
 
     <style>
+        :root {
+            --bg-1: #07122a;
+            --bg-2: #101f3f;
+            --panel-dark-1: #11213f;
+            --panel-dark-2: #1d3257;
+            --line: #d9e2f1;
+            --text-main: #1a2b4a;
+            --text-muted: #5a6d8e;
+            --accent-1: #2b6de6;
+            --accent-2: #1e52c1;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #0f172a, #1e293b);
+            font-family: 'Manrope', 'Segoe UI', sans-serif;
+            background:
+                radial-gradient(900px 500px at 6% 2%, rgba(45, 113, 255, 0.22), transparent 60%),
+                radial-gradient(1000px 560px at 96% 100%, rgba(59, 130, 246, 0.18), transparent 62%),
+                linear-gradient(140deg, var(--bg-1), var(--bg-2));
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            padding: 24px;
         }
 
         .login-wrapper {
             display: flex;
-            width: 960px;
-            max-width: 95%;
-            background: white;
-            border-radius: 16px;
+            width: min(1080px, 100%);
+            background: #fff;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(180, 198, 227, 0.35);
+            box-shadow: 0 30px 70px rgba(3, 11, 31, 0.55);
+            animation: card-in 0.55s ease;
         }
 
         .left-panel {
             flex: 1;
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.92));
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(130deg, var(--panel-dark-1), var(--panel-dark-2));
             color: #f1f5f9;
-            padding: 48px;
+            padding: 52px;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: center;
+            text-align: center;
+            gap: 16px;
+            isolation: isolate;
+        }
+
+        .left-panel::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: url('/static/login-bg.png') center center/cover no-repeat;
+            opacity: 0.30;
+            filter: brightness(1.2) contrast(1.08) saturate(1.02);
+            z-index: 0;
+        }
+
+        .left-panel::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(145deg, rgba(8, 13, 27, 0.65), rgba(19, 32, 58, 0.5)),
+                radial-gradient(500px 260px at 80% 18%, rgba(87, 149, 255, 0.2), transparent 75%);
+            z-index: 0;
+        }
+
+        .left-panel>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .kicker {
+            width: fit-content;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.13);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #dbeafe;
         }
 
         .left-panel h1 {
-            font-size: 34px;
-            margin-bottom: 16px;
-            font-weight: 600;
-            letter-spacing: 1px;
+            margin: 0;
+            font-family: 'Sora', 'Manrope', sans-serif;
+            font-size: clamp(32px, 3.7vw, 44px);
+            font-weight: 800;
+            letter-spacing: 0.3px;
+            line-height: 1.12;
         }
 
         .left-panel p {
-            font-size: 15px;
-            line-height: 1.7;
-            color: rgba(241, 245, 249, 0.9);
-            max-width: 420px;
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.75;
+            color: rgba(238, 246, 255, 0.92);
+            max-width: 520px;
+        }
+
+        .left-meta {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 4px;
+        }
+
+        .left-meta span {
+            font-size: 12px;
+            color: #dbeafe;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 999px;
+            padding: 6px 10px;
+            white-space: nowrap;
         }
 
         .right-panel {
             flex: 1;
-            padding: 40px;
+            padding: 44px 46px;
+            background: linear-gradient(180deg, #fcfdff, #f7faff);
+        }
+
+        .panel-title {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            font-family: 'Sora', 'Manrope', sans-serif;
+            font-size: 36px;
+            letter-spacing: 0.2px;
+            line-height: 1.1;
         }
 
         .notice {
-            border-radius: 8px;
-            padding: 10px 12px;
-            margin-bottom: 14px;
+            border-radius: 12px;
+            padding: 11px 13px;
+            margin-bottom: 16px;
             font-size: 13px;
+            font-weight: 600;
         }
 
         .notice.error {
-            background: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
+            background: #fef2f2;
+            color: #a30f2d;
+            border: 1px solid #fecdd3;
         }
 
         .notice.ok {
-            background: #dcfce7;
-            color: #166534;
-            border: 1px solid #bbf7d0;
+            background: #ecfdf3;
+            color: #0f6a3f;
+            border: 1px solid #b7f2cc;
         }
 
         form {
             display: none;
             flex-direction: column;
-            gap: 8px;
+            gap: 9px;
         }
 
         form.active {
             display: flex;
+            animation: form-in 0.22s ease;
         }
 
         label {
             font-size: 14px;
-            color: #475569;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-top: 3px;
         }
 
         select,
         input {
-            padding: 11px;
-            border-radius: 8px;
-            border: 1px solid #cbd5e1;
+            width: 100%;
+            height: 48px;
+            padding: 0 14px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
             font-size: 14px;
+            color: #102244;
+            background: #fff;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
             margin-bottom: 8px;
         }
 
         select:focus,
         input:focus {
-            border-color: #2563eb;
+            border-color: var(--accent-1);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+            box-shadow: 0 0 0 4px rgba(43, 109, 230, 0.16);
+            transform: translateY(-1px);
         }
 
         button[type="submit"] {
-            margin-top: 6px;
-            padding: 11px;
-            background: #2563eb;
+            margin-top: 8px;
+            height: 48px;
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 15px;
+            font-weight: 700;
             cursor: pointer;
+            box-shadow: 0 8px 18px rgba(40, 98, 210, 0.26);
+            transition: transform 0.16s ease, box-shadow 0.18s ease, filter 0.18s ease;
         }
 
         button[type="submit"]:hover {
-            background: #1d4ed8;
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(40, 98, 210, 0.33);
+            filter: brightness(1.02);
         }
 
         .switch-link {
-            margin-top: 6px;
+            margin-top: 7px;
             border: none;
             background: transparent;
-            color: #2563eb;
-            font-size: 13px;
+            color: var(--accent-1);
+            font-size: 14px;
+            font-weight: 700;
             text-align: left;
             cursor: pointer;
             padding: 0;
@@ -136,24 +252,67 @@
         }
 
         .footer-note {
-            margin-top: 14px;
-            font-size: 12px;
-            color: #94a3b8;
+            margin-top: 16px;
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--text-muted);
             text-align: center;
         }
 
-        @media(max-width: 768px) {
+        @keyframes card-in {
+            from {
+                opacity: 0;
+                transform: translateY(14px) scale(0.985);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes form-in {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media(max-width: 960px) {
             .login-wrapper {
                 flex-direction: column;
             }
 
             .left-panel {
-                padding: 28px;
-                text-align: center;
+                min-height: 320px;
+                padding: 30px 26px;
             }
 
             .right-panel {
                 padding: 24px;
+            }
+
+            .panel-title {
+                font-size: 30px;
+            }
+        }
+
+        @media(max-width: 540px) {
+            body {
+                padding: 14px;
+            }
+
+            .left-panel h1 {
+                font-size: 30px;
+            }
+
+            .left-panel p {
+                font-size: 15px;
             }
         }
     </style>
@@ -163,15 +322,22 @@
 
     <div class="login-wrapper">
         <div class="left-panel">
+            <div class="kicker">Academic Operations Suite</div>
             <h1>SmartTimetable</h1>
             <p>
-                Academic timetable system with optimization, teacher preferences,
-                conflict checks, and role-based dashboards.
+                Built for modern institutions with optimization-first scheduling,
+                teacher-preference intelligence, conflict-proof planning, and
+                role-driven academic workflows.
             </p>
+            <div class="left-meta">
+                <span>ILP Optimization</span>
+                <span>Faculty Preferences</span>
+                <span>Conflict Safe</span>
+            </div>
         </div>
 
         <div class="right-panel">
-            <h2 id="panel-title" style="margin-top:0; margin-bottom:18px; color:#1e293b;">Portal Login</h2>
+            <h2 id="panel-title" class="panel-title">Portal Login</h2>
 
             {% if error %}
             <div class="notice error">{{ error }}</div>

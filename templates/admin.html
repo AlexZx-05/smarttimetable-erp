@@ -986,13 +986,13 @@ td {
     <div class="card">
         <h2>Calendar Event Management</h2>
         <form action="/admin/events/add" method="POST" style="display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr auto; gap:10px; margin-bottom:14px;">
-            <input type="text" name="title" placeholder="Event title (Exam/Test/Vacation)" required style="padding:9px; border-radius:8px; border:1px solid #cfd8eb;">
+            <input type="text" name="title" placeholder="Event title (Exam, Test, Holiday, Leave)" required style="padding:9px; border-radius:8px; border:1px solid #cfd8eb;">
             <input type="date" name="date" required style="padding:9px; border-radius:8px; border:1px solid #cfd8eb;">
             <select name="event_type" style="padding:9px; border-radius:8px; border:1px solid #cfd8eb;">
                 <option value="general">General</option>
                 <option value="test">Test</option>
                 <option value="exam">Exam</option>
-                <option value="vacation">Vacation</option>
+                <option value="vacation">Holiday / Leave</option>
             </select>
             <select name="important" style="padding:9px; border-radius:8px; border:1px solid #cfd8eb;">
                 <option value="no">Normal</option>
@@ -1015,14 +1015,29 @@ td {
             </thead>
             <tbody>
                 {% for e in admin_events %}
-                <tr>
-                    <td>{{ e.date }}</td>
-                    <td>{{ e.title }}</td>
-                    <td style="text-transform:capitalize;">{{ e.type }}</td>
-                    <td>{{ e.creator_name }}</td>
-                    <td>{{ "Yes" if e.important else "No" }}</td>
-                    <td>
-                        <a class="action-btn" style="background:#0ea5e9;color:#fff;" href="/admin/events/edit?id={{ e.id }}">Edit</a>
+                <tr
+                    data-event-id="{{ e.id }}"
+                    data-event-date="{{ e.date }}"
+                    data-event-title="{{ e.title }}"
+                    data-event-type="{{ e.type }}"
+                    data-event-important="{{ 'yes' if e.important else 'no' }}"
+                    data-event-creator="{{ e.creator_name }}"
+                >
+                    <td class="event-col-date">{{ e.date }}</td>
+                    <td class="event-col-title">{{ e.title }}</td>
+                    <td class="event-col-type">
+                        {% if e.type == "vacation" %}
+                            Holiday / Leave
+                        {% elif e.type == "government_holiday" %}
+                            Government Holiday
+                        {% else %}
+                            {{ e.type|capitalize }}
+                        {% endif %}
+                    </td>
+                    <td class="event-col-creator">{{ e.creator_name }}</td>
+                    <td class="event-col-important">{{ "Yes" if e.important else "No" }}</td>
+                    <td class="event-col-action">
+                        <button type="button" class="action-btn" style="border:none;background:#0ea5e9;color:#fff;cursor:pointer;" onclick="startInlineEventEdit(this)">Edit</button>
                         <a class="action-btn reject" href="/admin/events/delete?id={{ e.id }}">Delete</a>
                     </td>
                 </tr>
@@ -1619,6 +1634,109 @@ function openProfileSection(e) {
     showSection("profile-section");
     const section = document.getElementById("profile-section");
     if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function formatEventTypeLabel(type) {
+    if (type === "vacation") return "Holiday / Leave";
+    if (type === "government_holiday") return "Government Holiday";
+    if (!type) return "General";
+    return type.charAt(0).toUpperCase() + type.slice(1);
+}
+
+function renderAdminEventRow(tr, eventData) {
+    tr.dataset.editing = "0";
+    tr.dataset.eventId = eventData.id;
+    tr.dataset.eventDate = eventData.date;
+    tr.dataset.eventTitle = eventData.title;
+    tr.dataset.eventType = eventData.type;
+    tr.dataset.eventImportant = eventData.important ? "yes" : "no";
+    tr.dataset.eventCreator = eventData.creator_name;
+
+    tr.querySelector(".event-col-date").textContent = eventData.date;
+    tr.querySelector(".event-col-title").textContent = eventData.title;
+    tr.querySelector(".event-col-type").textContent = formatEventTypeLabel(eventData.type);
+    tr.querySelector(".event-col-creator").textContent = eventData.creator_name;
+    tr.querySelector(".event-col-important").textContent = eventData.important ? "Yes" : "No";
+    tr.querySelector(".event-col-action").innerHTML = `
+        <button type="button" class="action-btn" style="border:none;background:#0ea5e9;color:#fff;cursor:pointer;" onclick="startInlineEventEdit(this)">Edit</button>
+        <a class="action-btn reject" href="/admin/events/delete?id=${encodeURIComponent(eventData.id)}">Delete</a>
+    `;
+}
+
+function startInlineEventEdit(btn) {
+    const tr = btn.closest("tr");
+    if (!tr || tr.dataset.editing === "1") return;
+
+    tr.dataset.editing = "1";
+    tr._eventOriginal = {
+        id: tr.dataset.eventId || "",
+        date: tr.dataset.eventDate || "",
+        title: tr.dataset.eventTitle || "",
+        type: tr.dataset.eventType || "general",
+        creator_name: tr.dataset.eventCreator || "",
+        important: (tr.dataset.eventImportant || "no") === "yes"
+    };
+
+    tr.querySelector(".event-col-date").innerHTML = `<input type="date" value="${tr._eventOriginal.date}" style="padding:7px 8px;border-radius:8px;border:1px solid #cfd8eb;min-width:145px;">`;
+    tr.querySelector(".event-col-title").innerHTML = `<input type="text" value="${tr._eventOriginal.title.replace(/"/g, "&quot;")}" style="padding:7px 8px;border-radius:8px;border:1px solid #cfd8eb;width:100%;">`;
+    tr.querySelector(".event-col-type").innerHTML = `
+        <select style="padding:7px 8px;border-radius:8px;border:1px solid #cfd8eb;">
+            <option value="general" ${tr._eventOriginal.type === "general" ? "selected" : ""}>General</option>
+            <option value="test" ${tr._eventOriginal.type === "test" ? "selected" : ""}>Test</option>
+            <option value="exam" ${tr._eventOriginal.type === "exam" ? "selected" : ""}>Exam</option>
+            <option value="vacation" ${tr._eventOriginal.type === "vacation" ? "selected" : ""}>Holiday / Leave</option>
+        </select>
+    `;
+    tr.querySelector(".event-col-important").innerHTML = `
+        <select style="padding:7px 8px;border-radius:8px;border:1px solid #cfd8eb;">
+            <option value="no" ${tr._eventOriginal.important ? "" : "selected"}>No</option>
+            <option value="yes" ${tr._eventOriginal.important ? "selected" : ""}>Yes</option>
+        </select>
+    `;
+    tr.querySelector(".event-col-action").innerHTML = `
+        <button type="button" class="action-btn approve" style="border:none;cursor:pointer;" onclick="saveInlineEventEdit(this)">Save</button>
+        <button type="button" class="action-btn" style="border:none;background:#64748b;color:#fff;cursor:pointer;" onclick="cancelInlineEventEdit(this)">Cancel</button>
+    `;
+}
+
+function cancelInlineEventEdit(btn) {
+    const tr = btn.closest("tr");
+    if (!tr || !tr._eventOriginal) return;
+    renderAdminEventRow(tr, tr._eventOriginal);
+}
+
+function saveInlineEventEdit(btn) {
+    const tr = btn.closest("tr");
+    if (!tr || !tr._eventOriginal) return;
+
+    const date = tr.querySelector(".event-col-date input").value;
+    const title = tr.querySelector(".event-col-title input").value.trim();
+    const eventType = tr.querySelector(".event-col-type select").value;
+    const important = tr.querySelector(".event-col-important select").value;
+
+    if (!date || !title) return;
+
+    const body = new URLSearchParams({
+        id: tr._eventOriginal.id,
+        date,
+        title,
+        event_type: eventType,
+        important
+    }).toString();
+
+    fetch("/admin/events/update_api", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body
+    })
+    .then(r => r.json())
+    .then(res => {
+        if (!res.ok) throw new Error(res.error || "Update failed");
+        renderAdminEventRow(tr, res.event);
+    })
+    .catch(() => {
+        cancelInlineEventEdit(btn);
+    });
 }
 
 function rowDataFromButton(btn) {
