@@ -259,6 +259,86 @@
             text-align: center;
         }
 
+        .input-with-toggle {
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .input-with-toggle input {
+            margin-bottom: 0;
+            padding-right: 56px;
+        }
+
+        /* Hide browser-native password reveal controls to avoid duplicate icons. */
+        input[type="password"]::-ms-reveal,
+        input[type="password"]::-ms-clear {
+            display: none;
+        }
+        input[type="password"]::-webkit-credentials-auto-fill-button,
+        input[type="password"]::-webkit-contacts-auto-fill-button,
+        input[type="password"]::-webkit-textfield-decoration-container {
+            display: none !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+
+        .toggle-pass {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: rgba(90, 109, 142, 0.12);
+            color: #556987;
+            border-radius: 999px;
+            height: 28px;
+            width: 28px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: none;
+            transition: background 0.18s ease, color 0.18s ease, transform 0.15s ease;
+        }
+
+        .toggle-pass:hover {
+            background: rgba(90, 109, 142, 0.2);
+            color: #334155;
+        }
+
+        .toggle-pass:focus {
+            outline: none;
+            background: rgba(43, 109, 230, 0.14);
+            color: #1e52c1;
+        }
+
+        .input-with-toggle input:focus + .toggle-pass {
+            background: rgba(43, 109, 230, 0.14);
+            color: #1e52c1;
+        }
+
+        .toggle-pass svg {
+            width: 15px;
+            height: 15px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .toggle-pass .eye-pupil {
+            fill: currentColor;
+            stroke: none;
+        }
+
+        .field-hint {
+            margin: -2px 0 6px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
         @keyframes card-in {
             from {
                 opacity: 0;
@@ -359,9 +439,13 @@
                 <input type="email" name="email" placeholder="example@iiitr.ac.in" required>
 
                 <label>Password</label>
-                <input type="password" name="password" placeholder="Enter password" required>
+                <div class="input-with-toggle">
+                    <input type="password" id="login-password" name="password" placeholder="Enter password" required>
+                    <button class="toggle-pass" type="button" data-target="login-password" aria-label="Show password" title="Show password"></button>
+                </div>
 
                 <button type="submit">Login</button>
+                <button class="switch-link" type="button" id="to-forgot">Forgot password?</button>
                 <button class="switch-link" type="button" id="to-signup">Need an account? Sign up</button>
             </form>
 
@@ -386,7 +470,37 @@
                 <input type="password" name="password" placeholder="Create password" required>
 
                 <button type="submit">Submit For Admin Approval</button>
+                <button class="switch-link" type="button" id="signup-to-forgot">Forgot password?</button>
                 <button class="switch-link" type="button" id="to-login">Already approved? Back to login</button>
+            </form>
+
+            <form method="POST" action="/forgot-password" id="forgot-form">
+                <label>Registered Role</label>
+                <select name="role" required>
+                    <option value="">-- Select Role --</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="student">Student</option>
+                </select>
+
+                <label>Registered Email</label>
+                <input type="email" name="email" placeholder="example@iiitr.ac.in" required>
+
+                <label>New Password</label>
+                <div class="input-with-toggle">
+                    <input type="password" id="new-password" name="new_password" placeholder="Enter new password" required>
+                    <button class="toggle-pass" type="button" data-target="new-password" aria-label="Show password" title="Show password"></button>
+                </div>
+                <div class="field-hint">Use at least 8 characters with uppercase, lowercase, and number.</div>
+
+                <label>Confirm Password</label>
+                <div class="input-with-toggle">
+                    <input type="password" id="confirm-password" name="confirm_password" placeholder="Re-enter new password" required>
+                    <button class="toggle-pass" type="button" data-target="confirm-password" aria-label="Show password" title="Show password"></button>
+                </div>
+
+                <button type="submit">Reset Password</button>
+                <button class="switch-link" type="button" id="forgot-to-login">Back to login</button>
+                <button class="switch-link" type="button" id="forgot-to-signup">Need account approval first? Sign up</button>
             </form>
 
             <div class="footer-note">
@@ -399,18 +513,57 @@
         const panelTitle = document.getElementById("panel-title");
         const loginForm = document.getElementById("login-form");
         const signupForm = document.getElementById("signup-form");
+        const forgotForm = document.getElementById("forgot-form");
         const toSignup = document.getElementById("to-signup");
         const toLogin = document.getElementById("to-login");
+        const toForgot = document.getElementById("to-forgot");
+        const signupToForgot = document.getElementById("signup-to-forgot");
+        const forgotToLogin = document.getElementById("forgot-to-login");
+        const forgotToSignup = document.getElementById("forgot-to-signup");
 
         function showTab(tab) {
             const onLogin = tab === "login";
+            const onSignup = tab === "signup";
+            const onForgot = tab === "forgot";
             loginForm.classList.toggle("active", onLogin);
-            signupForm.classList.toggle("active", !onLogin);
-            panelTitle.textContent = onLogin ? "Portal Login" : "Create Account Request";
+            signupForm.classList.toggle("active", onSignup);
+            forgotForm.classList.toggle("active", onForgot);
+            panelTitle.textContent = onLogin
+                ? "Portal Login"
+                : onSignup
+                    ? "Create Account Request"
+                    : "Reset Password";
         }
 
         toSignup.onclick = () => showTab("signup");
         toLogin.onclick = () => showTab("login");
+        toForgot.onclick = () => showTab("forgot");
+        signupToForgot.onclick = () => showTab("forgot");
+        forgotToLogin.onclick = () => showTab("login");
+        forgotToSignup.onclick = () => showTab("signup");
+
+        function getEyeIcon(visible) {
+            if (visible) {
+                return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"></path><circle class="eye-pupil" cx="12" cy="12" r="2"></circle></svg>';
+            }
+            return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"></path><circle class="eye-pupil" cx="12" cy="12" r="2"></circle><path d="M4 20L20 4"></path></svg>';
+        }
+
+        document.querySelectorAll(".toggle-pass").forEach((btn) => {
+            btn.dataset.visible = "false";
+            btn.innerHTML = getEyeIcon(false);
+            btn.onclick = () => {
+                const input = document.getElementById(btn.dataset.target);
+                if (!input) return;
+                const nextType = input.type === "password" ? "text" : "password";
+                input.type = nextType;
+                const visible = nextType === "text";
+                btn.dataset.visible = visible ? "true" : "false";
+                btn.innerHTML = getEyeIcon(visible);
+                btn.setAttribute("aria-label", visible ? "Hide password" : "Show password");
+                btn.setAttribute("title", visible ? "Hide password" : "Show password");
+            };
+        });
     </script>
 
 </body>

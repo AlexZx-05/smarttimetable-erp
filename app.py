@@ -743,6 +743,46 @@ def signup():
 
 
 # =====================================================
+# FORGOT PASSWORD (APPROVED USERS ONLY)
+# =====================================================
+@app.route("/forgot-password", methods=["POST"])
+def forgot_password():
+    role = request.form.get("role", "").strip()
+    email = request.form.get("email", "").strip()
+    new_password = request.form.get("new_password", "").strip()
+    confirm_password = request.form.get("confirm_password", "").strip()
+
+    if role not in ("teacher", "student"):
+        return redirect("/login?error=Password+reset+is+available+only+for+Teacher+and+Student.")
+    if not email or not new_password or not confirm_password:
+        return redirect("/login?error=All+forgot+password+fields+are+required.")
+    if new_password != confirm_password:
+        return redirect("/login?error=New+password+and+confirm+password+must+match.")
+    if len(new_password) < 8:
+        return redirect("/login?error=Password+must+be+at+least+8+characters.")
+    if not re.search(r"[A-Z]", new_password):
+        return redirect("/login?error=Password+must+include+at+least+one+uppercase+letter.")
+    if not re.search(r"[a-z]", new_password):
+        return redirect("/login?error=Password+must+include+at+least+one+lowercase+letter.")
+    if not re.search(r"\d", new_password):
+        return redirect("/login?error=Password+must+include+at+least+one+number.")
+
+    users = load_users()
+    target = None
+    for user in users:
+        if user.get("email", "") == email and user.get("role", "") == role:
+            target = user
+            break
+
+    if not target:
+        return redirect("/login?error=Password+reset+allowed+only+for+registered+approved+users.")
+
+    target["hash"] = generate_password_hash(new_password)
+    save_users(users)
+    return redirect("/login?message=Password+updated+successfully.+Please+login.")
+
+
+# =====================================================
 # LOGOUT
 # =====================================================
 @app.route("/logout")
