@@ -7,6 +7,11 @@ SmartTimetable ERP is a role-based college timetable management system with:
 - Student/Teacher personalized timetable views
 - Academic calendar and event management
 
+## UI Preview
+
+### Login Page
+![SmartTimetable Login Page](static/screenshots/login-page.png)
+
 ## Tech Stack
 - Python 3.11+
 - Flask
