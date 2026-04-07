@@ -3,15 +3,39 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 import timetable
 import os
+import time
+import base64
 from datetime import datetime
 import json
 import uuid
 import re
+import secrets
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
+from urllib.error import URLError, HTTPError
+
+
+def load_env_file(path):
+    if not os.path.exists(path):
+        return
+    with open(path, "r", encoding="utf-8") as f:
+        for raw in f:
+            line = raw.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            key = key.strip()
+            value = value.strip().strip('"').strip("'")
+            if key and key not in os.environ:
+                os.environ[key] = value
+
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+load_env_file(os.path.join(BASE_DIR, ".env"))
 
 app = Flask(__name__)
-app.secret_key = "very-secret-key"
+app.secret_key = os.environ.get("FLASK_SECRET_KEY", "very-secret-key")
 print("SMART TIMETABLE SERVER STARTED")
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 USERS_FILE = os.path.join(BASE_DIR, "users.txt")
 PENDING_FILE = os.path.join(BASE_DIR, "users_pending.txt")
 DATA_FILE = os.path.join(BASE_DIR, "data.txt")
@@ -19,7 +43,7 @@ TIMETABLE_FILE = os.path.join(BASE_DIR, "timetable_output.txt")
 HISTORY_FILE = os.path.join(BASE_DIR, "approval_history.txt")
 PREFERENCE_REQUESTS_FILE = os.path.join(BASE_DIR, "preference_requests.txt")
 PREFERENCE_HISTORY_FILE = os.path.join(BASE_DIR, "preference_history.txt")
-MAX_ROOM_CAPACITY = 50
+MAX_ROOM_CAPACITY = 120
 PROFILE_UPLOAD_DIR = os.path.join(BASE_DIR, "static", "profile_pics")
 ALLOWED_IMAGE_EXT = {".png", ".jpg", ".jpeg", ".webp"}
 EVENTS_FILE = os.path.join(BASE_DIR, "events.txt")
@@ -37,6 +61,22 @@ GOVERNMENT_HOLIDAYS = [
     ("10-02", "Gandhi Jayanti"),
     ("12-25", "Christmas")
 ]
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "").strip()
+GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", "").strip()
+GOOGLE_REDIRECT_URI = os.environ.get(
+    "GOOGLE_REDIRECT_URI",
+    "http://127.0.0.1:5000/auth/google/callback"
+).strip()
+GOOGLE_ALLOWED_DOMAIN = os.environ.get("GOOGLE_ALLOWED_DOMAIN", "").strip().lower()
+TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID", "").strip()
+TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN", "").strip()
+TWILIO_VERIFY_SERVICE_SID = os.environ.get("TWILIO_VERIFY_SERVICE_SID", "").strip()
+OTP_EXPIRY_SECONDS = int(os.environ.get("OTP_EXPIRY_SECONDS", "300"))
+OTP_MAX_ATTEMPTS = int(os.environ.get("OTP_MAX_ATTEMPTS", "5"))
+OTP_RESEND_COOLDOWN_SECONDS = int(os.environ.get("OTP_RESEND_COOLDOWN_SECONDS", "30"))
+OTP_MAX_REQUESTS_PER_HOUR = int(os.environ.get("OTP_MAX_REQUESTS_PER_HOUR", "5"))
+_OTP_SESSION_STATE = {}
+_OTP_PHONE_SEND_LOGS = {}
 
 
 def infer_default_semester_key(month):
@@ -78,13 +118,16 @@ def parse_user_line(line):
     parts = line.strip().split(",")
     if len(parts) < 4:
         return None
+    profile_pic = parts[5] if len(parts) >= 6 else ""
+    phone = parts[6] if len(parts) >= 7 else ""
     return {
         "email": parts[0],
         "hash": parts[1],
         "role": parts[2],
         "name": parts[3],
         "department": parts[4] if len(parts) >= 5 else "ALL",
-        "profile_pic": parts[5] if len(parts) >= 6 else ""
+        "profile_pic": profile_pic,
+        "phone": phone
     }
 
 
@@ -419,9 +462,10 @@ def save_users(users):
         for u in users:
             department = u.get("department", "ALL") or "ALL"
             profile_pic = u.get("profile_pic", "")
+            phone = u.get("phone", "")
             f.write(
                 f"{u['email']},{u['hash']},{u['role']},"
-                f"{u['name']},{department},{profile_pic}\n"
+                f"{u['name']},{department},{profile_pic},{phone}\n"
             )
 
 
@@ -645,6 +689,151 @@ def infer_department_from_email(email):
     return "ALL"
 
 
+def find_approved_user(email, role):
+    email_norm = (email or "").strip().lower()
+    role_norm = (role or "").strip().lower()
+    for user in load_users():
+        if user.get("role", "").strip().lower() != role_norm:
+            continue
+        if user.get("email", "").strip().lower() == email_norm:
+            return user
+    return None
+
+
+def find_pending_user(email, role):
+    email_norm = (email or "").strip().lower()
+    role_norm = (role or "").strip().lower()
+    if not os.path.exists(PENDING_FILE):
+        return None
+    with open(PENDING_FILE) as f:
+        for line in f:
+            pending = parse_pending_line(line)
+            if not pending:
+                continue
+            if pending.get("role", "").strip().lower() != role_norm:
+                continue
+            if pending.get("email", "").strip().lower() == email_norm:
+                return pending
+    return None
+
+
+def set_user_session(user):
+    role = user.get("role", "").strip().lower()
+    session["email"] = user.get("email", "")
+    session["role"] = role
+    session["name"] = user.get("name", "")
+    dept = user.get("department", "ALL")
+    if role == "student" and (not dept or dept.upper() == "ALL"):
+        dept = infer_department_from_email(user.get("email", ""))
+    session["department"] = dept
+    session["profile_pic"] = user.get("profile_pic", "")
+
+
+def role_dashboard_path(role):
+    role_value = (role or "").strip().lower()
+    if role_value == "admin":
+        return "/admin/dashboard"
+    if role_value == "teacher":
+        return "/teacher/dashboard"
+    if role_value == "student":
+        return "/student/dashboard"
+    return "/login"
+
+
+def http_get_json(url, headers=None, timeout=12):
+    req = Request(url, headers=headers or {})
+    with urlopen(req, timeout=timeout) as resp:
+        body = resp.read().decode("utf-8")
+    return json.loads(body)
+
+
+def http_post_form_json(url, form_data, timeout=12):
+    payload = urlencode(form_data).encode("utf-8")
+    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    req = Request(url, data=payload, headers=headers)
+    with urlopen(req, timeout=timeout) as resp:
+        body = resp.read().decode("utf-8")
+    return json.loads(body)
+
+
+def build_login_error_redirect(message):
+    msg = (message or "Authentication failed.").strip()
+    return redirect("/login?" + urlencode({"error": msg}))
+
+
+def normalize_phone_e164_india(raw_phone):
+    phone = re.sub(r"\D", "", (raw_phone or "").strip())
+    if phone.startswith("0") and len(phone) == 11:
+        phone = phone[1:]
+    if len(phone) == 10:
+        return f"+91{phone}"
+    if len(phone) == 12 and phone.startswith("91"):
+        return f"+{phone}"
+    if len(phone) == 13 and phone.startswith("091"):
+        return f"+91{phone[3:]}"
+    if raw_phone and raw_phone.strip().startswith("+") and len(phone) == 12 and phone.startswith("91"):
+        return raw_phone.strip()
+    return ""
+
+
+def twilio_post_form_json(url, form_data, timeout=12):
+    payload = urlencode(form_data).encode("utf-8")
+    token = f"{TWILIO_ACCOUNT_SID}:{TWILIO_AUTH_TOKEN}".encode("utf-8")
+    auth_header = "Basic " + base64.b64encode(token).decode("ascii")
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization": auth_header
+    }
+    req = Request(url, data=payload, headers=headers)
+    with urlopen(req, timeout=timeout) as resp:
+        body = resp.read().decode("utf-8")
+    return json.loads(body)
+
+
+def otp_session_key(email, role):
+    return f"{(email or '').strip().lower()}|{(role or '').strip().lower()}"
+
+
+def prune_phone_send_log(phone):
+    now = int(time.time())
+    entries = _OTP_PHONE_SEND_LOGS.get(phone, [])
+    entries = [ts for ts in entries if now - ts <= 3600]
+    _OTP_PHONE_SEND_LOGS[phone] = entries
+    return entries
+
+
+def save_otp_session(email, role, phone):
+    key = otp_session_key(email, role)
+    _OTP_SESSION_STATE[key] = {
+        "email": (email or "").strip().lower(),
+        "role": (role or "").strip().lower(),
+        "phone": phone,
+        "sent_at": int(time.time()),
+        "attempts": 0
+    }
+
+
+def get_otp_session(email, role):
+    key = otp_session_key(email, role)
+    return _OTP_SESSION_STATE.get(key)
+
+
+def mask_phone(phone):
+    digits = re.sub(r"\D", "", phone or "")
+    if len(digits) < 4:
+        return "******"
+    return f"+{digits[:2]}******{digits[-2:]}"
+
+
+def get_google_missing_keys():
+    missing = []
+    if not GOOGLE_CLIENT_ID:
+        missing.append("GOOGLE_CLIENT_ID")
+    if not GOOGLE_CLIENT_SECRET:
+        missing.append("GOOGLE_CLIENT_SECRET")
+    return missing
+
+
 # =====================================================
 # HOME → REDIRECT TO LOGIN
 # =====================================================
@@ -660,10 +849,13 @@ def home():
 def login():
 
     if request.method == "GET":
+        google_missing = get_google_missing_keys()
         return render_template(
             "login.html",
             message=request.args.get("message", ""),
-            error=request.args.get("error", "")
+            error=request.args.get("error", ""),
+            google_enabled=len(google_missing) == 0,
+            google_missing=", ".join(google_missing)
         )
 
     # ---------------- ADMIN / TEACHER ----------------
@@ -685,14 +877,7 @@ def login():
                 and user["role"] == role
                 and check_password_hash(user["hash"], password)
             ):
-                session["email"] = user["email"]
-                session["role"] = user["role"]
-                session["name"] = user["name"]
-                dept = user.get("department", "ALL")
-                if role == "student" and (not dept or dept.upper() == "ALL"):
-                    dept = infer_department_from_email(user["email"])
-                session["department"] = dept
-                session["profile_pic"] = user.get("profile_pic", "")
+                set_user_session(user)
 
                 if role == "admin":
                     return redirect("/admin/dashboard")
@@ -702,6 +887,312 @@ def login():
                     return redirect("/student/dashboard")
 
     return redirect("/login?error=Invalid+credentials+or+not+approved+yet.")
+
+
+@app.route("/auth/google")
+def auth_google():
+    mode = request.args.get("mode", "login").strip().lower()
+    role = request.args.get("role", "").strip().lower()
+    login_hint = request.args.get("login_hint", "").strip().lower()
+    if mode not in ("login", "signup"):
+        return redirect("/login?error=Invalid+Google+auth+request.")
+    if role not in ("teacher", "student"):
+        return redirect("/login?error=Select+Teacher+or+Student+before+Google+auth.")
+
+    department = request.args.get("department", "").strip().upper()
+    if mode == "signup":
+        if not department:
+            return redirect("/login?error=Department+is+required+for+Google+signup.")
+        if department not in ALLOWED_DEPARTMENTS:
+            return redirect("/login?error=Invalid+department+for+Google+signup.")
+
+    missing = get_google_missing_keys()
+    if missing:
+        missing_text = ",".join(missing)
+        return redirect("/login?error=Google+Sign-In+not+configured:+missing+" + missing_text)
+
+    state = secrets.token_urlsafe(24)
+    session["google_oauth_state"] = state
+    session["google_oauth_mode"] = mode
+    session["google_login_role"] = role
+    session["google_signup_department"] = department if mode == "signup" else ""
+    params = {
+        "client_id": GOOGLE_CLIENT_ID,
+        "redirect_uri": GOOGLE_REDIRECT_URI,
+        "response_type": "code",
+        "scope": "openid email profile",
+        "state": state
+    }
+    if login_hint and "@" in login_hint:
+        params["login_hint"] = login_hint
+    if GOOGLE_ALLOWED_DOMAIN:
+        params["hd"] = GOOGLE_ALLOWED_DOMAIN
+    auth_url = "https://accounts.google.com/o/oauth2/v2/auth?" + urlencode(params)
+    return redirect(auth_url)
+
+
+@app.route("/auth/google/callback")
+def auth_google_callback():
+    oauth_error = request.args.get("error", "").strip()
+    if oauth_error:
+        return redirect("/login?error=Google+login+was+cancelled+or+failed.")
+
+    state = request.args.get("state", "").strip()
+    expected_state = session.pop("google_oauth_state", "")
+    mode = session.pop("google_oauth_mode", "login").strip().lower()
+    role = session.pop("google_login_role", "").strip().lower()
+    signup_department = session.pop("google_signup_department", "").strip().upper()
+    code = request.args.get("code", "").strip()
+
+    if not state or not expected_state or state != expected_state:
+        return redirect("/login?error=Google+login+state+mismatch.+Try+again.")
+    if mode not in ("login", "signup"):
+        return redirect("/login?error=Invalid+Google+auth+mode.")
+    if role not in ("teacher", "student"):
+        return redirect("/login?error=Invalid+role+for+Google+login.")
+    if not code:
+        return redirect("/login?error=Google+authorization+code+missing.")
+
+    try:
+        token_data = http_post_form_json(
+            "https://oauth2.googleapis.com/token",
+            {
+                "code": code,
+                "client_id": GOOGLE_CLIENT_ID,
+                "client_secret": GOOGLE_CLIENT_SECRET,
+                "redirect_uri": GOOGLE_REDIRECT_URI,
+                "grant_type": "authorization_code"
+            }
+        )
+    except HTTPError as e:
+        message = "Google token exchange failed."
+        try:
+            payload = json.loads(e.read().decode("utf-8"))
+            message = payload.get("error_description") or payload.get("error") or message
+        except Exception:
+            pass
+        return build_login_error_redirect(f"Google login failed: {message}")
+    except (URLError, TimeoutError, ValueError):
+        return build_login_error_redirect("Google login failed due to network/timeout. Please retry.")
+
+    id_token = token_data.get("id_token", "")
+    access_token = token_data.get("access_token", "")
+    if not id_token and not access_token:
+        return build_login_error_redirect("Google token exchange succeeded but no usable token was returned.")
+
+    token_info = {}
+    if id_token:
+        try:
+            token_info = http_get_json(
+                "https://oauth2.googleapis.com/tokeninfo?" + urlencode({"id_token": id_token})
+            )
+        except Exception:
+            token_info = {}
+
+    if not token_info and access_token:
+        try:
+            token_info = http_get_json(
+                "https://openidconnect.googleapis.com/v1/userinfo",
+                headers={"Authorization": f"Bearer {access_token}"}
+            )
+        except HTTPError as e:
+            message = "Unable to read Google user profile."
+            try:
+                payload = json.loads(e.read().decode("utf-8"))
+                message = payload.get("error_description") or payload.get("error") or message
+            except Exception:
+                pass
+            return build_login_error_redirect(f"Google login verification failed: {message}")
+        except (URLError, TimeoutError, ValueError):
+            return build_login_error_redirect("Unable to verify Google account details right now. Please retry.")
+
+    if not token_info:
+        return build_login_error_redirect("Google login verification failed. Please retry in a minute.")
+
+    issuer = token_info.get("iss", "")
+    audience = token_info.get("aud", "")
+    email_verified = token_info.get("email_verified", "")
+    email = token_info.get("email", "").strip()
+    name = token_info.get("name", "").strip()
+
+    if issuer and issuer not in ("https://accounts.google.com", "accounts.google.com"):
+        return build_login_error_redirect("Invalid Google token issuer.")
+    if audience and audience != GOOGLE_CLIENT_ID:
+        return build_login_error_redirect("Invalid Google token audience.")
+    if str(email_verified).lower() not in ("true", "1"):
+        return build_login_error_redirect("Google email must be verified.")
+    if not email:
+        return build_login_error_redirect("Unable to read email from Google account.")
+    if GOOGLE_ALLOWED_DOMAIN:
+        email_domain = email.split("@")[-1].lower() if "@" in email else ""
+        if email_domain != GOOGLE_ALLOWED_DOMAIN:
+            return build_login_error_redirect("Use your institutional Google account only.")
+
+    if mode == "signup":
+        if not name:
+            name = email.split("@")[0]
+        department = signup_department or infer_department_from_email(email)
+        if department not in ALLOWED_DEPARTMENTS:
+            department = "ALL"
+
+        if find_approved_user(email, role):
+            return redirect("/login?message=Account+already+approved.+Use+Google+login+or+password+login.")
+        if find_pending_user(email, role):
+            return redirect("/login?message=Google+signup+already+pending+admin+approval.")
+
+        random_password_hash = generate_password_hash(secrets.token_urlsafe(24))
+        append_line_safe(PENDING_FILE, f"{email},{name},{department},{role},{random_password_hash}")
+        return redirect("/login?message=Google+signup+submitted.+Wait+for+admin+approval.")
+
+    user = find_approved_user(email, role)
+    if not user:
+        return redirect("/login?error=No+approved+account+for+this+email+and+role.")
+
+    set_user_session(user)
+
+    if role == "teacher":
+        return redirect("/teacher/dashboard")
+    return redirect("/student/dashboard")
+
+
+# =====================================================
+# PHONE OTP LOGIN (TEACHER / STUDENT)
+# =====================================================
+@app.route("/auth/phone/send-otp", methods=["POST"])
+def auth_phone_send_otp():
+    role = (request.form.get("role") or "").strip().lower()
+    email = (request.form.get("email") or "").strip().lower()
+    phone = normalize_phone_e164_india(request.form.get("phone", ""))
+
+    if role not in ("teacher", "student"):
+        return jsonify({"ok": False, "error": "Select Teacher or Student role."}), 400
+    if not email or not phone:
+        return jsonify({"ok": False, "error": "Email and valid Indian phone number are required."}), 400
+    if not TWILIO_ACCOUNT_SID or not TWILIO_AUTH_TOKEN or not TWILIO_VERIFY_SERVICE_SID:
+        return jsonify({"ok": False, "error": "Phone OTP is not configured on server."}), 500
+
+    user = find_approved_user(email, role)
+    if not user:
+        return jsonify({"ok": False, "error": "No approved account for this email and role."}), 404
+
+    existing_phone = normalize_phone_e164_india(user.get("phone", ""))
+    if existing_phone and existing_phone != phone:
+        return jsonify({"ok": False, "error": "This account is already linked to a different phone."}), 409
+
+    otp_state = get_otp_session(email, role)
+    now = int(time.time())
+    if otp_state and now - otp_state.get("sent_at", 0) < OTP_RESEND_COOLDOWN_SECONDS:
+        return jsonify({"ok": False, "error": f"Please wait {OTP_RESEND_COOLDOWN_SECONDS} seconds before resending OTP."}), 429
+
+    recent_sends = prune_phone_send_log(phone)
+    if len(recent_sends) >= OTP_MAX_REQUESTS_PER_HOUR:
+        return jsonify({"ok": False, "error": "OTP limit reached for this phone. Try again in an hour."}), 429
+
+    verify_url = f"https://verify.twilio.com/v2/Services/{TWILIO_VERIFY_SERVICE_SID}/Verifications"
+    try:
+        twilio_post_form_json(verify_url, {"To": phone, "Channel": "sms"})
+    except HTTPError as e:
+        details = "Unable to send OTP right now."
+        try:
+            body = e.read().decode("utf-8")
+            payload = json.loads(body)
+            details = payload.get("message", details)
+        except Exception:
+            pass
+        return jsonify({"ok": False, "error": details}), 502
+    except (URLError, TimeoutError, ValueError):
+        return jsonify({"ok": False, "error": "Unable to send OTP right now."}), 502
+
+    if not existing_phone:
+        users = load_users()
+        for u in users:
+            if (
+                (u.get("email", "").strip().lower() == email)
+                and (u.get("role", "").strip().lower() == role)
+            ):
+                u["phone"] = phone
+                break
+        save_users(users)
+
+    recent_sends.append(now)
+    _OTP_PHONE_SEND_LOGS[phone] = recent_sends
+    save_otp_session(email, role, phone)
+
+    return jsonify({
+        "ok": True,
+        "message": f"OTP sent to {mask_phone(phone)}.",
+        "cooldown_seconds": OTP_RESEND_COOLDOWN_SECONDS,
+        "expires_in_seconds": OTP_EXPIRY_SECONDS
+    })
+
+
+@app.route("/auth/phone/verify-otp", methods=["POST"])
+def auth_phone_verify_otp():
+    role = (request.form.get("role") or "").strip().lower()
+    email = (request.form.get("email") or "").strip().lower()
+    phone = normalize_phone_e164_india(request.form.get("phone", ""))
+    code = (request.form.get("otp") or "").strip()
+
+    if role not in ("teacher", "student"):
+        return jsonify({"ok": False, "error": "Select Teacher or Student role."}), 400
+    if not email or not phone or not code:
+        return jsonify({"ok": False, "error": "Role, email, phone and OTP are required."}), 400
+    if not TWILIO_ACCOUNT_SID or not TWILIO_AUTH_TOKEN or not TWILIO_VERIFY_SERVICE_SID:
+        return jsonify({"ok": False, "error": "Phone OTP is not configured on server."}), 500
+
+    otp_state = get_otp_session(email, role)
+    if not otp_state:
+        return jsonify({"ok": False, "error": "Send OTP first."}), 400
+    if otp_state.get("phone", "") != phone:
+        return jsonify({"ok": False, "error": "Phone number does not match the OTP request."}), 400
+
+    now = int(time.time())
+    sent_at = int(otp_state.get("sent_at", 0))
+    if now - sent_at > OTP_EXPIRY_SECONDS:
+        _OTP_SESSION_STATE.pop(otp_session_key(email, role), None)
+        return jsonify({"ok": False, "error": "OTP expired. Send a new OTP."}), 400
+
+    attempts = int(otp_state.get("attempts", 0))
+    if attempts >= OTP_MAX_ATTEMPTS:
+        _OTP_SESSION_STATE.pop(otp_session_key(email, role), None)
+        return jsonify({"ok": False, "error": "Maximum OTP attempts reached. Send new OTP."}), 429
+
+    verify_check_url = f"https://verify.twilio.com/v2/Services/{TWILIO_VERIFY_SERVICE_SID}/VerificationCheck"
+    try:
+        payload = twilio_post_form_json(verify_check_url, {"To": phone, "Code": code})
+    except HTTPError as e:
+        details = "Unable to verify OTP right now."
+        try:
+            body = e.read().decode("utf-8")
+            parsed = json.loads(body)
+            details = parsed.get("message", details)
+        except Exception:
+            pass
+        return jsonify({"ok": False, "error": details}), 502
+    except (URLError, TimeoutError, ValueError):
+        return jsonify({"ok": False, "error": "Unable to verify OTP right now."}), 502
+
+    if payload.get("status", "").strip().lower() != "approved":
+        otp_state["attempts"] = attempts + 1
+        remaining = max(OTP_MAX_ATTEMPTS - otp_state["attempts"], 0)
+        if remaining == 0:
+            _OTP_SESSION_STATE.pop(otp_session_key(email, role), None)
+            return jsonify({"ok": False, "error": "Invalid OTP. Maximum attempts reached."}), 429
+        return jsonify({"ok": False, "error": f"Invalid OTP. {remaining} attempt(s) left."}), 400
+
+    user = find_approved_user(email, role)
+    if not user:
+        _OTP_SESSION_STATE.pop(otp_session_key(email, role), None)
+        return jsonify({"ok": False, "error": "No approved account for this email and role."}), 404
+
+    linked_phone = normalize_phone_e164_india(user.get("phone", ""))
+    if linked_phone and linked_phone != phone:
+        _OTP_SESSION_STATE.pop(otp_session_key(email, role), None)
+        return jsonify({"ok": False, "error": "This account is linked to a different phone."}), 409
+
+    set_user_session(user)
+    _OTP_SESSION_STATE.pop(otp_session_key(email, role), None)
+    return jsonify({"ok": True, "redirect": role_dashboard_path(role), "message": "Phone OTP login successful."})
 
 
 # =====================================================
@@ -995,7 +1486,7 @@ def approve_preference():
     try:
         if int(approved["students"]) > MAX_ROOM_CAPACITY:
             return redirect(
-                "/admin/dashboard?error=Cannot+approve:+students+exceed+max+room+capacity+(50).+Please+edit+request.&section=preferences-section"
+                f"/admin/dashboard?error=Cannot+approve:+students+exceed+max+room+capacity+({MAX_ROOM_CAPACITY}).+Please+edit+request.&section=preferences-section"
             )
     except ValueError:
         return redirect("/admin/dashboard?error=Invalid+students+count+in+request.&section=preferences-section")
@@ -1082,7 +1573,7 @@ def edit_preference():
         try:
             if int(target_req["students"]) > MAX_ROOM_CAPACITY:
                 return redirect(
-                    f"/admin/preferences/edit?id={request_id}&error=Students+exceed+max+room+capacity+(50)."
+                    f"/admin/preferences/edit?id={request_id}&error=Students+exceed+max+room+capacity+({MAX_ROOM_CAPACITY})."
                 )
         except ValueError:
             return redirect(f"/admin/preferences/edit?id={request_id}&error=Invalid+students+count.")
@@ -1772,7 +2263,7 @@ def submit_teacher():
     target = request.form.get("target", "ALL").strip() or "ALL"
     try:
         if int(students) > MAX_ROOM_CAPACITY:
-            return "Students count exceeds max room capacity (50). Please split into multiple batches."
+            return f"Students count exceeds max room capacity ({MAX_ROOM_CAPACITY}). Please split into multiple batches."
     except ValueError:
         return "Invalid students count."
 

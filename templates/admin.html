@@ -279,6 +279,85 @@ td {
     font-size: 14px;
 }
 
+#timetable-section table {
+    table-layout: fixed;
+}
+
+#timetable-section td,
+#timetable-section th {
+    vertical-align: middle;
+}
+
+#timetable-section td:last-child {
+    width: 265px;
+}
+
+#timetable-section th:nth-child(1),
+#timetable-section td:nth-child(1),
+#timetable-section th:nth-child(2),
+#timetable-section td:nth-child(2),
+#timetable-section th:nth-child(5),
+#timetable-section td:nth-child(5),
+#timetable-section th:nth-child(6),
+#timetable-section td:nth-child(6),
+#timetable-section th:nth-child(7),
+#timetable-section td:nth-child(7) {
+    width: 68px;
+}
+
+#timetable-section th:nth-child(4),
+#timetable-section td:nth-child(4) {
+    width: 165px;
+}
+
+#timetable-section th:nth-child(3),
+#timetable-section td:nth-child(3) {
+    width: 350px;
+    word-break: break-word;
+}
+
+.tt-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tt-actions .action-btn {
+    margin-right: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 34px;
+    line-height: 1;
+}
+
+.tt-inline-input,
+.tt-inline-select {
+    width: 100%;
+    min-height: 36px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 7px 10px;
+    font: inherit;
+    background: #f8fbff;
+    color: #0f172a;
+    box-sizing: border-box;
+}
+
+.tt-inline-input:focus,
+.tt-inline-select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+}
+
+@media (max-width: 1200px) {
+    #timetable-section td:last-child {
+        width: 230px;
+    }
+}
+
 .action-btn {
     padding: 6px 12px;
     border-radius: 6px;
@@ -1307,7 +1386,15 @@ td {
             </thead>
             <tbody>
                 {% for row in timetable_rows %}
-                <tr>
+                <tr
+                    data-day="{{ row.day }}"
+                    data-slot="{{ row.slot }}"
+                    data-subject="{{ row.subject }}"
+                    data-teacher="{{ row.teacher }}"
+                    data-room="{{ row.room }}"
+                    data-target="{{ row.target }}"
+                    data-label="{{ row.label if row.label else '' }}"
+                >
                     <td>{{ row.day }}</td>
                     <td>{{ row.slot }}</td>
                     <td>{{ row.subject }}</td>
@@ -1316,24 +1403,32 @@ td {
                     <td>{{ row.target }}</td>
                     <td>{{ row.label if row.label else "-" }}</td>
                     <td>
-                        <a class="action-btn reject"
-                           href="{{ url_for('delete_timetable_entry', day=row.day, slot=row.slot, subject=row.subject, room=row.room, teacher=row.teacher, target=row.target) }}">
-                           Delete
-                        </a>
+                        <div class="tt-actions">
+                            <a class="action-btn reject"
+                               href="{{ url_for('delete_timetable_entry', day=row.day, slot=row.slot, subject=row.subject, room=row.room, teacher=row.teacher, target=row.target) }}">
+                               Delete
+                            </a>
 
-                        {% if row.label == "Teacher Absent" %}
-                        <a class="action-btn"
-                           style="background:#475569;color:#fff;"
-                           href="{{ url_for('label_timetable_absent', day=row.day, slot=row.slot, subject=row.subject, room=row.room, teacher=row.teacher, target=row.target, clear='1') }}">
-                           Clear Label
-                        </a>
-                        {% else %}
-                        <a class="action-btn"
-                           style="background:#f59e0b;color:#fff;"
-                           href="{{ url_for('label_timetable_absent', day=row.day, slot=row.slot, subject=row.subject, room=row.room, teacher=row.teacher, target=row.target) }}">
-                           Mark Absent
-                        </a>
-                        {% endif %}
+                            {% if row.label == "Teacher Absent" %}
+                            <a class="action-btn"
+                               style="background:#475569;color:#fff;"
+                               href="{{ url_for('label_timetable_absent', day=row.day, slot=row.slot, subject=row.subject, room=row.room, teacher=row.teacher, target=row.target, clear='1') }}">
+                               Clear Label
+                            </a>
+                            {% else %}
+                            <a class="action-btn"
+                               style="background:#f59e0b;color:#fff;"
+                               href="{{ url_for('label_timetable_absent', day=row.day, slot=row.slot, subject=row.subject, room=row.room, teacher=row.teacher, target=row.target) }}">
+                               Mark Absent
+                            </a>
+                            {% endif %}
+                            <button type="button"
+                               class="action-btn"
+                               style="border:none;background:#0ea5e9;color:#fff;cursor:pointer;"
+                               onclick="startAdminInlineEdit(this)">
+                               Edit
+                            </button>
+                        </div>
                     </td>
                 </tr>
                 {% endfor %}
@@ -1736,6 +1831,149 @@ function saveInlineEventEdit(btn) {
     })
     .catch(() => {
         cancelInlineEventEdit(btn);
+    });
+}
+
+function buildAdminTimetableActionHtml(row) {
+    const deleteParams = new URLSearchParams({
+        day: row.day || "",
+        slot: row.slot || "",
+        subject: row.subject || "",
+        room: row.room || "",
+        teacher: row.teacher || "",
+        target: row.target || "ALL"
+    }).toString();
+
+    const labelParams = new URLSearchParams({
+        day: row.day || "",
+        slot: row.slot || "",
+        subject: row.subject || "",
+        room: row.room || "",
+        teacher: row.teacher || "",
+        target: row.target || "ALL"
+    });
+
+    const deleteHref = `/admin/timetable/delete?${deleteParams}`;
+    let labelBtn = "";
+    if ((row.label || "") === "Teacher Absent") {
+        labelParams.append("clear", "1");
+        labelBtn = `<a class="action-btn" style="background:#475569;color:#fff;" href="/admin/timetable/label_absent?${labelParams.toString()}">Clear Label</a>`;
+    } else {
+        labelBtn = `<a class="action-btn" style="background:#f59e0b;color:#fff;" href="/admin/timetable/label_absent?${labelParams.toString()}">Mark Absent</a>`;
+    }
+
+    return `
+        <div class="tt-actions">
+            <a class="action-btn reject" href="${deleteHref}">Delete</a>
+            ${labelBtn}
+            <button type="button" class="action-btn" style="border:none;background:#0ea5e9;color:#fff;cursor:pointer;" onclick="startAdminInlineEdit(this)">Edit</button>
+        </div>
+    `;
+}
+
+function renderAdminTimetableRow(tr, row) {
+    tr.dataset.day = row.day || "";
+    tr.dataset.slot = row.slot || "";
+    tr.dataset.subject = row.subject || "";
+    tr.dataset.teacher = row.teacher || "";
+    tr.dataset.room = row.room || "";
+    tr.dataset.target = row.target || "ALL";
+    tr.dataset.label = row.label || "";
+    tr.dataset.editing = "0";
+    tr._originalData = null;
+
+    const tds = tr.querySelectorAll("td");
+    tds[0].textContent = row.day || "";
+    tds[1].textContent = row.slot || "";
+    tds[2].textContent = row.subject || "";
+    tds[3].textContent = row.teacher || "";
+    tds[4].textContent = row.room || "";
+    tds[5].textContent = row.target || "ALL";
+    tds[6].textContent = row.label ? row.label : "-";
+    tds[7].innerHTML = buildAdminTimetableActionHtml(row);
+}
+
+function startAdminInlineEdit(btn) {
+    const tr = btn.closest("tr");
+    if (!tr || tr.dataset.editing === "1") return;
+    tr.dataset.editing = "1";
+
+    const data = {
+        day: tr.dataset.day || "",
+        slot: tr.dataset.slot || "",
+        subject: tr.dataset.subject || "",
+        teacher: tr.dataset.teacher || "",
+        room: tr.dataset.room || "",
+        target: tr.dataset.target || "ALL",
+        label: tr.dataset.label || ""
+    };
+    tr._originalData = data;
+
+    const tds = tr.querySelectorAll("td");
+    tds[0].innerHTML = `<select class="tt-inline-select"><option ${data.day==="Mon"?"selected":""}>Mon</option><option ${data.day==="Tue"?"selected":""}>Tue</option><option ${data.day==="Wed"?"selected":""}>Wed</option><option ${data.day==="Thu"?"selected":""}>Thu</option><option ${data.day==="Fri"?"selected":""}>Fri</option></select>`;
+    tds[1].innerHTML = `<select class="tt-inline-select"><option ${data.slot==="S1"?"selected":""}>S1</option><option ${data.slot==="S2"?"selected":""}>S2</option><option ${data.slot==="S3"?"selected":""}>S3</option><option ${data.slot==="S4"?"selected":""}>S4</option></select>`;
+    tds[2].innerHTML = `<input class="tt-inline-input" type="text" value="${data.subject.replace(/"/g, "&quot;")}">`;
+    tds[3].innerHTML = `<input class="tt-inline-input" type="text" value="${data.teacher.replace(/"/g, "&quot;")}">`;
+    tds[4].innerHTML = `<input class="tt-inline-input" type="text" value="${data.room.replace(/"/g, "&quot;")}">`;
+    tds[5].innerHTML = `<select class="tt-inline-select"><option ${data.target==="ALL"?"selected":""}>ALL</option><option ${data.target==="CSE"?"selected":""}>CSE</option><option ${data.target==="ECE"?"selected":""}>ECE</option><option ${data.target==="IT"?"selected":""}>IT</option><option ${data.target==="ME"?"selected":""}>ME</option></select>`;
+    tds[6].innerHTML = `<input class="tt-inline-input" type="text" value="${data.label.replace(/"/g, "&quot;")}">`;
+    tds[7].innerHTML = `
+        <div class="tt-actions">
+            <button type="button" class="action-btn approve" style="border:none;cursor:pointer;" onclick="saveAdminInlineEdit(this)">Save</button>
+            <button type="button" class="action-btn" style="border:none;background:#64748b;color:#fff;cursor:pointer;" onclick="cancelAdminInlineEdit(this)">Cancel</button>
+        </div>
+    `;
+}
+
+function cancelAdminInlineEdit(btn) {
+    const tr = btn.closest("tr");
+    if (!tr || !tr._originalData) return;
+    renderAdminTimetableRow(tr, tr._originalData);
+}
+
+function saveAdminInlineEdit(btn) {
+    const tr = btn.closest("tr");
+    const oldData = tr && tr._originalData ? tr._originalData : null;
+    if (!tr || !oldData) return;
+
+    const tds = tr.querySelectorAll("td");
+    const newData = {
+        day: tds[0].querySelector("select").value,
+        slot: tds[1].querySelector("select").value,
+        subject: tds[2].querySelector("input").value.trim(),
+        teacher: tds[3].querySelector("input").value.trim(),
+        room: tds[4].querySelector("input").value.trim(),
+        target: tds[5].querySelector("select").value,
+        label: tds[6].querySelector("input").value.trim()
+    };
+
+    if (!newData.subject || !newData.teacher || !newData.room) return;
+
+    const body = new URLSearchParams({
+        old_day: oldData.day,
+        old_slot: oldData.slot,
+        old_subject: oldData.subject,
+        old_teacher: oldData.teacher,
+        old_room: oldData.room,
+        old_target: oldData.target,
+        day: newData.day,
+        slot: newData.slot,
+        subject: newData.subject,
+        teacher: newData.teacher,
+        room: newData.room,
+        target: newData.target,
+        label: newData.label
+    }).toString();
+
+    fetch("/admin/timetable/update_api", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body
+    }).then(r => r.json()).then(res => {
+        if (!res.ok) throw new Error(res.error || "Update failed");
+        renderAdminTimetableRow(tr, res.row);
+    }).catch(() => {
+        cancelAdminInlineEdit(btn);
     });
 }
 

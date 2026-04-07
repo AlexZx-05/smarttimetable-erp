@@ -71,9 +71,10 @@ def run():
     # -----------------------------
 
     rooms = {
-        "R1": 50,
-        "R2": 40,
-        "R3": 35
+        "R1": 120,
+        "R2": 100,
+        "R3": 80,
+        "R4": 65
     }
 
     slots = [
@@ -156,6 +157,41 @@ def run():
             model += lpSum(
                 x[c][s][r] for c in courses
             ) <= 1
+
+    # Student/department clash prevention:
+    # For each department in each slot, allow at most one class that targets
+    # that department. "ALL" is treated as common to every department.
+    departments = sorted({targets[c] for c in courses if targets[c] != "ALL"})
+    if not departments:
+        departments = ["ALL"]
+
+    for s in slots:
+        # Clash among ALL-targeted common courses.
+        model += lpSum(
+            x[c][s][r]
+            for c in courses if targets[c] == "ALL"
+            for r in rooms
+        ) <= 1
+
+        # Clash per department, including common (ALL) courses.
+        for dept in departments:
+            model += lpSum(
+                x[c][s][r]
+                for c in courses if targets[c] in (dept, "ALL")
+                for r in rooms
+            ) <= 1
+
+    # Room load balancing:
+    # prevent all assignments from collapsing into a single room.
+    total_required_classes = sum(len(preferences[c]) for c in courses)
+    per_room_target = (total_required_classes + len(rooms) - 1) // len(rooms)
+    max_per_room = per_room_target + 1
+    for r in rooms:
+        model += lpSum(
+            x[c][s][r]
+            for c in courses
+            for s in slots
+        ) <= max_per_room
 
 
     # -----------------------------

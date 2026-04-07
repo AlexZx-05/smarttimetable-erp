@@ -129,6 +129,33 @@ http://127.0.0.1:5050/login
 6. Generate timetable
 7. Verify timetable in admin, teacher, and student dashboards
 
+## Google Login Setup (Teacher/Student)
+
+Google login is available on the login page for `Teacher` and `Student` roles.
+It authenticates with Google, then allows access only if the same email+role is already approved in `users.txt`.
+
+### 1. Create OAuth credentials in Google Cloud
+- Create an OAuth 2.0 Web Application credential.
+- Add Authorized Redirect URI:
+  - `http://127.0.0.1:5000/auth/google/callback`
+
+### 2. Set environment variables before running
+```bash
+set GOOGLE_CLIENT_ID=your_google_client_id
+set GOOGLE_CLIENT_SECRET=your_google_client_secret
+set GOOGLE_REDIRECT_URI=http://127.0.0.1:5000/auth/google/callback
+```
+
+Optional (restrict sign-in to one domain):
+```bash
+set GOOGLE_ALLOWED_DOMAIN=iiitr.ac.in
+```
+
+### 3. Run server
+```bash
+python app.py
+```
+
 ## Notes
 - This project uses file-based persistence for academic/demo simplicity.
 - Deleting/editing rows in generate snapshot also syncs source preferences for future generation consistency.
