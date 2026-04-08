@@ -210,8 +210,8 @@
         }
 
         .top-bar {
-            position: sticky;
-            top: 14px;
+            position: relative;
+            top: auto;
             z-index: 20;
             margin-bottom: 24px;
             border: 1px solid var(--line);
@@ -235,6 +235,18 @@
             margin: 2px 0 0 0;
             font-size: 12px;
             color: var(--muted);
+        }
+
+        .top-brand .live-date {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: #eaf7ff;
+            color: #0f5e84;
+            border: 1px solid #c8e7f6;
+            font-size: 11px;
+            font-weight: 700;
         }
 
         .top-right {
@@ -527,8 +539,8 @@
         }
 
         .hero-elevated {
-            position: sticky;
-            top: 10px;
+            position: relative;
+            top: auto;
             z-index: 70;
             margin: 0 0 24px 0;
         }
@@ -912,7 +924,7 @@
         /* ===== ACTION BUTTON ===== */
         .form-actions {
             margin-top: 24px;
-            padding-top: 14px;
+            padding-top: auto;
             border-top: 1px solid #dfebff;
             text-align: right;
         }
@@ -957,21 +969,21 @@
             justify-content: space-between;
             align-items: flex-start;
             gap: 16px;
-            margin-bottom: 18px;
+            margin-bottom: 12px;
         }
 
         .pref-hero h3 {
             margin: 0;
-            font-size: 34px;
-            letter-spacing: -0.4px;
+            font-size: 22px;
+            letter-spacing: -0.2px;
             color: #112b56;
         }
 
         .pref-hero p {
-            margin: 8px 0 0 0;
-            font-size: 14px;
+            margin: 6px 0 0 0;
+            font-size: 12px;
             color: #536991;
-            line-height: 1.55;
+            line-height: 1.45;
             max-width: 640px;
         }
 
@@ -981,15 +993,15 @@
             border: 1px solid #cfe0ff;
             background: #eef4ff;
             color: #1d449d;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
-            padding: 8px 12px;
+            padding: 6px 10px;
         }
 
         .pref-form-shell {
             border: 1px solid #d9e6fb;
             border-radius: 14px;
-            padding: 18px;
+            padding: 14px;
             background: linear-gradient(180deg, #ffffff, #f7fbff);
         }
 
@@ -1017,11 +1029,11 @@
         .pref-field input,
         .pref-field select {
             width: 100%;
-            min-height: 50px;
-            padding: 11px 13px;
+            min-height: 42px;
+            padding: 8px 11px;
             border-radius: 11px;
             border: 1px solid #c9d8ef;
-            font-size: 15px;
+            font-size: 14px;
             color: #12284f;
             background: #fff;
             box-sizing: border-box;
@@ -1043,7 +1055,7 @@
         .pref-sep {
             height: 1px;
             background: linear-gradient(90deg, rgba(37,99,235,0), rgba(37,99,235,0.26), rgba(37,99,235,0));
-            margin: 22px 0;
+            margin: 14px 0;
         }
 
         .pref-slot-grid {
@@ -1055,18 +1067,18 @@
         .pref-slot-card {
             border: 1px solid #d9e6fa;
             border-radius: 14px;
-            padding: 16px;
+            padding: 12px;
             background: linear-gradient(180deg, #ffffff, #f8fbff);
             box-shadow: 0 8px 18px rgba(25, 43, 84, 0.05);
         }
 
         .pref-slot-head {
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
         .pref-slot-head h4 {
             margin: 0;
-            font-size: 28px;
+            font-size: 16px;
             letter-spacing: -0.2px;
             color: #122a52;
         }
@@ -1079,6 +1091,13 @@
             font-weight: 700;
         }
 
+        .pref-slot-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            align-items: end;
+        }
+
         .pref-slot-card .pref-field label {
             font-size: 11px;
             letter-spacing: 0.05em;
@@ -1087,7 +1106,7 @@
 
         .pref-submit-row {
             margin-top: 22px;
-            padding-top: 14px;
+            padding-top: auto;
             border-top: 1px solid #deebff;
             display: flex;
             justify-content: space-between;
@@ -1106,12 +1125,16 @@
             .pref-slot-grid {
                 grid-template-columns: 1fr;
             }
+            .pref-slot-fields {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
             .pref-hero {
                 flex-direction: column;
                 align-items: flex-start;
             }
             .pref-hero h3 {
-                font-size: 30px;
+                font-size: 20px;
             }
             .pref-submit-row {
                 justify-content: flex-end;
@@ -1121,14 +1144,14 @@
         .calendar-toolbar {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             gap: 14px;
             margin-bottom: 14px;
             padding: 14px 16px;
-            border: 1px solid #d8e4fb;
+            border: 1px solid #d7e3f5;
             border-radius: 14px;
-            background: linear-gradient(180deg, #ffffff, #f5f9ff);
-            box-shadow: 0 10px 24px rgba(22, 45, 90, 0.06);
+            background: linear-gradient(180deg, #ffffff, #f8fbff);
+            box-shadow: 0 8px 20px rgba(22, 45, 90, 0.05);
         }
 
         .calendar-toolbar h4 {
@@ -1144,6 +1167,14 @@
             max-width: 520px;
         }
 
+        .calendar-toolbar-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
         .calendar-action-msg {
             font-size: 12px;
             font-weight: 600;
@@ -1153,12 +1184,35 @@
             text-align: right;
         }
 
+        .calendar-add-btn {
+            border: 1px solid #bedef1;
+            background: linear-gradient(90deg, #16a8df, #1497d2);
+            color: #fff;
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .calendar-add-btn:hover {
+            filter: brightness(1.04);
+        }
+
+        .calendar-main-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.8fr) minmax(270px, 1fr);
+            gap: 12px;
+            align-items: start;
+        }
+
         .calendar-surface {
-            border: 1px solid #dbe6f8;
-            border-radius: 14px;
-            background: linear-gradient(180deg, #ffffff, #f9fbff);
+            border: 1px solid #d6e0ef;
+            border-radius: 16px;
+            background: #fff;
             padding: 12px;
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            min-width: 0;
         }
 
         #calendarUI .fc {
@@ -1167,19 +1221,40 @@
 
         #calendarUI .fc-toolbar.fc-header-toolbar {
             margin-bottom: 12px;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 10px;
         }
 
         #calendarUI .fc-toolbar-title {
-            font-size: 22px;
-            color: #14213d;
+            font-size: clamp(20px, 3vw, 30px);
+            color: #15223a;
             font-weight: 700;
             letter-spacing: 0.2px;
+            line-height: 1.15;
+            text-align: center;
+        }
+
+        #calendarUI .fc-toolbar-chunk {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        #calendarUI .fc-toolbar-chunk:nth-child(2) {
+            justify-content: center;
+            min-width: 0;
+        }
+
+        #calendarUI .fc-toolbar-chunk:last-child {
+            justify-content: flex-end;
         }
 
         #calendarUI .fc-button {
-            border: 1px solid #d3ddf2 !important;
-            background: #fff !important;
-            color: #243b66 !important;
+            border: 1px solid #bedef1 !important;
+            background: linear-gradient(90deg, #16a8df, #1497d2) !important;
+            color: #fff !important;
             border-radius: 9px !important;
             font-weight: 600 !important;
             padding: 7px 12px !important;
@@ -1187,20 +1262,62 @@
             text-transform: capitalize !important;
         }
 
+        #calendarUI .fc-button-group {
+            display: inline-flex !important;
+            gap: 8px;
+        }
+
+        #calendarUI .fc-button-group > .fc-button {
+            margin: 0 !important;
+            margin-left: 8px !important;
+            border-radius: 10px !important;
+        }
+
+        #calendarUI .fc-button-group > .fc-button:first-child {
+            margin-left: 0 !important;
+        }
+
         #calendarUI .fc-button:hover {
-            background: #eef4ff !important;
-            border-color: #c1d2f4 !important;
+            filter: brightness(1.04);
+        }
+
+        @media (max-width: 980px) {
+            #calendarUI .fc-toolbar.fc-header-toolbar {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            #calendarUI .fc-toolbar-chunk {
+                justify-content: center !important;
+                flex-wrap: wrap;
+            }
         }
 
         #calendarUI .fc-button-primary:not(:disabled).fc-button-active,
         #calendarUI .fc-button-primary:not(:disabled):active {
-            background: linear-gradient(90deg, #2d6cdf, #4f83f6) !important;
-            border-color: #2d6cdf !important;
+            background: linear-gradient(90deg, #1497d2, #117fb2) !important;
+            border-color: #117fb2 !important;
             color: #fff !important;
         }
 
+        #calendarUI .fc-col-header {
+            border: none !important;
+        }
+
+        #calendarUI .fc-col-header-cell {
+            border: none !important;
+            background: linear-gradient(90deg, #16ace0, #1496d1);
+        }
+
+        #calendarUI .fc-col-header-cell:first-child {
+            border-radius: 999px 0 0 999px;
+        }
+
+        #calendarUI .fc-col-header-cell:last-child {
+            border-radius: 0 999px 999px 0;
+        }
+
         #calendarUI .fc-col-header-cell-cushion {
-            color: #274174;
+            color: #f8fdff;
             font-weight: 700;
             padding: 9px 0;
             text-transform: uppercase;
@@ -1218,70 +1335,89 @@
 
         #calendarUI .fc-daygrid-day-frame {
             padding: 3px;
+            min-height: 76px;
         }
 
         #calendarUI .fc-daygrid-day-number {
-            color: #1f335c;
+            color: #2b2f37;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 12px;
             padding: 6px 8px;
         }
 
         #calendarUI .fc .fc-daygrid-day.fc-day-today {
-            background: #eef4ff !important;
+            background: #e8f6ff !important;
         }
 
         #calendarUI .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
-            background: #dbe8ff;
+            background: #d7effb;
             border-radius: 8px;
-            color: #1d4cb5;
+            color: #0f5e84;
         }
 
         #calendarUI .fc-event {
             border: none !important;
-            border-radius: 8px !important;
+            border-left: 3px solid #0877ab !important;
+            border-radius: 6px !important;
             padding: 2px 6px !important;
-            font-size: 12px !important;
+            font-size: 11px !important;
             font-weight: 600 !important;
-            background: linear-gradient(90deg, #2d6cdf, #5789f6) !important;
-            box-shadow: 0 2px 8px rgba(45, 108, 223, 0.25);
+            background: #e8f7ff !important;
+            color: #0d5f87 !important;
+            box-shadow: none;
+        }
+
+        #calendarUI .fc-event-title,
+        #calendarUI .fc-event-main-frame {
+            text-shadow: none !important;
+            filter: none !important;
         }
 
         #calendarUI .fc-event.is-important {
-            background: linear-gradient(90deg, #c2410c, #ea580c) !important;
-            box-shadow: 0 2px 8px rgba(194, 65, 12, 0.25);
+            border-left-color: #d97706 !important;
+            background: #fff1dd !important;
+            color: #9a3412 !important;
         }
 
         #calendarUI .fc-event.is-government-holiday {
-            background: linear-gradient(90deg, #ff7a18, #ffb02e) !important;
-            box-shadow: 0 2px 10px rgba(255, 122, 24, 0.30);
-            color: #ffffff !important;
+            border-left-color: #0f766e !important;
+            background: #dcfdf7 !important;
+            color: #0f766e !important;
             border: none !important;
         }
 
         #calendarUI .fc-event.is-important.is-government-holiday {
-            background: linear-gradient(90deg, #ff7a18, #ffb02e) !important;
-            box-shadow: 0 2px 10px rgba(255, 122, 24, 0.30);
+            border-left-color: #0f766e !important;
+            background: #dcfdf7 !important;
+            color: #0f766e !important;
+        }
+
+        #calendarUI .fc-theme-standard td,
+        #calendarUI .fc-theme-standard th {
+            border-color: #e3e9f3 !important;
         }
 
         .vacation-panel {
-            margin-top: 16px;
-            border: 1px solid #f3d8b0;
+            margin-top: 14px;
+            border: 1px dashed #9ecadd;
             border-radius: 14px;
-            background: linear-gradient(180deg, #fffdf7, #fff7eb);
+            background: linear-gradient(180deg, #f9fdff, #f3fbff);
             padding: 14px 16px;
         }
 
         .vacation-panel h4 {
             margin: 0 0 10px 0;
             font-size: 16px;
-            color: #5f370e;
+            color: #0f5e84;
             letter-spacing: 0.01em;
         }
 
         .vacation-list {
             display: grid;
             gap: 8px;
+            max-height: 360px;
+            overflow: auto;
+            padding-right: 2px;
         }
 
         .vacation-item {
@@ -1291,7 +1427,7 @@
             padding: 9px 10px;
             border-radius: 10px;
             background: #ffffff;
-            border: 1px solid #f3e2cb;
+            border: 1px solid #d5e8f3;
         }
 
         .vacation-date {
@@ -1301,8 +1437,8 @@
             min-width: 106px;
             padding: 5px 8px;
             border-radius: 999px;
-            background: linear-gradient(90deg, #fff2dc, #ffe6be);
-            color: #7a3e00;
+            background: #e8f7ff;
+            color: #0d5f87;
             font-size: 11px;
             font-weight: 700;
             letter-spacing: 0.03em;
@@ -1311,7 +1447,7 @@
         .vacation-title {
             font-size: 13px;
             font-weight: 700;
-            color: #4a2f0c;
+            color: #1d334d;
         }
 
         .vacation-empty {
@@ -1321,6 +1457,49 @@
             border: 1px dashed #cfdaef;
             border-radius: 10px;
             background: #f8fbff;
+        }
+
+        .teacher-event-insights {
+            margin-top: 12px;
+            border: 1px solid #dce6f7;
+            border-radius: 12px;
+            background: linear-gradient(180deg, #ffffff, #f8fbff);
+            padding: 12px;
+        }
+
+        .teacher-event-insights.is-hidden {
+            display: none;
+        }
+
+        .teacher-event-insights h4 {
+            margin: 0 0 8px 0;
+            font-size: 15px;
+            color: #1a2c50;
+        }
+
+        .teacher-event-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 8px;
+        }
+
+        .teacher-event-item {
+            border: 1px solid #e1e8f6;
+            border-radius: 10px;
+            background: #fff;
+            padding: 8px 10px;
+        }
+
+        .teacher-event-item .k {
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        .teacher-event-item .v {
+            margin-top: 2px;
+            font-size: 13px;
+            color: #0f172a;
+            font-weight: 600;
         }
 
         .event-modal-overlay {
@@ -1463,7 +1642,7 @@
         }
 
         .event-actions {
-            margin-top: 14px;
+            margin-top: auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -1503,9 +1682,17 @@
                 align-items: flex-start;
             }
 
+            .calendar-toolbar-right {
+                align-items: flex-start;
+            }
+
             .calendar-action-msg {
                 text-align: left;
                 min-width: 0;
+            }
+
+            .calendar-main-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -1579,11 +1766,14 @@
             <div class="hero-elevated">
             <div class="top-bar">
                 <div class="top-brand">
-                    <h1>Welcome, {{ teacher }}</h1>
-                    <p>SmartTimetable Faculty Workspace</p>
+                    <h1 id="liveTeacherWelcome">Welcome, {{ teacher }}</h1>
+                    <p id="liveTeacherLine">
+                        SmartTimetable Faculty Workspace
+                        <span id="liveTeacherDate" class="live-date"></span>
+                    </p>
                 </div>
                 <div class="top-right">
-                    <div class="top-pill">
+                    <div class="top-pill" id="liveTeacherPortal">
                         <i data-lucide="briefcase"></i>
                         {{ teacher_department }} | Faculty Portal
                     </div>
@@ -1804,26 +1994,28 @@
                                     <h4>Class {{ i }}</h4>
                                     <span>Weekly Preference</span>
                                 </div>
-                                <div class="pref-field">
-                                    <label>Day</label>
-                                    <select name="day{{ i }}">
-                                        <option>-</option>
-                                        <option>Mon</option>
-                                        <option>Tue</option>
-                                        <option>Wed</option>
-                                        <option>Thu</option>
-                                        <option>Fri</option>
-                                    </select>
-                                </div>
-                                <div class="pref-field">
-                                    <label>Slot</label>
-                                    <select name="slot{{ i }}">
-                                        <option>-</option>
-                                        <option>S1</option>
-                                        <option>S2</option>
-                                        <option>S3</option>
-                                        <option>S4</option>
-                                    </select>
+                                <div class="pref-slot-fields">
+                                    <div class="pref-field">
+                                        <label>Day</label>
+                                        <select name="day{{ i }}">
+                                            <option>-</option>
+                                            <option>Mon</option>
+                                            <option>Tue</option>
+                                            <option>Wed</option>
+                                            <option>Thu</option>
+                                            <option>Fri</option>
+                                        </select>
+                                    </div>
+                                    <div class="pref-field">
+                                        <label>Slot</label>
+                                        <select name="slot{{ i }}">
+                                            <option>-</option>
+                                            <option>S1</option>
+                                            <option>S2</option>
+                                            <option>S3</option>
+                                            <option>S4</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             {% endfor %}
@@ -1883,6 +2075,14 @@
                             <select id="teacherDeptFilter" style="flex:1; padding:9px 10px; border-radius:8px; border:1px solid #cfd8eb;">
                                 <option value="ALL">All Departments</option>
                             </select>
+                            <select id="teacherDayFilter" style="flex:1; padding:9px 10px; border-radius:8px; border:1px solid #cfd8eb;">
+                                <option value="ALL">All Days</option>
+                                <option value="Mon">Monday</option>
+                                <option value="Tue">Tuesday</option>
+                                <option value="Wed">Wednesday</option>
+                                <option value="Thu">Thursday</option>
+                                <option value="Fri">Friday</option>
+                            </select>
                             <button id="teacherDeptReset" type="button" style="border:none; border-radius:8px; background:#dde6f7; color:#1e293b; padding:9px 12px; cursor:pointer;">Reset</button>
                         </div>
                         <div id="teacherFilterCount" style="margin-top:8px; font-size:12px; color:#334155;"></div>
@@ -1900,23 +2100,29 @@
                             <h4>Faculty Event Planner</h4>
                             <p>Click any date to create an event. Click your event to edit or delete.</p>
                         </div>
-                        <div id="calendarActionMsg" class="calendar-action-msg"></div>
+                        <div class="calendar-toolbar-right">
+                            <div id="calendarActionMsg" class="calendar-action-msg"></div>
+                            <button type="button" class="calendar-add-btn" onclick="openTeacherEventModal('add', { date: '', type: 'general', target: '{{ teacher_department | upper }}', important: false })">Add Event</button>
+                        </div>
                     </div>
-                    <div id="calendarUI" class="calendar-surface"></div>
-                    <div class="vacation-panel">
-                        <h4>Upcoming Celebration Days & Official Holidays</h4>
-                        {% if vacations %}
-                            <div class="vacation-list">
-                            {% for v in vacations %}
-                            <div class="vacation-item">
-                                <span class="vacation-date">{{ v.date }}</span>
-                                <span class="vacation-title">{{ v.title }}</span>
-                            </div>
-                            {% endfor %}
-                            </div>
-                        {% else %}
-                            <div class="vacation-empty">No upcoming celebration days or official holidays.</div>
-                        {% endif %}
+                    <div class="calendar-main-grid">
+                        <div id="calendarUI" class="calendar-surface"></div>
+                        <div class="vacation-panel">
+                            <h4>Upcoming Celebration Days & Official Holidays</h4>
+                            {% if vacations %}
+                                <div class="vacation-list">
+                                {% for v in vacations %}
+                                <div class="vacation-item">
+                                    <span class="vacation-date">{{ v.date }}</span>
+                                    <span class="vacation-title">{{ v.title }}</span>
+                                </div>
+                                {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="vacation-empty">No upcoming celebration days or official holidays.</div>
+                            {% endif %}
+                            <div id="teacherEventInsights" class="teacher-event-insights is-hidden"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2008,6 +2214,96 @@
         let teacherEventMode = "add";
         let teacherEditingEventId = "";
         let teacherEventLabelColor = "";
+        const teacherDisplayName = "{{ teacher }}";
+        const teacherDeptName = "{{ teacher_department }}";
+        const teacherTodayClassesCount = {{ today_classes | length }};
+
+        function getTeacherActiveSectionLabel() {
+            const activeLink = document.querySelector(".nav-link.active span");
+            if (!activeLink) return "Dashboard";
+            return (activeLink.textContent || "Dashboard").trim();
+        }
+
+        function updateLiveTeacherHeader() {
+            const now = new Date();
+            const hr = now.getHours();
+            let part = "Evening";
+            if (hr < 12) part = "Morning";
+            else if (hr < 17) part = "Afternoon";
+            const sectionLabel = getTeacherActiveSectionLabel();
+
+            const title = document.getElementById("liveTeacherWelcome");
+            const line = document.getElementById("liveTeacherLine");
+            const portal = document.getElementById("liveTeacherPortal");
+            if (title) {
+                title.textContent = `Good ${part}, ${teacherDisplayName}`;
+            }
+            if (line) {
+                line.innerHTML = `SmartTimetable Faculty Workspace | ${sectionLabel} | ${teacherTodayClassesCount} classes today <span id="liveTeacherDate" class="live-date"></span>`;
+            }
+            if (portal) {
+                portal.innerHTML = `<i data-lucide="briefcase"></i>${teacherDeptName} | Faculty Portal | ${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+            }
+            const dateTag = document.getElementById("liveTeacherDate");
+            if (dateTag) {
+                dateTag.textContent = now.toLocaleDateString([], {
+                    weekday: "short",
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric"
+                });
+            }
+            lucide.createIcons();
+        }
+
+        function applyReadableEventStyle(eventEl) {
+            if (!eventEl) return;
+            const bg = window.getComputedStyle(eventEl).backgroundColor || "";
+            const m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+            if (!m) return;
+            const r = parseInt(m[1], 10) / 255;
+            const g = parseInt(m[2], 10) / 255;
+            const b = parseInt(m[3], 10) / 255;
+            const luminance = (0.2126 * r) + (0.7152 * g) + (0.0722 * b);
+            const textColor = luminance > 0.6 ? "#1f2937" : "#ffffff";
+            eventEl.style.setProperty("--fc-event-text-color", textColor);
+            eventEl.style.color = textColor;
+            eventEl.style.textShadow = "none";
+            eventEl.style.fontWeight = "700";
+            eventEl.querySelectorAll(".fc-event-title, .fc-event-time, .fc-event-main-frame, .fc-event-title-container").forEach((node) => {
+                node.style.color = textColor;
+                node.style.textShadow = "none";
+                node.style.fontWeight = "700";
+                node.style.opacity = "1";
+            });
+        }
+
+        function renderTeacherEventInsights(info) {
+            const ext = info.event.extendedProps || {};
+            const subject = ext.subject || info.event.title || "-";
+            const createdBy = ext.creator_name || ext.creator_email || "Unknown";
+            const assignedByLabel = ext.assigned_by_label || "Published by";
+            const audience = ext.target || "ALL";
+            const eventType = ext.type || "general";
+            const eventTypeLabel = ext.type_label || eventType.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+            const priority = ext.important ? "Important" : "Normal";
+            const dateStr = (info.event.startStr || "").slice(0, 10) || "-";
+            const box = document.getElementById("teacherEventInsights");
+            if (!box) return;
+            box.classList.remove("is-hidden");
+            box.innerHTML = `
+                <h4>Event Insights</h4>
+                <div class="teacher-event-grid">
+                    <div class="teacher-event-item"><div class="k">Title</div><div class="v">${info.event.title || "-"}</div></div>
+                    <div class="teacher-event-item"><div class="k">Subject</div><div class="v">${subject}</div></div>
+                    <div class="teacher-event-item"><div class="k">${assignedByLabel}</div><div class="v">${createdBy}</div></div>
+                    <div class="teacher-event-item"><div class="k">Date</div><div class="v">${dateStr}</div></div>
+                    <div class="teacher-event-item"><div class="k">Audience</div><div class="v">${audience}</div></div>
+                    <div class="teacher-event-item"><div class="k">Type</div><div class="v">${eventTypeLabel}</div></div>
+                    <div class="teacher-event-item"><div class="k">Priority</div><div class="v">${priority}</div></div>
+                </div>
+            `;
+        }
 
         function sortRows(rows) {
             return rows.slice().sort((a, b) => {
@@ -2061,11 +2357,15 @@
         }
 
         function renderInstituteTimetable() {
-            const filterEl = document.getElementById("teacherDeptFilter");
-            const selectedDept = filterEl ? filterEl.value : "ALL";
-            const rows = selectedDept === "ALL"
-                ? teacherInstituteRows
-                : teacherInstituteRows.filter(r => (r.target || "ALL").toUpperCase() === selectedDept);
+            const deptFilterEl = document.getElementById("teacherDeptFilter");
+            const dayFilterEl = document.getElementById("teacherDayFilter");
+            const selectedDept = deptFilterEl ? deptFilterEl.value : "ALL";
+            const selectedDay = dayFilterEl ? dayFilterEl.value : "ALL";
+            const rows = teacherInstituteRows.filter((r) => {
+                const matchDept = selectedDept === "ALL" || (r.target || "ALL").toUpperCase() === selectedDept;
+                const matchDay = selectedDay === "ALL" || (r.day || "") === selectedDay;
+                return matchDept && matchDay;
+            });
 
             const container = document.getElementById("teacherInstituteTimetableSummary");
             const countEl = document.getElementById("teacherFilterCount");
@@ -2106,9 +2406,10 @@
         }
 
         function initInstituteFilter() {
-            const filter = document.getElementById("teacherDeptFilter");
+            const deptFilter = document.getElementById("teacherDeptFilter");
+            const dayFilter = document.getElementById("teacherDayFilter");
             const reset = document.getElementById("teacherDeptReset");
-            if (!filter || !reset) return;
+            if (!deptFilter || !dayFilter || !reset) return;
 
             const depts = [...new Set(teacherInstituteRows.map(r => (r.target || "ALL").toUpperCase()))].sort();
             depts.forEach(d => {
@@ -2116,12 +2417,14 @@
                 const opt = document.createElement("option");
                 opt.value = d;
                 opt.textContent = d;
-                filter.appendChild(opt);
+                deptFilter.appendChild(opt);
             });
 
-            filter.onchange = renderInstituteTimetable;
+            deptFilter.onchange = renderInstituteTimetable;
+            dayFilter.onchange = renderInstituteTimetable;
             reset.onclick = () => {
-                filter.value = "ALL";
+                deptFilter.value = "ALL";
+                dayFilter.value = "ALL";
                 renderInstituteTimetable();
             };
         }
@@ -2189,10 +2492,16 @@
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body
-            }).then(() => {
+            }).then(async (res) => {
+                if (!res.ok) {
+                    const msg = (await res.text()) || "Unable to save calendar event.";
+                    throw new Error(msg);
+                }
                 closeTeacherEventModal();
                 setCalendarMessage("Calendar event saved successfully.");
                 if (calendar) calendar.refetchEvents();
+            }).catch((err) => {
+                setCalendarMessage(err.message || "No more than 3 events are allowed on this date.", "error");
             });
         }
 
@@ -2232,6 +2541,7 @@
                 const matched = document.querySelector(`.nav-link[data-section="${id}"]`);
                 if (matched) matched.classList.add("active");
             }
+            updateLiveTeacherHeader();
 
             // ===== ENTERPRISE CALENDAR LOGIC =====
             if (id === "calendar") {
@@ -2243,7 +2553,7 @@
 
                     calendar = new FullCalendar.Calendar(calendarEl, {
                         initialView: 'dayGridMonth',
-                        height: 650,
+                        height: "auto",
                         headerToolbar: {
                             left: 'prev,next today',
                             center: 'title',
@@ -2254,7 +2564,7 @@
                             month: 'Month',
                             week: 'Week'
                         },
-                        dayMaxEvents: true,
+                        dayMaxEvents: 3,
                         events: '/events',
                         eventClassNames: function(info) {
                             const classes = [];
@@ -2269,14 +2579,20 @@
                             }
                             return classes;
                         },
+                        eventDidMount: function(info) {
+                            applyReadableEventStyle(info.el);
+                        },
 
                         dateClick: function (info) {
                             setCalendarMessage("");
+                            const box = document.getElementById("teacherEventInsights");
+                            if (box) box.classList.add("is-hidden");
                             openTeacherEventModal("add", { date: info.dateStr, type: "general", target: "{{ teacher_department | upper }}", important: false });
                         },
 
                         eventClick: function(info) {
                             const ev = info.event;
+                            renderTeacherEventInsights(info);
                             const isOwner = ev.extendedProps && ev.extendedProps.is_owner;
                             if (!isOwner) {
                                 setCalendarMessage("You can edit or delete only events created by you.", "error");
@@ -2316,6 +2632,8 @@
         }
 
         lucide.createIcons();
+        updateLiveTeacherHeader();
+        setInterval(updateLiveTeacherHeader, 30000);
         renderTeacherTimetable();
         initInstituteFilter();
         renderInstituteTimetable();
@@ -2325,3 +2643,6 @@
 </body>
 
 </html>
+
+
+

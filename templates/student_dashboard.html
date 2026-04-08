@@ -165,8 +165,8 @@ body {
 .main.shifted { margin-left: 260px; }
 
 .top-bar {
-    position: sticky;
-    top: 14px;
+    position: relative;
+    top: auto;
     z-index: 20;
     margin-bottom: 24px;
     border: 1px solid var(--line);
@@ -190,6 +190,18 @@ body {
     margin: 2px 0 0 0;
     font-size: 12px;
     color: var(--muted);
+}
+
+.top-brand .live-date {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: #eaf7ff;
+    color: #0f5e84;
+    border: 1px solid #c8e7f6;
+    font-size: 11px;
+    font-weight: 700;
 }
 
 .top-pill {
@@ -731,6 +743,10 @@ td {
     padding: 12px;
 }
 
+.calendar-event-card.is-hidden {
+    display: none;
+}
+
 .calendar-event-card h4 {
     margin: 0 0 8px 0;
     font-size: 15px;
@@ -763,12 +779,17 @@ td {
 }
 
 .calendar-workspace {
-    border: 1px solid #dbe5f6;
-    border-radius: 14px;
-    background:
-        radial-gradient(circle at 88% -8%, rgba(107, 155, 255, 0.2), rgba(107, 155, 255, 0)),
-        linear-gradient(180deg, #ffffff, #f8fbff);
+    border: 1px solid #d7e3f5;
+    border-radius: 16px;
+    background: linear-gradient(180deg, #ffffff, #f9fbff);
     padding: 16px;
+}
+
+.calendar-main-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.8fr) minmax(260px, 1fr);
+    gap: 12px;
+    align-items: start;
 }
 
 .calendar-head {
@@ -793,9 +814,9 @@ td {
 
 .calendar-chip {
     white-space: nowrap;
-    border: 1px solid #cde1ff;
-    background: #edf4ff;
-    color: #1a4aa6;
+    border: 1px solid #b6dff0;
+    background: #e9f7fd;
+    color: #0f5e84;
     border-radius: 999px;
     padding: 7px 11px;
     font-size: 11px;
@@ -804,42 +825,200 @@ td {
 }
 
 #calendarUI {
-    border: 1px solid #dce6f8;
-    border-radius: 12px;
+    border: 1px solid #d6e0ef;
+    border-radius: 16px;
     background: #fff;
-    padding: 8px;
+    padding: 10px;
+    min-width: 0;
+}
+
+#calendarUI .fc {
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+#calendarUI .fc-toolbar-title {
+    font-size: clamp(20px, 3vw, 30px);
+    color: #15223a;
+    font-weight: 700;
+    line-height: 1.15;
+    text-align: center;
+}
+
+#calendarUI .fc-toolbar.fc-header-toolbar {
+    margin-bottom: 10px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 10px;
+}
+
+#calendarUI .fc-toolbar-chunk {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#calendarUI .fc-toolbar-chunk:nth-child(2) {
+    justify-content: center;
+    min-width: 0;
+}
+
+#calendarUI .fc-toolbar-chunk:last-child {
+    justify-content: flex-end;
+}
+
+#calendarUI .fc-button {
+    border: 1px solid #bedef1 !important;
+    background: linear-gradient(90deg, #16a8df, #1497d2) !important;
+    color: #fff !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    text-transform: capitalize !important;
+    box-shadow: none !important;
+}
+
+#calendarUI .fc-button-group {
+    display: inline-flex !important;
+    gap: 8px;
+}
+
+#calendarUI .fc-button-group > .fc-button {
+    margin: 0 !important;
+    margin-left: 8px !important;
+    border-radius: 10px !important;
+}
+
+#calendarUI .fc-button-group > .fc-button:first-child {
+    margin-left: 0 !important;
+}
+
+#calendarUI .fc-button:hover {
+    filter: brightness(1.04);
+}
+
+#calendarUI .fc-button:disabled {
+    opacity: 0.65 !important;
+}
+
+@media (max-width: 980px) {
+    #calendarUI .fc-toolbar.fc-header-toolbar {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    #calendarUI .fc-toolbar-chunk {
+        justify-content: center !important;
+        flex-wrap: wrap;
+    }
+}
+
+#calendarUI .fc-col-header {
+    border: none !important;
+}
+
+#calendarUI .fc-col-header-cell {
+    border: none !important;
+    background: linear-gradient(90deg, #16ace0, #1496d1);
+}
+
+#calendarUI .fc-col-header-cell:first-child {
+    border-radius: 999px 0 0 999px;
+}
+
+#calendarUI .fc-col-header-cell:last-child {
+    border-radius: 0 999px 999px 0;
+}
+
+#calendarUI .fc .fc-daygrid-day.fc-day-today {
+    background: #e8f6ff !important;
+}
+
+#calendarUI .fc-daygrid-day-frame {
+    min-height: 76px;
+}
+
+#calendarUI .fc-col-header-cell-cushion {
+    font-size: 12px;
+    font-weight: 700;
+    color: #f8fdff;
+    padding: 9px 0;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+#calendarUI .fc-daygrid-day-number {
+    color: #2b2f37;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+#calendarUI .fc-event {
+    border: none !important;
+    border-left: 3px solid #0877ab !important;
+    border-radius: 6px !important;
+    background: #e8f7ff !important;
+    color: #0d5f87 !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    padding: 2px 6px !important;
+}
+
+#calendarUI .fc-event-title,
+#calendarUI .fc-event-main-frame,
+#calendarUI .fc-event-title-container {
+    text-shadow: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+}
+
+#calendarUI .fc-event.is-important {
+    border-left-color: #d97706 !important;
+    background: #fff1dd !important;
+    color: #9a3412 !important;
+}
+
+#calendarUI .fc-event.is-government-holiday {
+    border-left-color: #0f766e !important;
+    background: #dcfdf7 !important;
+    color: #0f766e !important;
+}
+
+#calendarUI .fc-theme-standard td,
+#calendarUI .fc-theme-standard th {
+    border-color: #e3e9f3 !important;
 }
 
 .calendar-side-grid {
-    margin-top: 14px;
     display: grid;
-    grid-template-columns: 1.2fr 1fr;
+    grid-template-columns: 1fr;
     gap: 12px;
 }
 
 .holiday-stream {
-    border: 1px solid #f1dfc4;
+    border: 1px dashed #9ecadd;
     border-radius: 12px;
     padding: 12px;
-    background: linear-gradient(180deg, #fffdf8, #fff7ec);
+    background: linear-gradient(180deg, #f9fdff, #f3fbff);
 }
 
 .holiday-stream h4 {
     margin: 0 0 9px 0;
     font-size: 15px;
-    color: #623a09;
+    color: #0f5e84;
 }
 
 .holiday-list {
     display: grid;
     gap: 8px;
+    max-height: 300px;
+    overflow: auto;
+    padding-right: 2px;
 }
 
 .holiday-item {
     display: flex;
     align-items: center;
     gap: 8px;
-    border: 1px solid #f0dfc6;
+    border: 1px solid #d5e8f3;
     border-radius: 10px;
     padding: 8px 9px;
     background: #ffffff;
@@ -852,8 +1031,8 @@ td {
     min-width: 96px;
     border-radius: 999px;
     padding: 4px 8px;
-    background: #fff0da;
-    color: #8b4b04;
+    background: #e8f7ff;
+    color: #0d5f87;
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.03em;
@@ -861,7 +1040,7 @@ td {
 
 .holiday-title {
     font-size: 13px;
-    color: #4a2f0c;
+    color: #1d334d;
     font-weight: 700;
 }
 
@@ -888,8 +1067,8 @@ td {
 }
 
 .calendar-add-btn {
-    border: 1px solid #cfe0ff;
-    background: linear-gradient(90deg, #2d6cdf, #4f86f8);
+    border: 1px solid #bedef1;
+    background: linear-gradient(90deg, #16a8df, #1497d2);
     color: #fff;
     border-radius: 10px;
     padding: 8px 12px;
@@ -1035,7 +1214,7 @@ td {
 }
 
 .student-event-actions {
-    margin-top: 14px;
+    margin-top: auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1081,6 +1260,9 @@ td {
         grid-template-columns: 1fr;
     }
     .profile-form-grid {
+        grid-template-columns: 1fr;
+    }
+    .calendar-main-grid {
         grid-template-columns: 1fr;
     }
     .calendar-head {
@@ -1157,11 +1339,14 @@ td {
 
     <div class="top-bar">
         <div class="top-brand">
-            <h1>Welcome, {{ student_name }}</h1>
-            <p>SmartTimetable Student Workspace</p>
+            <h1 id="liveWelcomeTitle">Welcome, {{ student_name }}</h1>
+            <p id="liveWorkspaceLine">
+                SmartTimetable Student Workspace
+                <span id="liveHeaderDate" class="live-date"></span>
+            </p>
         </div>
         <div class="top-right">
-            <div class="top-pill">
+            <div class="top-pill" id="livePortalPill">
                 <i data-lucide="graduation-cap"></i>
                 {{ student_department }} | Academic Portal
             </div>
@@ -1363,6 +1548,14 @@ td {
                     <select id="deptFilter" class="filter-select">
                         <option value="ALL">All Departments</option>
                     </select>
+                    <select id="dayFilter" class="filter-select">
+                        <option value="ALL">All Days</option>
+                        <option value="Mon">Monday</option>
+                        <option value="Tue">Tuesday</option>
+                        <option value="Wed">Wednesday</option>
+                        <option value="Thu">Thursday</option>
+                        <option value="Fri">Friday</option>
+                    </select>
                     <button id="clearDeptFilter" class="filter-btn" type="button">Reset</button>
                     <span id="filterCount" class="filter-count">Showing 0 classes</span>
                 </div>
@@ -1387,26 +1580,25 @@ td {
                 <div id="studentCalendarActionMsg" class="calendar-action-msg"></div>
                 <button type="button" class="calendar-add-btn" onclick="openStudentEventModal('add', { date: '' })">Add Event</button>
             </div>
-            <div id="calendarUI"></div>
-            <div class="calendar-side-grid">
-                <div id="studentEventDetails" class="calendar-event-card">
-                    <h4>Event Insights</h4>
-                    <div style="font-size:13px; color:#64748b;">Select any event on the calendar to view complete details.</div>
-                </div>
-                <div class="holiday-stream">
-                    <h4>Upcoming Celebration Days & Official Holidays</h4>
-                    {% if vacations %}
-                    <div class="holiday-list">
-                        {% for v in vacations %}
-                        <div class="holiday-item">
-                            <span class="holiday-date">{{ v.date }}</span>
-                            <span class="holiday-title">{{ v.title }}</span>
+            <div class="calendar-main-grid">
+                <div id="calendarUI"></div>
+                <div class="calendar-side-grid">
+                    <div class="holiday-stream">
+                        <h4>Upcoming Celebration Days & Official Holidays</h4>
+                        {% if vacations %}
+                        <div class="holiday-list">
+                            {% for v in vacations %}
+                            <div class="holiday-item">
+                                <span class="holiday-date">{{ v.date }}</span>
+                                <span class="holiday-title">{{ v.title }}</span>
+                            </div>
+                            {% endfor %}
                         </div>
-                        {% endfor %}
+                        {% else %}
+                        <div class="holiday-empty">No holiday or leave announcements available at the moment.</div>
+                        {% endif %}
                     </div>
-                    {% else %}
-                    <div class="holiday-empty">No holiday or leave announcements available at the moment.</div>
-                    {% endif %}
+                    <div id="studentEventDetails" class="calendar-event-card is-hidden"></div>
                 </div>
             </div>
             </div>
@@ -1489,6 +1681,57 @@ const instituteRows = JSON.parse(document.getElementById("studentInstituteRowsDa
 let studentEventMode = "add";
 let studentEditingEventId = "";
 let studentEventLabelColor = "";
+const studentDisplayName = "{{ student_name }}";
+const studentDeptName = "{{ student_department }}";
+
+function updateLiveStudentHeader() {
+    const now = new Date();
+    const hr = now.getHours();
+    let part = "Evening";
+    if (hr < 12) part = "Morning";
+    else if (hr < 17) part = "Afternoon";
+
+    const title = document.getElementById("liveWelcomeTitle");
+    const line = document.getElementById("liveWorkspaceLine");
+    const pill = document.getElementById("livePortalPill");
+    if (title) title.textContent = `Good ${part}, ${studentDisplayName}`;
+    if (line) {
+        line.innerHTML = `SmartTimetable Student Workspace · ${part} Focus <span id="liveHeaderDate" class="live-date"></span>`;
+    }
+    if (pill) pill.innerHTML = `<i data-lucide="graduation-cap"></i>${studentDeptName} | Academic Portal · ${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+    const dateTag = document.getElementById("liveHeaderDate");
+    if (dateTag) {
+        dateTag.textContent = now.toLocaleDateString([], {
+            weekday: "short",
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        });
+    }
+    lucide.createIcons();
+}
+
+function applyReadableEventStyle(eventEl) {
+    if (!eventEl) return;
+    const bg = window.getComputedStyle(eventEl).backgroundColor || "";
+    const m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+    if (!m) return;
+    const r = parseInt(m[1], 10) / 255;
+    const g = parseInt(m[2], 10) / 255;
+    const b = parseInt(m[3], 10) / 255;
+    const luminance = (0.2126 * r) + (0.7152 * g) + (0.0722 * b);
+    const textColor = luminance > 0.6 ? "#1f2937" : "#ffffff";
+    eventEl.style.setProperty("--fc-event-text-color", textColor);
+    eventEl.style.color = textColor;
+    eventEl.style.textShadow = "none";
+    eventEl.style.fontWeight = "700";
+    eventEl.querySelectorAll(".fc-event-title, .fc-event-time, .fc-event-main-frame, .fc-event-title-container").forEach((node) => {
+        node.style.color = textColor;
+        node.style.textShadow = "none";
+        node.style.fontWeight = "700";
+        node.style.opacity = "1";
+    });
+}
 
 function sortRows(rows) {
     return rows.slice().sort((a, b) => {
@@ -1547,30 +1790,37 @@ function renderSummary(containerId, rows, type) {
 }
 
 function initDeptFilter() {
-    const filter = document.getElementById("deptFilter");
+    const deptFilter = document.getElementById("deptFilter");
+    const dayFilter = document.getElementById("dayFilter");
     const clearBtn = document.getElementById("clearDeptFilter");
     const countTag = document.getElementById("filterCount");
+    if (!deptFilter || !dayFilter || !clearBtn || !countTag) return;
     const depts = [...new Set(instituteRows.map(r => (r.target || "ALL").toUpperCase()))].sort();
     depts.forEach(d => {
         if (d === "ALL") return;
         const opt = document.createElement("option");
         opt.value = d;
         opt.textContent = d;
-        filter.appendChild(opt);
+        deptFilter.appendChild(opt);
     });
 
     function applyFilter() {
-        const val = filter.value;
-        const rows = val === "ALL"
-            ? instituteRows
-            : instituteRows.filter(r => (r.target || "ALL").toUpperCase() === val);
+        const deptVal = deptFilter.value;
+        const dayVal = dayFilter.value;
+        const rows = instituteRows.filter((r) => {
+            const matchDept = deptVal === "ALL" || (r.target || "ALL").toUpperCase() === deptVal;
+            const matchDay = dayVal === "ALL" || (r.day || "") === dayVal;
+            return matchDept && matchDay;
+        });
         renderSummary("instituteTimetableSummary", rows, "institute");
         countTag.textContent = `Showing ${rows.length} classes`;
     }
 
-    filter.onchange = applyFilter;
+    deptFilter.onchange = applyFilter;
+    dayFilter.onchange = applyFilter;
     clearBtn.onclick = () => {
-        filter.value = "ALL";
+        deptFilter.value = "ALL";
+        dayFilter.value = "ALL";
         applyFilter();
     };
 
@@ -1639,10 +1889,16 @@ function saveStudentEvent() {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body
-    }).then(() => {
+    }).then(async (res) => {
+        if (!res.ok) {
+            const msg = (await res.text()) || "Unable to save calendar event.";
+            throw new Error(msg);
+        }
         closeStudentEventModal();
         setStudentCalendarMessage("Calendar event saved.");
         if (calendar) calendar.refetchEvents();
+    }).catch((err) => {
+        setStudentCalendarMessage(err.message || "No more than 3 events are allowed on this date.", "error");
     });
 }
 
@@ -1657,6 +1913,33 @@ function deleteStudentEvent() {
         setStudentCalendarMessage("Event deleted.");
         if (calendar) calendar.refetchEvents();
     });
+}
+
+function renderStudentEventInsights(info) {
+    const ext = info.event.extendedProps || {};
+    const subject = ext.subject || info.event.title || "-";
+    const createdBy = ext.creator_name || ext.creator_email || "Unknown";
+    const assignedByLabel = ext.assigned_by_label || "Published by";
+    const audience = ext.target || "ALL";
+    const eventType = ext.type || "general";
+    const eventTypeLabel = ext.type_label || eventType.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+    const priority = ext.important ? "Important" : "Normal";
+    const dateStr = (info.event.startStr || "").slice(0, 10) || "-";
+    const box = document.getElementById("studentEventDetails");
+    if (!box) return;
+    box.classList.remove("is-hidden");
+    box.innerHTML = `
+        <h4>Event Insights</h4>
+        <div class="calendar-event-grid">
+            <div class="calendar-event-item"><div class="k">Title</div><div class="v">${info.event.title || "-"}</div></div>
+            <div class="calendar-event-item"><div class="k">Subject</div><div class="v">${subject}</div></div>
+            <div class="calendar-event-item"><div class="k">${assignedByLabel}</div><div class="v">${createdBy}</div></div>
+            <div class="calendar-event-item"><div class="k">Date</div><div class="v">${dateStr}</div></div>
+            <div class="calendar-event-item"><div class="k">Audience</div><div class="v">${audience}</div></div>
+            <div class="calendar-event-item"><div class="k">Type</div><div class="v">${eventTypeLabel}</div></div>
+            <div class="calendar-event-item"><div class="k">Priority</div><div class="v">${priority}</div></div>
+        </div>
+    `;
 }
 
 function showSection(id, el = null) {
@@ -1683,14 +1966,44 @@ function showSection(id, el = null) {
 
             calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
-                height: 650,
+                height: "auto",
+                dayMaxEventRows: 3,
+                headerToolbar: {
+                    left: "prev,next today",
+                    center: "title",
+                    right: "dayGridMonth,timeGridWeek"
+                },
+                buttonText: {
+                    today: "Today",
+                    month: "Month",
+                    week: "Week"
+                },
                 events: '/events',
+                eventClassNames: function(info) {
+                    const classes = [];
+                    if (info.event.extendedProps && info.event.extendedProps.important) {
+                        classes.push("is-important");
+                    }
+                    if (
+                        info.event.extendedProps
+                        && info.event.extendedProps.type === "government_holiday"
+                    ) {
+                        classes.push("is-government-holiday");
+                    }
+                    return classes;
+                },
+                eventDidMount: function(info) {
+                    applyReadableEventStyle(info.el);
+                },
                 dateClick: function(info) {
                     setStudentCalendarMessage("");
+                    const box = document.getElementById("studentEventDetails");
+                    if (box) box.classList.add("is-hidden");
                     openStudentEventModal("add", { date: info.dateStr, type: "general", important: false });
                 },
                 eventClick: function(info) {
                     const ext = info.event.extendedProps || {};
+                    renderStudentEventInsights(info);
                     if (ext.is_owner) {
                         setStudentCalendarMessage("");
                         openStudentEventModal("edit", {
@@ -1704,27 +2017,6 @@ function showSection(id, el = null) {
                         });
                         return;
                     }
-                    const subject = ext.subject || info.event.title || "-";
-                    const createdBy = ext.creator_name || ext.creator_email || "Unknown";
-                    const assignedByLabel = ext.assigned_by_label || "Published by";
-                    const audience = ext.target || "ALL";
-                    const eventType = ext.type || "general";
-                    const eventTypeLabel = ext.type_label || eventType.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
-                    const priority = ext.important ? "Important" : "Normal";
-                    const dateStr = (info.event.startStr || "").slice(0, 10) || "-";
-                    const box = document.getElementById("studentEventDetails");
-                    box.innerHTML = `
-                        <h4>Event Insights</h4>
-                        <div class="calendar-event-grid">
-                            <div class="calendar-event-item"><div class="k">Title</div><div class="v">${info.event.title || "-"}</div></div>
-                            <div class="calendar-event-item"><div class="k">Subject</div><div class="v">${subject}</div></div>
-                            <div class="calendar-event-item"><div class="k">${assignedByLabel}</div><div class="v">${createdBy}</div></div>
-                            <div class="calendar-event-item"><div class="k">Date</div><div class="v">${dateStr}</div></div>
-                            <div class="calendar-event-item"><div class="k">Audience</div><div class="v">${audience}</div></div>
-                            <div class="calendar-event-item"><div class="k">Type</div><div class="v">${eventTypeLabel}</div></div>
-                            <div class="calendar-event-item"><div class="k">Priority</div><div class="v">${priority}</div></div>
-                        </div>
-                    `;
                 }
             });
 
@@ -1746,6 +2038,8 @@ function openProfileSection(e) {
 }
 
 lucide.createIcons();
+updateLiveStudentHeader();
+setInterval(updateLiveStudentHeader, 60000);
 renderSummary("myTimetableSummary", myTimetableRows, "my");
 initDeptFilter();
 
@@ -1753,3 +2047,4 @@ initDeptFilter();
 
 </body>
 </html>
+

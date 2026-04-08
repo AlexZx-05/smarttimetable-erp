@@ -7,9 +7,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css' rel='stylesheet' />
 
 <!-- Lucide Icons -->
 <script src="https://unpkg.com/lucide@latest"></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
 
 <style>
 :root {
@@ -164,8 +166,8 @@ body {
 .main.shifted { margin-left: 260px; }
 
 .top-bar {
-    position: sticky;
-    top: 14px;
+    position: relative;
+    top: auto;
     z-index: 20;
     margin-bottom: 24px;
     border: 1px solid var(--line);
@@ -189,6 +191,18 @@ body {
     margin: 2px 0 0 0;
     font-size: 12px;
     color: var(--muted);
+}
+
+.top-brand .live-date {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: #eaf7ff;
+    color: #0f5e84;
+    border: 1px solid #c8e7f6;
+    font-size: 11px;
+    font-weight: 700;
 }
 
 .top-right {
@@ -385,6 +399,297 @@ td {
 .empty {
     color: #64748b;
     padding: 20px 0;
+}
+
+.events-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+    gap: 14px;
+}
+
+.events-main-card {
+    border: 1px solid #d7e3f5;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #ffffff, #f9fbff);
+    padding: 14px;
+}
+
+.events-main-head {
+    margin-bottom: 10px;
+}
+
+.events-main-head h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #132747;
+}
+
+.events-main-head p {
+    margin: 5px 0 0 0;
+    font-size: 13px;
+    color: #5a6a87;
+}
+
+.event-form-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr auto;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.event-form-grid input,
+.event-form-grid select {
+    min-height: 38px;
+    border: 1px solid #cad8ef;
+    border-radius: 10px;
+    padding: 8px 10px;
+    font: inherit;
+    background: #fff;
+    color: #0f172a;
+    box-sizing: border-box;
+}
+
+.event-form-grid input:focus,
+.event-form-grid select:focus {
+    outline: none;
+    border-color: #1497d2;
+    box-shadow: 0 0 0 3px rgba(20, 151, 210, 0.16);
+}
+
+.event-add-btn {
+    border: 1px solid #bedef1;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #16a8df, #1497d2);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.event-add-btn:hover {
+    filter: brightness(1.04);
+}
+
+.events-table-wrap {
+    overflow-x: auto;
+}
+
+.admin-calendar-surface {
+    border: 1px solid #d6e0ef;
+    border-radius: 16px;
+    background: #fff;
+    padding: 10px;
+    margin-bottom: 12px;
+}
+
+#adminCalendarUI .fc {
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+#adminCalendarUI .fc-toolbar-title {
+    font-size: clamp(20px, 3vw, 30px);
+    color: #15223a;
+    font-weight: 700;
+    line-height: 1.15;
+    text-align: center;
+}
+
+#adminCalendarUI .fc-toolbar.fc-header-toolbar {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 10px;
+}
+
+#adminCalendarUI .fc-toolbar-chunk {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#adminCalendarUI .fc-toolbar-chunk:nth-child(2) {
+    justify-content: center;
+    min-width: 0;
+}
+
+#adminCalendarUI .fc-toolbar-chunk:last-child {
+    justify-content: flex-end;
+}
+
+#adminCalendarUI .fc-button {
+    border: 1px solid #bedef1 !important;
+    background: linear-gradient(90deg, #16a8df, #1497d2) !important;
+    color: #fff !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    text-transform: capitalize !important;
+    box-shadow: none !important;
+}
+
+#adminCalendarUI .fc-button-group {
+    display: inline-flex !important;
+    gap: 8px;
+}
+
+#adminCalendarUI .fc-button-group > .fc-button {
+    margin: 0 !important;
+    margin-left: 8px !important;
+    border-radius: 10px !important;
+}
+
+#adminCalendarUI .fc-button-group > .fc-button:first-child {
+    margin-left: 0 !important;
+}
+
+#adminCalendarUI .fc-button:hover {
+    filter: brightness(1.04);
+}
+
+@media (max-width: 980px) {
+    #adminCalendarUI .fc-toolbar.fc-header-toolbar {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    #adminCalendarUI .fc-toolbar-chunk {
+        justify-content: center !important;
+        flex-wrap: wrap;
+    }
+}
+
+#adminCalendarUI .fc-col-header {
+    border: none !important;
+}
+
+#adminCalendarUI .fc-col-header-cell {
+    border: none !important;
+    background: linear-gradient(90deg, #16ace0, #1496d1);
+}
+
+#adminCalendarUI .fc-col-header-cell:first-child {
+    border-radius: 999px 0 0 999px;
+}
+
+#adminCalendarUI .fc-col-header-cell:last-child {
+    border-radius: 0 999px 999px 0;
+}
+
+#adminCalendarUI .fc-col-header-cell-cushion {
+    color: #f8fdff;
+    font-weight: 700;
+    padding: 9px 0;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+}
+
+#adminCalendarUI .fc-daygrid-day-frame {
+    min-height: 76px;
+}
+
+#adminCalendarUI .fc-daygrid-day-number {
+    color: #2b2f37;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+#adminCalendarUI .fc .fc-daygrid-day.fc-day-today {
+    background: #e8f6ff !important;
+}
+
+#adminCalendarUI .fc-event {
+    border: none !important;
+    border-left: 3px solid #0877ab !important;
+    border-radius: 6px !important;
+    background: #e8f7ff !important;
+    color: #0d5f87 !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    padding: 2px 6px !important;
+}
+
+#adminCalendarUI .fc-event-title,
+#adminCalendarUI .fc-event-main-frame {
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+#adminCalendarUI .fc-event.is-important {
+    border-left-color: #d97706 !important;
+    background: #fff1dd !important;
+    color: #9a3412 !important;
+}
+
+#adminCalendarUI .fc-event.is-government-holiday {
+    border-left-color: #0f766e !important;
+    background: #dcfdf7 !important;
+    color: #0f766e !important;
+}
+
+#adminCalendarUI .fc-theme-standard td,
+#adminCalendarUI .fc-theme-standard th {
+    border-color: #e3e9f3 !important;
+}
+
+.admin-calendar-note {
+    font-size: 12px;
+    color: #46687f;
+    margin: -2px 0 12px 0;
+}
+
+.events-upcoming {
+    border: 1px dashed #9ecadd;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #f9fdff, #f3fbff);
+    padding: 14px;
+    height: fit-content;
+}
+
+.events-upcoming h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #0f5e84;
+}
+
+.events-upcoming p {
+    margin: 5px 0 10px 0;
+    font-size: 12px;
+    color: #4c6a7f;
+}
+
+.events-upcoming-list {
+    display: grid;
+    gap: 8px;
+    max-height: 380px;
+    overflow: auto;
+    padding-right: 2px;
+}
+
+.events-upcoming-item {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    border: 1px solid #d5e8f3;
+    border-radius: 10px;
+    background: #fff;
+    padding: 8px;
+}
+
+.events-upcoming-date {
+    min-width: 95px;
+    text-align: center;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: #e8f7ff;
+    color: #0d5f87;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.events-upcoming-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1d334d;
 }
 
 .teacher-grid {
@@ -617,6 +922,12 @@ td {
         grid-template-columns: 1fr;
     }
     .profile-form-grid {
+        grid-template-columns: 1fr;
+    }
+    .events-layout {
+        grid-template-columns: 1fr;
+    }
+    .event-form-grid {
         grid-template-columns: 1fr;
     }
 }
@@ -886,7 +1197,7 @@ td {
 }
 
 .edit-actions {
-    margin-top: 14px;
+    margin-top: auto;
     display: flex;
     justify-content: flex-end;
     gap: 8px;
@@ -987,11 +1298,14 @@ td {
 
     <div class="top-bar">
         <div class="top-brand">
-            <h1>Admin Dashboard</h1>
-            <p>SmartTimetable Control Center</p>
+            <h1 id="liveAdminWelcome">Admin Dashboard</h1>
+            <p id="liveAdminLine">
+                SmartTimetable Control Center
+                <span id="liveAdminDate" class="live-date"></span>
+            </p>
         </div>
         <div class="top-right">
-            <div class="top-pill">
+            <div class="top-pill" id="liveAdminPortal">
                 <i data-lucide="shield-check"></i>
                 System Administration
             </div>
@@ -1064,68 +1378,97 @@ td {
     <div id="events-section" class="admin-section">
     <div class="card">
         <h2>Calendar Event Management</h2>
-        <form action="/admin/events/add" method="POST" style="display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr auto; gap:10px; margin-bottom:14px;">
-            <input type="text" name="title" placeholder="Event title (Exam, Test, Holiday, Leave)" required style="padding:9px; border-radius:8px; border:1px solid #cfd8eb;">
-            <input type="date" name="date" required style="padding:9px; border-radius:8px; border:1px solid #cfd8eb;">
-            <select name="event_type" style="padding:9px; border-radius:8px; border:1px solid #cfd8eb;">
-                <option value="general">General</option>
-                <option value="test">Test</option>
-                <option value="exam">Exam</option>
-                <option value="vacation">Holiday / Leave</option>
-            </select>
-            <select name="important" style="padding:9px; border-radius:8px; border:1px solid #cfd8eb;">
-                <option value="no">Normal</option>
-                <option value="yes">Important</option>
-            </select>
-            <button type="submit" style="border:none; border-radius:8px; background:#2563eb; color:#fff; padding:9px 12px; cursor:pointer;">Add Event</button>
-        </form>
+        <div class="events-layout">
+            <div class="events-main-card">
+                <div class="events-main-head">
+                    <h3>Publish And Maintain Events</h3>
+                    <p>Keep exam, test, and holiday notices professional and easy to scan.</p>
+                </div>
+                <form action="/admin/events/add" method="POST" class="event-form-grid">
+                    <input type="text" name="title" placeholder="Event title (Exam, Test, Holiday, Leave)" required>
+                    <input type="date" name="date" required>
+                    <select name="event_type">
+                        <option value="general">General</option>
+                        <option value="test">Test</option>
+                        <option value="exam">Exam</option>
+                        <option value="vacation">Holiday / Leave</option>
+                    </select>
+                    <select name="important">
+                        <option value="no">Normal</option>
+                        <option value="yes">Important</option>
+                    </select>
+                    <button type="submit" class="event-add-btn">Add Event</button>
+                </form>
+                <div id="adminCalendarUI" class="admin-calendar-surface"></div>
+                <div id="adminCalendarNote" class="admin-calendar-note">Tip: click any date to prefill the add-event date field.</div>
 
-        {% if admin_events %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Title</th>
-                    <th>Type</th>
-                    <th>Creator</th>
-                    <th>Important</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for e in admin_events %}
-                <tr
-                    data-event-id="{{ e.id }}"
-                    data-event-date="{{ e.date }}"
-                    data-event-title="{{ e.title }}"
-                    data-event-type="{{ e.type }}"
-                    data-event-important="{{ 'yes' if e.important else 'no' }}"
-                    data-event-creator="{{ e.creator_name }}"
-                >
-                    <td class="event-col-date">{{ e.date }}</td>
-                    <td class="event-col-title">{{ e.title }}</td>
-                    <td class="event-col-type">
-                        {% if e.type == "vacation" %}
-                            Holiday / Leave
-                        {% elif e.type == "government_holiday" %}
-                            Government Holiday
-                        {% else %}
-                            {{ e.type|capitalize }}
-                        {% endif %}
-                    </td>
-                    <td class="event-col-creator">{{ e.creator_name }}</td>
-                    <td class="event-col-important">{{ "Yes" if e.important else "No" }}</td>
-                    <td class="event-col-action">
-                        <button type="button" class="action-btn" style="border:none;background:#0ea5e9;color:#fff;cursor:pointer;" onclick="startInlineEventEdit(this)">Edit</button>
-                        <a class="action-btn reject" href="/admin/events/delete?id={{ e.id }}">Delete</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-            <div class="empty">No calendar events yet.</div>
-        {% endif %}
+                {% if admin_events %}
+                <div class="events-table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Title</th>
+                                <th>Type</th>
+                                <th>Creator</th>
+                                <th>Important</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for e in admin_events %}
+                            <tr
+                                data-event-id="{{ e.id }}"
+                                data-event-date="{{ e.date }}"
+                                data-event-title="{{ e.title }}"
+                                data-event-type="{{ e.type }}"
+                                data-event-important="{{ 'yes' if e.important else 'no' }}"
+                                data-event-creator="{{ e.creator_name }}"
+                            >
+                                <td class="event-col-date">{{ e.date }}</td>
+                                <td class="event-col-title">{{ e.title }}</td>
+                                <td class="event-col-type">
+                                    {% if e.type == "vacation" %}
+                                        Holiday / Leave
+                                    {% elif e.type == "government_holiday" %}
+                                        Government Holiday
+                                    {% else %}
+                                        {{ e.type|capitalize }}
+                                    {% endif %}
+                                </td>
+                                <td class="event-col-creator">{{ e.creator_name }}</td>
+                                <td class="event-col-important">{{ "Yes" if e.important else "No" }}</td>
+                                <td class="event-col-action">
+                                    <button type="button" class="action-btn" style="border:none;background:#0ea5e9;color:#fff;cursor:pointer;" onclick="startInlineEventEdit(this)">Edit</button>
+                                    <a class="action-btn reject" href="/admin/events/delete?id={{ e.id }}">Delete</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                    <div class="empty">No calendar events yet.</div>
+                {% endif %}
+            </div>
+
+            <div class="events-upcoming">
+                <h3>Upcoming Holidays</h3>
+                <p>Visible here without scrolling the full page.</p>
+                {% if vacations %}
+                <div class="events-upcoming-list">
+                    {% for v in vacations %}
+                    <div class="events-upcoming-item">
+                        <span class="events-upcoming-date">{{ v.date }}</span>
+                        <span class="events-upcoming-title">{{ v.title }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="vacation-empty">No upcoming holiday announcements.</div>
+                {% endif %}
+            </div>
+        </div>
     </div>
     </div>
 
@@ -1369,6 +1712,21 @@ td {
     <div id="timetable-section" class="admin-section">
     <div class="card">
         <h2>Generated Timetable (Admin Edit)</h2>
+        <div style="max-width:520px; margin:10px 0 14px;">
+            <label style="font-size:13px; color:#475569;">Filter by Day</label>
+            <div style="display:flex; gap:8px; margin-top:6px;">
+                <select id="adminDayFilter" style="flex:1; padding:9px 10px; border-radius:8px; border:1px solid #cfd8eb;">
+                    <option value="ALL">All Days</option>
+                    <option value="Mon">Monday</option>
+                    <option value="Tue">Tuesday</option>
+                    <option value="Wed">Wednesday</option>
+                    <option value="Thu">Thursday</option>
+                    <option value="Fri">Friday</option>
+                </select>
+                <button id="adminDayFilterReset" type="button" style="border:none; border-radius:8px; background:#dde6f7; color:#1e293b; padding:9px 12px; cursor:pointer;">Reset</button>
+                <span id="adminDayFilterCount" style="align-self:center; font-size:12px; color:#334155; background:#e9f1ff; border-radius:999px; padding:6px 10px;">Showing 0 rows</span>
+            </div>
+        </div>
 
         {% if timetable_rows %}
         <table>
@@ -1384,7 +1742,7 @@ td {
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="adminTimetableBodyMain">
                 {% for row in timetable_rows %}
                 <tr
                     data-day="{{ row.day }}"
@@ -1552,7 +1910,7 @@ td {
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="adminTimetableBodySnapshot">
                         {% for row in timetable_rows %}
                         <tr
                             data-day="{{ row.day }}"
@@ -1705,6 +2063,10 @@ td {
 </div>
 
 <script>
+let adminCalendar = null;
+let adminCalendarInitialized = false;
+const adminDisplayName = "{{ admin_name }}";
+
 function toggleSidebar() {
     document.getElementById("sidebar").classList.toggle("expanded");
     document.getElementById("main").classList.toggle("shifted");
@@ -1722,6 +2084,10 @@ function showSection(id, el = null) {
         const matched = document.querySelector(`.nav-link[data-section="${id}"]`);
         if (matched) matched.classList.add("active");
     }
+
+    if (id === "events-section") {
+        initAdminCalendar();
+    }
 }
 
 function openProfileSection(e) {
@@ -1736,6 +2102,125 @@ function formatEventTypeLabel(type) {
     if (type === "government_holiday") return "Government Holiday";
     if (!type) return "General";
     return type.charAt(0).toUpperCase() + type.slice(1);
+}
+
+function setAdminCalendarNote(message, tone = "info") {
+    const note = document.getElementById("adminCalendarNote");
+    if (!note) return;
+    note.textContent = message || "";
+    note.style.color = tone === "error" ? "#b42318" : "#46687f";
+}
+
+function updateLiveAdminHeader() {
+    const now = new Date();
+    const hr = now.getHours();
+    let part = "Evening";
+    if (hr < 12) part = "Morning";
+    else if (hr < 17) part = "Afternoon";
+
+    const title = document.getElementById("liveAdminWelcome");
+    const line = document.getElementById("liveAdminLine");
+    const portal = document.getElementById("liveAdminPortal");
+    if (title) title.textContent = `Good ${part}, ${adminDisplayName}`;
+    if (line) {
+        line.innerHTML = `SmartTimetable Control Center · ${part} Ops <span id="liveAdminDate" class="live-date"></span>`;
+    }
+    if (portal) {
+        portal.innerHTML = `<i data-lucide="shield-check"></i>System Administration · ${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+    }
+    const dateTag = document.getElementById("liveAdminDate");
+    if (dateTag) {
+        dateTag.textContent = now.toLocaleDateString([], {
+            weekday: "short",
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        });
+    }
+    lucide.createIcons();
+}
+
+function applyReadableEventStyle(eventEl) {
+    if (!eventEl) return;
+    const bg = window.getComputedStyle(eventEl).backgroundColor || "";
+    const m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+    if (!m) return;
+    const r = parseInt(m[1], 10) / 255;
+    const g = parseInt(m[2], 10) / 255;
+    const b = parseInt(m[3], 10) / 255;
+    const luminance = (0.2126 * r) + (0.7152 * g) + (0.0722 * b);
+    const textColor = luminance > 0.6 ? "#1f2937" : "#ffffff";
+    eventEl.style.setProperty("--fc-event-text-color", textColor);
+    eventEl.style.color = textColor;
+    eventEl.style.textShadow = "none";
+    eventEl.style.fontWeight = "700";
+    eventEl.querySelectorAll(".fc-event-title, .fc-event-time, .fc-event-main-frame, .fc-event-title-container").forEach((node) => {
+        node.style.color = textColor;
+        node.style.textShadow = "none";
+        node.style.fontWeight = "700";
+        node.style.opacity = "1";
+    });
+}
+
+function initAdminCalendar() {
+    if (adminCalendarInitialized) {
+        setTimeout(() => {
+            if (adminCalendar) adminCalendar.updateSize();
+        }, 120);
+        return;
+    }
+
+    const calendarEl = document.getElementById("adminCalendarUI");
+    if (!calendarEl || typeof FullCalendar === "undefined") return;
+
+    adminCalendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: "dayGridMonth",
+        height: "auto",
+        dayMaxEventRows: 3,
+        headerToolbar: {
+            left: "prev,next today",
+            center: "title",
+            right: "dayGridMonth,timeGridWeek"
+        },
+        buttonText: {
+            today: "Today",
+            month: "Month",
+            week: "Week"
+        },
+        events: "/events",
+        eventClassNames: function(info) {
+            const classes = [];
+            if (info.event.extendedProps && info.event.extendedProps.important) {
+                classes.push("is-important");
+            }
+            if (
+                info.event.extendedProps
+                && info.event.extendedProps.type === "government_holiday"
+            ) {
+                classes.push("is-government-holiday");
+            }
+            return classes;
+        },
+        eventDidMount: function(info) {
+            applyReadableEventStyle(info.el);
+        },
+        dateClick: function(info) {
+            const dateInput = document.querySelector('#events-section input[name="date"]');
+            if (dateInput) {
+                dateInput.value = info.dateStr;
+            }
+            setAdminCalendarNote(`Date selected: ${info.dateStr}. Add event form is prefilled.`);
+        },
+        eventClick: function(info) {
+            const ext = info.event.extendedProps || {};
+            const dateStr = (info.event.startStr || "").slice(0, 10);
+            const typeLabel = ext.type_label || formatEventTypeLabel(ext.type || "general");
+            setAdminCalendarNote(`Selected "${info.event.title}" on ${dateStr} (${typeLabel}).`);
+        }
+    });
+
+    adminCalendar.render();
+    adminCalendarInitialized = true;
 }
 
 function renderAdminEventRow(tr, eventData) {
@@ -1828,8 +2313,10 @@ function saveInlineEventEdit(btn) {
     .then(res => {
         if (!res.ok) throw new Error(res.error || "Update failed");
         renderAdminEventRow(tr, res.event);
+        if (adminCalendar) adminCalendar.refetchEvents();
     })
-    .catch(() => {
+    .catch((err) => {
+        setAdminCalendarNote(err.message || "No more than 3 shared events are allowed on this date.", "error");
         cancelInlineEventEdit(btn);
     });
 }
@@ -1891,6 +2378,7 @@ function renderAdminTimetableRow(tr, row) {
     tds[5].textContent = row.target || "ALL";
     tds[6].textContent = row.label ? row.label : "-";
     tds[7].innerHTML = buildAdminTimetableActionHtml(row);
+    applyAdminDayFilter();
 }
 
 function startAdminInlineEdit(btn) {
@@ -2001,6 +2489,7 @@ function deleteSnapshotRow(btn) {
     }).then(r => r.json()).then(res => {
         if (!res.ok) throw new Error(res.error || "Delete failed");
         d.tr.remove();
+        applyAdminDayFilter();
     }).catch(() => {
         btn.disabled = false;
     });
@@ -2110,6 +2599,7 @@ function renderSnapshotRow(tr, row) {
         <button type="button" class="gen-action del" onclick="deleteSnapshotRow(this)">Delete</button>
         <button type="button" class="gen-action edit" onclick="startInlineEdit(this)">Edit</button>
     `;
+    applyAdminDayFilter();
 }
 
 function openSnapshotEdit(btn) {
@@ -2167,11 +2657,55 @@ document.getElementById("snapshotEditForm").addEventListener("submit", function(
         tds[4].textContent = row.room;
         tds[5].textContent = row.target;
         tds[6].textContent = row.label ? row.label : "-";
+        applyAdminDayFilter();
         closeSnapshotEdit();
     }).catch(() => {});
 });
 
+function applyAdminDayFilter() {
+    const dayFilter = document.getElementById("adminDayFilter");
+    if (!dayFilter) return;
+    const selectedDay = dayFilter.value || "ALL";
+    const mainRows = Array.from(document.querySelectorAll("#adminTimetableBodyMain tr"));
+    const snapshotRows = Array.from(document.querySelectorAll("#adminTimetableBodySnapshot tr"));
+
+    let mainVisible = 0;
+    const applyToRows = (rows) => {
+        rows.forEach((tr) => {
+            const rowDay = tr.dataset.day || "";
+            const match = selectedDay === "ALL" || rowDay === selectedDay;
+            tr.style.display = match ? "" : "none";
+            if (match && rows === mainRows) mainVisible += 1;
+        });
+    };
+
+    applyToRows(mainRows);
+    applyToRows(snapshotRows);
+
+    const countTag = document.getElementById("adminDayFilterCount");
+    if (countTag) {
+        countTag.textContent = `Showing ${mainVisible} row(s)`;
+    }
+}
+
+function initAdminDayFilter() {
+    const dayFilter = document.getElementById("adminDayFilter");
+    const resetBtn = document.getElementById("adminDayFilterReset");
+    if (!dayFilter || !resetBtn) return;
+
+    dayFilter.onchange = applyAdminDayFilter;
+    resetBtn.onclick = () => {
+        dayFilter.value = "ALL";
+        applyAdminDayFilter();
+    };
+
+    applyAdminDayFilter();
+}
+
 lucide.createIcons();
+updateLiveAdminHeader();
+setInterval(updateLiveAdminHeader, 60000);
+initAdminDayFilter();
 
 const params = new URLSearchParams(window.location.search);
 const msg = params.get("message") || "";
@@ -2194,3 +2728,5 @@ setTimeout(() => {
 
 </body>
 </html>
+
+

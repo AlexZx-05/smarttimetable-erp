@@ -75,6 +75,7 @@ OTP_EXPIRY_SECONDS = int(os.environ.get("OTP_EXPIRY_SECONDS", "300"))
 OTP_MAX_ATTEMPTS = int(os.environ.get("OTP_MAX_ATTEMPTS", "5"))
 OTP_RESEND_COOLDOWN_SECONDS = int(os.environ.get("OTP_RESEND_COOLDOWN_SECONDS", "30"))
 OTP_MAX_REQUESTS_PER_HOUR = int(os.environ.get("OTP_MAX_REQUESTS_PER_HOUR", "5"))
+MAX_EVENTS_PER_DAY = 3
 _OTP_SESSION_STATE = {}
 _OTP_PHONE_SEND_LOGS = {}
 
@@ -664,6 +665,39 @@ def to_calendar_event(event, viewer_email):
             "is_owner": event.get("creator_email", "") == viewer_email
         }
     }
+
+
+def can_add_event_for_date(events, date_value, creator_role, creator_email, exclude_id=""):
+    date_str = (date_value or "").strip()
+    role = (creator_role or "").strip().lower()
+    owner = (creator_email or "").strip().lower()
+    exclude = (exclude_id or "").strip()
+    if not date_str:
+        return False
+
+    count = 0
+    for e in events:
+        if (e.get("date", "") or "").strip() != date_str:
+            continue
+        if exclude and (e.get("id", "") or "").strip() == exclude:
+            continue
+
+        e_role = (e.get("creator_role", "") or "").strip().lower()
+        e_owner = (e.get("creator_email", "") or "").strip().lower()
+
+        # Shared stream (teacher/admin) capped together.
+        if role in ("teacher", "admin"):
+            if e_role in ("teacher", "admin"):
+                count += 1
+            continue
+
+        # Student stream is private and capped per-student.
+        if role == "student":
+            if e_role == "student" and e_owner == owner:
+                count += 1
+            continue
+
+    return count < MAX_EVENTS_PER_DAY
 
 
 def get_upcoming_vacations(limit=10):
@@ -1862,6 +1896,17 @@ def events():
         for e in all_events:
             target = sanitize_target_department(e.get("target", "ALL"), default="ALL")
             is_owner = e.get("creator_email", "") == email
+            creator_role = (e.get("creator_role", "") or "").strip().lower()
+
+            # Student-created events are private to the same student only.
+            if creator_role == "student" and not is_owner:
+                continue
+
+            # Teacher/Admin/System events are visible to all users.
+            if creator_role in ("teacher", "admin", "system"):
+                filtered.append(e)
+                continue
+
             if target == "ALL" or target == viewer_dept or is_owner:
                 filtered.append(e)
         all_events = filtered
@@ -1888,6 +1933,13 @@ def add_teacher_event():
         event_type = "general"
 
     all_events = load_events()
+    if not can_add_event_for_date(
+        all_events,
+        date_value=date,
+        creator_role="teacher",
+        creator_email=session.get("email", "")
+    ):
+        return f"No more than {MAX_EVENTS_PER_DAY} shared events are allowed on this date.", 400
     all_events.append({
         "id": str(uuid.uuid4()),
         "title": title,
@@ -1925,6 +1977,15 @@ def update_teacher_event():
         if e.get("id") == event_id:
             if e.get("creator_email", "") != session.get("email", ""):
                 return "Forbidden", 403
+            candidate_date = date if date else e.get("date", "")
+            if not can_add_event_for_date(
+                all_events,
+                date_value=candidate_date,
+                creator_role="teacher",
+                creator_email=session.get("email", ""),
+                exclude_id=event_id
+            ):
+                return f"No more than {MAX_EVENTS_PER_DAY} shared events are allowed on this date.", 400
             if title:
                 e["title"] = title
             if subject:
@@ -1989,6 +2050,13 @@ def add_student_event():
         event_type = "general"
 
     all_events = load_events()
+    if not can_add_event_for_date(
+        all_events,
+        date_value=date,
+        creator_role="student",
+        creator_email=session.get("email", "")
+    ):
+        return f"No more than {MAX_EVENTS_PER_DAY} personal events are allowed on this date.", 400
     all_events.append({
         "id": str(uuid.uuid4()),
         "title": title,
@@ -2026,6 +2094,15 @@ def update_student_event():
         if e.get("id") == event_id:
             if e.get("creator_email", "") != session.get("email", ""):
                 return "Forbidden", 403
+            candidate_date = date if date else e.get("date", "")
+            if not can_add_event_for_date(
+                all_events,
+                date_value=candidate_date,
+                creator_role="student",
+                creator_email=session.get("email", ""),
+                exclude_id=event_id
+            ):
+                return f"No more than {MAX_EVENTS_PER_DAY} personal events are allowed on this date.", 400
             if title:
                 e["title"] = title
             if subject:
@@ -2087,6 +2164,13 @@ def admin_add_event():
         event_type = "general"
 
     all_events = load_events()
+    if not can_add_event_for_date(
+        all_events,
+        date_value=date,
+        creator_role="admin",
+        creator_email=session.get("email", "")
+    ):
+        return redirect("/admin/dashboard?error=No+more+than+3+shared+events+are+allowed+on+this+date.")
     all_events.append({
         "id": str(uuid.uuid4()),
         "title": title,
@@ -2136,6 +2220,15 @@ def admin_edit_event():
         date = request.form.get("date", "").strip()
         event_type = request.form.get("event_type", "general").strip().lower()
         important = request.form.get("important", "no").strip().lower() == "yes"
+        candidate_date = date if date else target.get("date", "")
+        if not can_add_event_for_date(
+            all_events,
+            date_value=candidate_date,
+            creator_role="admin",
+            creator_email=session.get("email", ""),
+            exclude_id=event_id
+        ):
+            return redirect("/admin/dashboard?error=No+more+than+3+shared+events+are+allowed+on+this+date.")
         if title:
             target["title"] = title
         if subject:
@@ -2173,6 +2266,14 @@ def admin_update_event_api():
     updated = None
     for e in all_events:
         if e.get("id", "") == event_id:
+            if not can_add_event_for_date(
+                all_events,
+                date_value=date,
+                creator_role="admin",
+                creator_email=session.get("email", ""),
+                exclude_id=event_id
+            ):
+                return jsonify({"ok": False, "error": "No more than 3 shared events are allowed on this date."}), 400
             e["title"] = title
             e["subject"] = e.get("subject", title) or title
             e["date"] = date
