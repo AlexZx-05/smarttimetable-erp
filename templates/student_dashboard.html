@@ -93,7 +93,9 @@ body {
 .avatar img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    padding: 2px;
+    background: rgba(8, 17, 40, 0.34);
     border-radius: 50%;
 }
 
@@ -145,15 +147,21 @@ body {
     width: 20px;
     height: 20px;
     stroke-width: 2;
-    margin-right: 15px;
+    margin-right: 0;
     min-width: 20px;
 }
 .sidebar span {
     opacity: 0;
-    transition: opacity 0.2s ease;
+    width: 0;
+    overflow: hidden;
+    transition: opacity 0.2s ease, width 0.2s ease;
     font-weight: 500;
 }
-.sidebar.expanded span { opacity: 1; }
+.sidebar.expanded svg { margin-right: 15px; }
+.sidebar.expanded span {
+    opacity: 1;
+    width: auto;
+}
 
 /* ===== MAIN ===== */
 .main {
@@ -277,22 +285,24 @@ body {
 .overview-card {
     position: relative;
     overflow: hidden;
-    border: 1px solid #d7e4fb;
+    border: 1px solid #c8d8f1;
+    border-radius: 22px;
     background:
-        radial-gradient(circle at 90% 10%, rgba(127, 170, 255, 0.22), rgba(127, 170, 255, 0)),
-        radial-gradient(circle at 10% 110%, rgba(68, 130, 246, 0.18), rgba(68, 130, 246, 0)),
-        linear-gradient(120deg, #ffffff, #f6faff);
-    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+        radial-gradient(circle at 92% 6%, rgba(130, 169, 235, 0.22), rgba(130, 169, 235, 0)),
+        radial-gradient(circle at -5% 105%, rgba(130, 169, 235, 0.14), rgba(130, 169, 235, 0)),
+        linear-gradient(120deg, #f5f9ff, #e9f1ff);
+    box-shadow: 0 14px 30px rgba(14, 31, 67, 0.08);
+    padding: 0;
 }
 
 .overview-card::after {
     content: "";
     position: absolute;
-    right: -48px;
-    top: -48px;
-    width: 170px;
-    height: 170px;
-    background: radial-gradient(circle, rgba(45, 108, 223, 0.18), rgba(45, 108, 223, 0));
+    right: -46px;
+    top: -52px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(45, 108, 223, 0.14), rgba(45, 108, 223, 0));
     pointer-events: none;
 }
 
@@ -301,71 +311,175 @@ body {
     align-items: flex-start;
     justify-content: space-between;
     gap: 14px;
-    margin-bottom: 16px;
+    margin: 0;
+    padding: 30px 30px 16px 30px;
+    border-bottom: 1px solid #cfdef5;
+    background:
+        radial-gradient(circle at 0% 0%, rgba(255,255,255,0.75), rgba(255,255,255,0)),
+        linear-gradient(92deg, #eef4ff, #e4edff);
 }
 
 .overview-header h3 {
     margin: 0;
-    font-size: 31px;
-    letter-spacing: -0.4px;
+    font-size: clamp(30px, 2.4vw, 40px);
+    letter-spacing: -0.015em;
+    line-height: 1.12;
+    font-weight: 700;
+    color: #162b54;
 }
 
 .overview-sub {
     margin: 8px 0 0 0;
     color: #506080;
     font-size: 14px;
-    max-width: 680px;
+    max-width: 760px;
     line-height: 1.6;
+    font-weight: 500;
 }
 
 .overview-pill {
     white-space: nowrap;
     font-size: 11px;
     font-weight: 700;
-    color: #1f4297;
-    border: 1px solid #cfe0ff;
-    background: #eef4ff;
+    color: #1e4697;
+    border: 1px solid #b9d0f8;
+    background: linear-gradient(180deg, #eef5ff, #e8f0ff);
     border-radius: 999px;
-    padding: 8px 12px;
+    padding: 9px 14px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.95);
 }
 
 .overview-kpis {
     display: grid;
     grid-template-columns: repeat(3, minmax(180px, 1fr));
-    gap: 12px;
+    gap: 16px;
+    padding: 18px 30px 30px 30px;
 }
 
 .kpi-card {
-    border: 1px solid #dbe7fb;
-    border-radius: 12px;
-    padding: 12px 13px;
-    background: rgba(255, 255, 255, 0.92);
+    position: relative;
+    border: 1px solid #cfe0fb;
+    border-radius: 20px;
+    padding: 20px 20px 18px 20px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(247, 251, 255, 0.92));
+    box-shadow: 0 10px 22px rgba(20, 55, 109, 0.08);
+    transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+    min-height: 174px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.kpi-card.kpi-tone-blue {
+    background: linear-gradient(180deg, #f4f8ff, #eaf2ff);
+    border-color: #c2d6fa;
+}
+
+.kpi-card.kpi-tone-green {
+    background: linear-gradient(180deg, #eef8f5, #e4f3ed);
+    border-color: #b8ddcf;
+}
+
+.kpi-card.kpi-tone-sand {
+    background: linear-gradient(180deg, #fff8ef, #f8efe1);
+    border-color: #efd2ad;
+}
+
+.kpi-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.kpi-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+    border: 1px solid #bfd2f2;
+    background: rgba(255, 255, 255, 0.7);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #1f4c9a;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.kpi-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2.1;
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+    border-color: #bed3fa;
+    box-shadow: 0 14px 26px rgba(20, 55, 109, 0.12);
 }
 
 .kpi-label {
     font-size: 11px;
+    letter-spacing: 0.06em;
+    color: #4b5f86;
+    margin-bottom: 8px;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: #61739a;
-    margin-bottom: 6px;
 }
 
 .kpi-value {
-    font-size: 26px;
+    font-size: clamp(38px, 2.4vw, 46px);
     font-weight: 700;
-    color: #12264f;
-    line-height: 1;
+    color: #12285a;
+    line-height: 0.98;
+    letter-spacing: -0.012em;
 }
 
 .kpi-meta {
     margin-top: 6px;
     font-size: 12px;
-    color: #42547a;
+    color: #5a7097;
+    line-height: 1.45;
 }
 
 .today-card {
-    border: 1px solid #dbe4f5;
-    background: linear-gradient(180deg, #ffffff, #f9fbff);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #d4e2f8;
+    border-radius: 18px;
+    background: linear-gradient(180deg, #ffffff, #f7faff);
+    box-shadow: 0 12px 24px rgba(19, 44, 90, 0.07);
+}
+
+.today-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 0;
+    background: linear-gradient(90deg, #4a84ff, #57b4ff);
+}
+
+.today-card-my {
+    border-color: #c8d9ff;
+    background:
+        radial-gradient(circle at 100% 0%, rgba(83, 136, 241, 0.12), rgba(83, 136, 241, 0)),
+        linear-gradient(180deg, #ffffff, #f4f8ff);
+}
+
+.today-card-my::before {
+    background: linear-gradient(90deg, #3f7cef, #57a6ff);
+}
+
+.today-card-institute {
+    border-color: #c8e0f1;
+    background:
+        radial-gradient(circle at 100% 0%, rgba(22, 163, 184, 0.12), rgba(22, 163, 184, 0)),
+        linear-gradient(180deg, #ffffff, #f3fbff);
+}
+
+.today-card-institute::before {
+    background: linear-gradient(90deg, #2097c6, #3ab7c6);
 }
 
 .today-head {
@@ -378,22 +492,87 @@ body {
 
 .today-head h3 {
     margin: 0;
-    font-size: 30px;
-    letter-spacing: -0.3px;
+    font-size: clamp(31px, 2.3vw, 40px);
+    letter-spacing: -0.015em;
+    color: #132f61;
 }
 
 .today-badge {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
-    color: #1f4297;
+    color: #1f4d9e;
     border-radius: 999px;
-    border: 1px solid #d2e1ff;
-    background: #eef4ff;
-    padding: 6px 10px;
+    border: 1px solid #c5d9ff;
+    background: linear-gradient(180deg, #edf4ff, #e6efff);
+    padding: 7px 12px;
+}
+
+.today-card-my .today-badge {
+    color: #1f4d9e;
+    border-color: #bcd4ff;
+    background: linear-gradient(180deg, #eaf3ff, #e2edff);
+}
+
+.today-card-institute .today-badge {
+    color: #0f6b83;
+    border-color: #b8dce8;
+    background: linear-gradient(180deg, #e8f8fd, #ddf3fb);
 }
 
 .table-wrap {
     overflow-x: auto;
+    border: 1px solid #dbe6f6;
+    border-radius: 14px;
+    background: #fff;
+}
+
+.today-card table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.today-card th {
+    background: #eef3fc;
+    color: #1d3f7b;
+    padding: 13px 14px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    text-align: left;
+}
+
+.today-card td {
+    padding: 13px 14px;
+    border-bottom: 1px solid #e3ebf8;
+    font-size: 15px;
+    color: #132744;
+}
+
+.today-card tbody tr:hover td {
+    background: #f7faff;
+}
+
+.today-card td:first-child {
+    font-weight: 700;
+    color: #1d3f7b;
+}
+
+.today-card tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.today-card-institute th {
+    background: #edf6fb;
+    color: #0f5f74;
+}
+
+.today-card-institute td:first-child {
+    color: #0f5f74;
+}
+
+.today-card-institute tbody tr:hover td {
+    background: #f3fbff;
 }
 
 .empty-note {
@@ -423,35 +602,45 @@ td {
 }
 
 .tt-day-card {
-    border: 1px solid #dfe7f6;
-    border-radius: 14px;
-    padding: 14px;
-    margin-bottom: 12px;
-    background: linear-gradient(180deg, #ffffff, #f9fbff);
-    box-shadow: 0 8px 20px rgba(18, 33, 77, 0.04);
+    border: 1px solid #d8e3f6;
+    border-radius: 16px;
+    padding: 15px 15px 14px 15px;
+    margin-bottom: 14px;
+    background:
+        radial-gradient(circle at 100% 0%, rgba(83, 136, 241, 0.1), rgba(83, 136, 241, 0)),
+        linear-gradient(180deg, #ffffff, #f8fbff);
+    box-shadow: 0 10px 22px rgba(18, 33, 77, 0.06);
 }
 
 .tt-day-head {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     gap: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 .tt-day-head h4 {
     margin: 0;
-    color: #182540;
-    font-size: 16px;
+    color: #162d58;
+    font-size: 20px;
+    letter-spacing: -0.012em;
+}
+
+.tt-day-note {
+    margin: 4px 0 0 0;
+    font-size: 13px;
+    color: #5b7095;
 }
 
 .tt-count {
-    font-size: 11px;
-    padding: 4px 9px;
+    font-size: 12px;
+    padding: 6px 10px;
     border-radius: 999px;
-    background: #e9f0ff;
-    color: #1e429f;
-    font-weight: 600;
+    background: linear-gradient(180deg, #e9f2ff, #e2ecff);
+    border: 1px solid #c7dbfd;
+    color: #1e4698;
+    font-weight: 700;
     white-space: nowrap;
 }
 
@@ -461,46 +650,67 @@ td {
 }
 
 .tt-item {
-    border: 1px solid #e3e9f5;
-    border-radius: 10px;
-    padding: 10px 12px;
-    background: #fff;
+    border: 1px solid #dfe7f6;
+    border-radius: 12px;
+    padding: 11px 12px;
+    background: linear-gradient(180deg, #ffffff, #fbfdff);
     display: grid;
-    grid-template-columns: 58px 1fr;
+    grid-template-columns: 64px 1fr;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 .tt-slot {
-    border-radius: 8px;
-    padding: 6px 0;
+    border-radius: 10px;
+    padding: 7px 0;
     text-align: center;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
-    color: #0f2f74;
-    background: #e8f0ff;
+    color: #17408b;
+    border: 1px solid #c8daf8;
+    background: linear-gradient(180deg, #ecf3ff, #e4eeff);
 }
 
 .tt-subject {
-    font-size: 14px;
-    font-weight: 600;
-    color: #0f172a;
-    margin-bottom: 2px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #13284b;
+    margin-bottom: 3px;
 }
 
 .tt-meta {
-    font-size: 12px;
-    color: #4a5a7a;
+    font-size: 13px;
+    color: #4a5f86;
+}
+
+.tt-dot {
+    margin: 0 7px;
+    color: #8ca0c4;
+}
+
+.tt-dept-tag {
+    margin-left: 8px;
+    display: inline-block;
+    border-radius: 999px;
+    border: 1px solid #c0d8f8;
+    background: linear-gradient(180deg, #ebf4ff, #e4eeff);
+    color: #1d4f95;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
 }
 
 .chip {
-    display: inline-block;
-    margin-left: 6px;
-    padding: 2px 8px;
+    display: inline-flex;
+    align-items: center;
+    margin-left: 8px;
+    padding: 3px 8px;
     border-radius: 999px;
     font-size: 11px;
-    background: #fef3c7;
-    color: #92400e;
+    font-weight: 700;
+    background: linear-gradient(180deg, #fff3cc, #ffeab2);
+    border: 1px solid #f5d48c;
+    color: #8a4d00;
 }
 
 .filter-wrap {
@@ -555,6 +765,63 @@ td {
     background: #e7efff;
     border-radius: 30px;
     padding: 4px 10px;
+}
+
+.institute-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin: -25px -25px 16px -25px;
+    padding: 18px 24px;
+    border-bottom: 1px solid #d6e3f8;
+    background:
+        radial-gradient(circle at 0% 0%, rgba(255,255,255,0.72), rgba(255,255,255,0)),
+        linear-gradient(95deg, #eef4ff, #e6efff);
+    border-radius: 14px 14px 0 0;
+}
+
+.institute-topbar h3 {
+    margin: 0;
+    font-size: 36px;
+    letter-spacing: -0.016em;
+    color: #15315f;
+}
+
+.institute-topbar .filter-wrap {
+    margin-bottom: 0;
+    min-width: 720px;
+    border: 1px solid #cadbf6;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.68);
+    padding: 10px;
+}
+
+.institute-topbar .filter-row {
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+}
+
+.institute-topbar .filter-select {
+    min-width: 260px;
+    min-height: 44px;
+    font-size: 16px;
+    border-radius: 10px;
+}
+
+.institute-topbar .filter-btn {
+    min-height: 44px;
+    border-radius: 10px;
+    padding: 0 16px;
+    font-weight: 600;
+}
+
+.institute-topbar .filter-count {
+    min-height: 44px;
+    padding: 0 14px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 13px;
 }
 
 .profile-panel {
@@ -674,7 +941,9 @@ td {
 .profile-avatar-lg img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    padding: 6px;
+    background: rgba(8, 17, 40, 0.28);
 }
 
 .profile-side .meta-line {
@@ -1248,13 +1517,29 @@ td {
     .overview-header {
         flex-direction: column;
         align-items: flex-start;
+        padding: 18px 16px 14px 16px;
+    }
+    .overview-pill {
+        padding: 8px 12px;
+        font-size: 12px;
     }
     .overview-header h3,
     .today-head h3 {
-        font-size: 24px;
+        font-size: 27px;
+    }
+    .overview-sub {
+        font-size: 13px;
     }
     .overview-kpis {
         grid-template-columns: 1fr;
+        padding: 12px 16px 16px 16px;
+    }
+    .kpi-card {
+        min-height: 148px;
+        padding: 14px;
+    }
+    .kpi-value {
+        font-size: 34px;
     }
     .profile-main {
         grid-template-columns: 1fr;
@@ -1274,6 +1559,36 @@ td {
     }
     .calendar-side-grid {
         grid-template-columns: 1fr;
+    }
+    .institute-topbar {
+        flex-direction: column;
+        align-items: stretch;
+        margin: -25px -25px 14px -25px;
+        padding: 14px 14px 12px 14px;
+    }
+    .institute-topbar .filter-wrap {
+        min-width: 0;
+        width: 100%;
+        padding: 8px;
+    }
+    .institute-topbar h3 {
+        font-size: 28px;
+    }
+    .institute-topbar .filter-row {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+    .institute-topbar .filter-select {
+        min-width: 180px;
+        min-height: 40px;
+        font-size: 14px;
+    }
+    .institute-topbar .filter-btn {
+        min-height: 40px;
+    }
+    .institute-topbar .filter-count {
+        min-height: 40px;
+        font-size: 12px;
     }
     .student-event-grid {
         grid-template-columns: 1fr;
@@ -1431,31 +1746,40 @@ td {
         <div class="card overview-card">
             <div class="overview-header">
                 <div>
-                    <h3>Student Command Center</h3>
-                    <p class="overview-sub">Track today's learning load, stay aligned with your department schedule, and keep your academic calendar in sync from one place.</p>
+                    <h3>Dashboard Overview</h3>
+                    <p class="overview-sub">Live academic snapshot for class load, readiness, and daily schedule alignment.</p>
                 </div>
-                <span class="overview-pill">{{ today_name }} Briefing</span>
+                <span class="overview-pill">Student Analytics</span>
             </div>
             <div class="overview-kpis">
-                <div class="kpi-card">
-                    <div class="kpi-label">Department</div>
+                <div class="kpi-card kpi-tone-blue">
+                    <div class="kpi-top">
+                        <div class="kpi-label">Department</div>
+                        <span class="kpi-icon"><i data-lucide="graduation-cap"></i></span>
+                    </div>
                     <div class="kpi-value">{{ student_department }}</div>
                     <div class="kpi-meta">Active academic stream</div>
                 </div>
-                <div class="kpi-card">
-                    <div class="kpi-label">My Timetable</div>
+                <div class="kpi-card kpi-tone-green">
+                    <div class="kpi-top">
+                        <div class="kpi-label">My Timetable</div>
+                        <span class="kpi-icon"><i data-lucide="sliders-horizontal"></i></span>
+                    </div>
                     <div class="kpi-value">{{ my_timetable | length }}</div>
                     <div class="kpi-meta">Total classes mapped</div>
                 </div>
-                <div class="kpi-card">
-                    <div class="kpi-label">Today's Classes</div>
+                <div class="kpi-card kpi-tone-sand">
+                    <div class="kpi-top">
+                        <div class="kpi-label">Today's Classes</div>
+                        <span class="kpi-icon"><i data-lucide="calendar-days"></i></span>
+                    </div>
                     <div class="kpi-value">{{ my_today | length }}</div>
                     <div class="kpi-meta">For your branch</div>
                 </div>
             </div>
         </div>
 
-        <div class="card today-card">
+        <div class="card today-card today-card-my">
             <div class="today-head">
                 <h3>My Classes Today ({{ today_name }})</h3>
                 <span class="today-badge">{{ my_today | length }} scheduled</span>
@@ -1490,7 +1814,7 @@ td {
             {% endif %}
         </div>
 
-        <div class="card today-card">
+        <div class="card today-card today-card-institute">
             <div class="today-head">
                 <h3>Institute Classes Today ({{ today_name }})</h3>
                 <span class="today-badge">{{ institute_today | length }} active</span>
@@ -1541,23 +1865,24 @@ td {
     <!-- INSTITUTE TIMETABLE -->
     <div id="institute-timetable" class="section">
         <div class="card">
-            <h3>Institute Timetable</h3>
-            <div class="filter-wrap">
-                <label class="filter-label">Filter by Department</label>
-                <div class="filter-row">
-                    <select id="deptFilter" class="filter-select">
-                        <option value="ALL">All Departments</option>
-                    </select>
-                    <select id="dayFilter" class="filter-select">
-                        <option value="ALL">All Days</option>
-                        <option value="Mon">Monday</option>
-                        <option value="Tue">Tuesday</option>
-                        <option value="Wed">Wednesday</option>
-                        <option value="Thu">Thursday</option>
-                        <option value="Fri">Friday</option>
-                    </select>
-                    <button id="clearDeptFilter" class="filter-btn" type="button">Reset</button>
-                    <span id="filterCount" class="filter-count">Showing 0 classes</span>
+            <div class="institute-topbar">
+                <h3>Institute Timetable</h3>
+                <div class="filter-wrap">
+                    <div class="filter-row">
+                        <select id="deptFilter" class="filter-select">
+                            <option value="ALL">All Departments</option>
+                        </select>
+                        <select id="dayFilter" class="filter-select">
+                            <option value="ALL">All Days</option>
+                            <option value="Mon">Monday</option>
+                            <option value="Tue">Tuesday</option>
+                            <option value="Wed">Wednesday</option>
+                            <option value="Thu">Thursday</option>
+                            <option value="Fri">Friday</option>
+                        </select>
+                        <button id="clearDeptFilter" class="filter-btn" type="button">Reset</button>
+                        <span id="filterCount" class="filter-count">Showing 0 classes</span>
+                    </div>
                 </div>
             </div>
 
@@ -1578,7 +1903,6 @@ td {
             </div>
             <div class="calendar-action-row">
                 <div id="studentCalendarActionMsg" class="calendar-action-msg"></div>
-                <button type="button" class="calendar-add-btn" onclick="openStudentEventModal('add', { date: '' })">Add Event</button>
             </div>
             <div class="calendar-main-grid">
                 <div id="calendarUI"></div>
@@ -1753,7 +2077,7 @@ function groupByDay(rows) {
 function renderSummary(containerId, rows, type) {
     const container = document.getElementById(containerId);
     if (!rows.length) {
-        container.innerHTML = "<p style='color:#64748b;'>No timetable available.</p>";
+        container.innerHTML = "<div class='empty-note'>No timetable available.</div>";
         return;
     }
 
@@ -1762,24 +2086,32 @@ function renderSummary(containerId, rows, type) {
     let html = "";
 
     orderedDays.forEach(day => {
-        const sentence = type === "my"
-            ? `On ${fullDayName[day] || day}, in your timetable you have:`
-            : `On ${fullDayName[day] || day}, in institute timetable there are:`;
+        const dayTitle = fullDayName[day] || day;
+        const subtitle = type === "my"
+            ? "Your classes for the day"
+            : "Institute schedule for the day";
+        const classCount = grouped[day].length;
+        const classText = classCount === 1 ? "class" : "classes";
 
         html += `<div class="tt-day-card">
                     <div class="tt-day-head">
-                        <h4>${sentence}</h4>
-                        <span class="tt-count">${grouped[day].length} class(es)</span>
+                        <div>
+                            <h4>${dayTitle}</h4>
+                            <p class="tt-day-note">${subtitle}</p>
+                        </div>
+                        <span class="tt-count">${classCount} ${classText}</span>
                     </div>
                     <div class="tt-list">`;
         grouped[day].forEach(r => {
             const label = r.label ? `<span class="chip">${r.label}</span>` : "";
-            const target = type === "institute" ? ` | Dept: ${r.target}` : "";
+            const target = type === "institute"
+                ? `<span class="tt-dept-tag">${r.target || "ALL"}</span>`
+                : "";
             html += `<div class="tt-item">
                         <div class="tt-slot">${r.slot}</div>
                         <div>
                             <div class="tt-subject">${r.subject}${label}</div>
-                            <div class="tt-meta">${r.teacher} | Room ${r.room}${target}</div>
+                            <div class="tt-meta">${r.teacher}<span class="tt-dot">•</span>Room ${r.room}${target}</div>
                         </div>
                     </div>`;
         });
@@ -1996,27 +2328,13 @@ function showSection(id, el = null) {
                     applyReadableEventStyle(info.el);
                 },
                 dateClick: function(info) {
-                    setStudentCalendarMessage("");
+                    setStudentCalendarMessage("Calendar is view-only for students.");
                     const box = document.getElementById("studentEventDetails");
                     if (box) box.classList.add("is-hidden");
-                    openStudentEventModal("add", { date: info.dateStr, type: "general", important: false });
                 },
                 eventClick: function(info) {
-                    const ext = info.event.extendedProps || {};
                     renderStudentEventInsights(info);
-                    if (ext.is_owner) {
-                        setStudentCalendarMessage("");
-                        openStudentEventModal("edit", {
-                            id: info.event.id,
-                            title: info.event.title || "",
-                            subject: ext.subject || "",
-                            date: (info.event.startStr || "").slice(0, 10),
-                            type: ext.type || "general",
-                            important: !!ext.important,
-                            customColor: ext.custom_color || ""
-                        });
-                        return;
-                    }
+                    setStudentCalendarMessage("");
                 }
             });
 

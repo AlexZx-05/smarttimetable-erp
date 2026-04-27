@@ -42,10 +42,11 @@
         }
 
         .login-wrapper {
-            display: flex;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(420px, 48%);
             width: min(1080px, 100%);
             max-height: calc(100vh - 32px);
-            background: #fff;
+            background: transparent;
             border-radius: 20px;
             overflow: hidden;
             border: 1px solid rgba(180, 198, 227, 0.35);
@@ -54,7 +55,7 @@
         }
 
         .left-panel {
-            flex: 1;
+            min-width: 0;
             position: relative;
             overflow: hidden;
             background: linear-gradient(130deg, var(--panel-dark-1), var(--panel-dark-2));
@@ -143,10 +144,11 @@
         }
 
         .right-panel {
-            flex: 1;
+            min-width: 0;
             padding: 30px 34px;
             background: linear-gradient(180deg, #fcfdff, #f7faff);
             overflow-y: auto;
+            border-left: 1px solid rgba(189, 206, 235, 0.55);
         }
 
         .panel-title {
@@ -163,7 +165,7 @@
             border-radius: 12px;
             padding: 11px 13px;
             margin-bottom: 16px;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
         }
 
@@ -191,7 +193,7 @@
         }
 
         label {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
             color: var(--text-main);
             margin-top: 3px;
@@ -469,7 +471,7 @@
             }
         }
 
-        @media(max-width: 960px) {
+        @media(max-width: 1100px) {
             body {
                 height: auto;
                 overflow: auto;
@@ -477,6 +479,7 @@
             }
 
             .login-wrapper {
+                display: flex;
                 flex-direction: column;
                 max-height: none;
             }
@@ -489,6 +492,7 @@
             .right-panel {
                 padding: 24px;
                 overflow: visible;
+                border-left: none;
             }
 
             .panel-title {
