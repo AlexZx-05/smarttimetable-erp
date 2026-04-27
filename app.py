@@ -257,6 +257,84 @@ def normalize_prefs(pref_list):
     return (cleaned + ["-:-", "-:-", "-:-"])[:3]
 
 
+def _parse_pref_slot(pref):
+    token = (pref or "").strip()
+    if not token or token == "-:-":
+        return {
+            "raw": token or "-:-",
+            "label": "Unassigned",
+            "status": "empty"
+        }
+
+    if ":" not in token:
+        return {
+            "raw": token,
+            "label": token,
+            "status": "invalid"
+        }
+
+    day_raw, slot_raw = token.split(":", 1)
+    day_key = day_raw.strip().lower()
+    slot_key = slot_raw.strip().upper()
+    day_map = {
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri"
+    }
+
+    if day_key in day_map and re.match(r"^S\d+$", slot_key):
+        return {
+            "raw": token,
+            "label": f"{day_map[day_key]}:{slot_key}",
+            "status": "valid"
+        }
+
+    return {
+        "raw": token,
+        "label": token,
+        "status": "invalid"
+    }
+
+
+def build_approved_course_stack(courses):
+    enriched = []
+    for course in courses:
+        raw_prefs = normalize_prefs(course.get("prefs", []))
+        slot_items = [_parse_pref_slot(p) for p in raw_prefs]
+        valid_count = len([s for s in slot_items if s["status"] == "valid"])
+
+        if valid_count == 3:
+            coverage = "Complete"
+            coverage_tone = "complete"
+        elif valid_count > 0:
+            coverage = "Partial"
+            coverage_tone = "partial"
+        else:
+            coverage = "Missing"
+            coverage_tone = "missing"
+
+        students_raw = str(course.get("students", "")).strip()
+        try:
+            students = int(students_raw)
+        except ValueError:
+            students = students_raw if students_raw else "-"
+
+        enriched.append({
+            "teacher": course.get("teacher", "").strip() or "Unknown",
+            "subject": course.get("subject", "").strip() or "Untitled Subject",
+            "target": (course.get("target", "ALL") or "ALL").strip().upper(),
+            "students": students,
+            "slot_items": slot_items,
+            "coverage": coverage,
+            "coverage_tone": coverage_tone
+        })
+
+    enriched.sort(key=lambda c: (c.get("teacher", ""), c.get("subject", "")))
+    return enriched
+
+
 def find_course(courses, subject, teacher, target):
     for c in courses:
         if (
@@ -1396,7 +1474,7 @@ def admin_dashboard():
         timetable_history=timetable_history,
         timetable_history_grouped=timetable_history_grouped,
         approved_courses_count=len(courses),
-        approved_course_stack=sorted(courses, key=lambda c: (c.get("teacher", ""), c.get("subject", ""))),
+        approved_course_stack=build_approved_course_stack(courses),
         semester_options=SEMESTER_OPTIONS,
         default_semester_key=default_semester_key,
         default_semester_year=default_semester_year,

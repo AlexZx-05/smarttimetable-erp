@@ -294,7 +294,7 @@ td {
 }
 
 #timetable-section table {
-    table-layout: fixed;
+    table-layout: auto;
 }
 
 #timetable-section td,
@@ -302,44 +302,241 @@ td {
     vertical-align: middle;
 }
 
+.tt-admin-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+    padding: 0;
+}
+
+.tt-head-main {
+    min-width: 0;
+}
+
+.tt-admin-head h2 {
+    margin: 0;
+    font-size: clamp(34px, 3vw, 56px);
+    line-height: 1.08;
+    letter-spacing: -0.018em;
+    color: #183f7b;
+    text-wrap: balance;
+}
+
+.tt-admin-head p {
+    margin: 9px 0 0 0;
+    color: #556f98;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.tt-head-side {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 10px;
+    margin-right: 14px;
+}
+
+.tt-day-tools {
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.tt-day-tools label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #315a95;
+}
+
+.tt-day-select {
+    min-height: 38px;
+    min-width: 160px;
+    border-radius: 10px;
+    border: 1px solid #b6cbed;
+    background: #fff;
+    color: #1a3c73;
+    padding: 8px 10px;
+    font: inherit;
+    font-size: 13px;
+}
+
+.tt-day-reset {
+    min-height: 38px;
+    border-radius: 10px;
+    border: 1px solid #9fbce7;
+    background: linear-gradient(180deg, #f3f8ff, #dde9ff);
+    color: #204680;
+    padding: 8px 12px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.tt-day-reset:hover {
+    filter: brightness(1.02);
+    box-shadow: 0 4px 10px rgba(25, 65, 129, 0.14);
+}
+
+.tt-count {
+    border-radius: 999px;
+    border: 1px solid #a8c2e8;
+    background: linear-gradient(180deg, #e6f0ff, #d9e7ff);
+    color: #245198;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 9px 14px;
+    white-space: nowrap;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92);
+    align-self: auto;
+}
+
+.tt-shell {
+    border-radius: 22px;
+    border: 1px solid #c5d6ee;
+    background:
+        radial-gradient(circle at 96% 0%, rgba(166, 207, 255, 0.2), transparent 35%),
+        radial-gradient(circle at 0% 0%, rgba(195, 223, 255, 0.18), transparent 36%),
+        linear-gradient(180deg, #f8fbff, #eef5ff);
+    box-shadow: 0 12px 26px rgba(17, 43, 88, 0.07);
+}
+
+.tt-filter-panel {
+    max-width: 980px;
+    margin: 0 0 18px 0;
+    border: 1px solid #bfd3ef;
+    border-radius: 22px;
+    background:
+        radial-gradient(circle at 3% 0%, rgba(148, 201, 255, 0.16), transparent 30%),
+        linear-gradient(180deg, #eef5ff, #e8f0fe);
+    padding: 15px 16px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78);
+}
+
+.tt-filter-panel label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #1f4f91;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.tt-filter-controls {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.tt-filter-controls select {
+    flex: 1 1 230px;
+    min-height: 52px;
+    border-radius: 14px;
+    border: 1px solid #b9cdea;
+    background: #fff;
+    padding: 12px 14px;
+    font: inherit;
+    font-size: 15px;
+    color: #0f2a53;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+
+.tt-filter-controls button {
+    border: 1px solid #9fbce7;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #f3f8ff, #dde9ff);
+    color: #204680;
+    min-height: 52px;
+    padding: 12px 18px;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.14s ease, box-shadow 0.14s ease, filter 0.14s ease;
+}
+
+.tt-filter-controls button:hover {
+    transform: translateY(-0.5px);
+    box-shadow: 0 6px 14px rgba(25, 65, 129, 0.16);
+    filter: brightness(1.02);
+}
+
+.tt-filter-controls span {
+    align-self: center;
+    font-size: 13px;
+    color: #1f437e;
+    background: linear-gradient(180deg, #eaf2ff, #deebff);
+    border: 1px solid #b9d1f6;
+    border-radius: 999px;
+    padding: 11px 15px;
+    font-weight: 700;
+}
+
+.tt-table-wrap {
+    border: 1px solid #c4d4eb;
+    border-radius: 22px;
+    overflow-x: hidden;
+    overflow-y: visible;
+    background: linear-gradient(180deg, #f8fbff, #f3f8ff);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+
+.tt-table-wrap table {
+    margin: 0;
+    min-width: 0;
+    width: 100%;
+}
+
+.tt-table-wrap th {
+    background: linear-gradient(180deg, #d4deef, #cad7ec);
+    color: #1b4c8f;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 12px;
+    font-weight: 700;
+    border-bottom: 1px solid #b9cde9;
+    padding: 12px 14px;
+}
+
+.tt-table-wrap td {
+    border-bottom: 1px solid #d8e2f2;
+    background: #fbfdff;
+    font-size: 14px;
+    padding: 8px 12px;
+}
+
+.tt-table-wrap tbody tr:hover td {
+    background: #f2f7ff;
+}
+
 #timetable-section td:last-child {
-    width: 265px;
+    width: 330px;
 }
 
-#timetable-section th:nth-child(1),
-#timetable-section td:nth-child(1),
-#timetable-section th:nth-child(2),
-#timetable-section td:nth-child(2),
-#timetable-section th:nth-child(5),
-#timetable-section td:nth-child(5),
-#timetable-section th:nth-child(6),
-#timetable-section td:nth-child(6),
-#timetable-section th:nth-child(7),
-#timetable-section td:nth-child(7) {
-    width: 68px;
-}
-
-#timetable-section th:nth-child(4),
-#timetable-section td:nth-child(4) {
-    width: 165px;
-}
-
-#timetable-section th:nth-child(3),
 #timetable-section td:nth-child(3) {
-    width: 350px;
     word-break: break-word;
 }
 
 .tt-actions {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 6px;
-    width: fit-content;
-    border: 1px solid #d7e3f5;
-    background: #f3f7ff;
-    border-radius: 12px;
-    padding: 4px;
+    border: 1px solid #bfd0ea;
+    background: linear-gradient(180deg, #eef4ff, #e7efff);
+    border-radius: 14px;
+    padding: 5px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .tt-actions .action-btn {
@@ -348,21 +545,25 @@ td {
     align-items: center;
     justify-content: center;
     min-height: 34px;
-    min-width: 92px;
+    width: auto;
+    flex: 1 1 0;
+    min-width: 0;
     line-height: 1;
-    border-radius: 8px;
+    border-radius: 10px;
     font-weight: 700;
-    padding: 6px 12px;
-    font-size: 13px;
+    padding: 0 8px;
+    font-size: 12px;
     border: 1px solid transparent;
     box-shadow: none;
     transition: transform 0.14s ease, filter 0.14s ease, box-shadow 0.14s ease;
+    white-space: nowrap;
+    text-align: center;
 }
 
 .tt-actions .action-btn:hover {
     transform: translateY(-0.5px);
     filter: brightness(1.02);
-    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.1);
+    box-shadow: 0 5px 12px rgba(15, 23, 42, 0.12);
 }
 
 .tt-actions .action-btn:focus-visible {
@@ -370,28 +571,32 @@ td {
     outline-offset: 2px;
 }
 
+.tt-actions .tt-btn-edit {
+    grid-column: auto;
+}
+
 #timetable-section .tt-actions .reject {
-    background: linear-gradient(180deg, #e94b50, #da2f34);
-    border-color: #d6393e;
+    background: linear-gradient(180deg, #ef4b56, #de3440);
+    border-color: #d94a54;
     color: #fff;
 }
 
 .tt-btn-mark {
-    background: linear-gradient(180deg, #f7a915, #ed9808);
-    border-color: #df930b;
+    background: linear-gradient(180deg, #f8b42a, #eb9a11);
+    border-color: #dca43f;
     color: #fff;
 }
 
 .tt-btn-clear {
-    background: linear-gradient(180deg, #55657b, #445368);
-    border-color: #48586f;
+    background: linear-gradient(180deg, #5f7390, #475a74);
+    border-color: #4f627c;
     color: #fff;
 }
 
 .tt-btn-edit {
     border: none;
-    background: linear-gradient(180deg, #1ea6df, #0e93cb);
-    border-color: #0f8fc8;
+    background: linear-gradient(180deg, #35add9, #1f93c2);
+    border-color: #3699bf;
     color: #fff;
     cursor: pointer;
 }
@@ -417,8 +622,29 @@ td {
 }
 
 @media (max-width: 1200px) {
+    .tt-admin-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .tt-head-side {
+        width: 100%;
+        align-items: flex-start;
+        margin-right: 0;
+        gap: 8px;
+    }
+
+    .tt-day-tools {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .tt-day-select {
+        flex: 1 1 200px;
+    }
+
     #timetable-section td:last-child {
-        width: 230px;
+        width: 320px;
     }
 }
 
@@ -898,6 +1124,25 @@ td {
         align-items: flex-start;
     }
 
+    .tt-admin-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .tt-filter-controls {
+        gap: 10px;
+    }
+
+    .tt-filter-controls span {
+        width: 100%;
+        text-align: center;
+    }
+
+    .pref-actions {
+        grid-template-columns: repeat(2, minmax(90px, 1fr));
+    }
+
     #adminCalendarUI .fc-toolbar.fc-header-toolbar {
         grid-template-columns: 1fr;
         gap: 8px;
@@ -905,6 +1150,42 @@ td {
     #adminCalendarUI .fc-toolbar-chunk {
         justify-content: center !important;
         flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 720px) {
+    .pref-head h2,
+    .tt-admin-head h2 {
+        font-size: 26px;
+    }
+
+    .pref-head p,
+    .tt-admin-head p {
+        font-size: 13px;
+    }
+
+    .pref-count {
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+
+    .pref-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .tt-actions {
+        display: flex;
+        flex-wrap: nowrap;
+    }
+
+    .gen-stack-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .gen-snapshot-head {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }
 
@@ -1312,12 +1593,7 @@ td {
 }
 
 .users-card::before {
-    content: "";
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: 3px;
-    background: linear-gradient(90deg, #1f6fe5, #0ea5e9);
-    opacity: 0.78;
+    content: none;
 }
 
 .users-card + .users-card {
@@ -1488,21 +1764,17 @@ td {
 .pref-card {
     position: relative;
     overflow: hidden;
-    border: 1px solid #d7e3f5;
-    border-radius: 18px;
+    border: 1px solid #d1e0f6;
+    border-radius: 20px;
     background:
-        radial-gradient(circle at 100% 0%, rgba(56, 189, 248, 0.1), transparent 30%),
-        linear-gradient(180deg, #ffffff, #f8fbff);
-    box-shadow: 0 14px 28px rgba(15, 23, 42, 0.06);
+        radial-gradient(circle at 100% 0%, rgba(14, 165, 233, 0.14), transparent 34%),
+        radial-gradient(circle at 0% 100%, rgba(59, 130, 246, 0.08), transparent 26%),
+        linear-gradient(180deg, #ffffff, #f7fbff);
+    box-shadow: 0 16px 32px rgba(15, 23, 42, 0.07);
 }
 
 .pref-card::before {
-    content: "";
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: 3px;
-    background: linear-gradient(90deg, #1f6fe5, #0ea5e9);
-    opacity: 0.78;
+    content: none;
 }
 
 .pref-card + .pref-card {
@@ -1511,17 +1783,17 @@ td {
 
 .pref-head {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
     gap: 12px;
-    margin-bottom: 12px;
-    padding-bottom: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
     border-bottom: 1px solid #dce7f8;
 }
 
 .pref-head h2 {
     margin: 0;
-    font-size: clamp(24px, 2.1vw, 34px);
+    font-size: clamp(30px, 2.8vw, 48px);
     line-height: 1.12;
     letter-spacing: -0.02em;
     color: #123267;
@@ -1529,37 +1801,38 @@ td {
 }
 
 .pref-head p {
-    margin: 5px 0 0 0;
+    margin: 7px 0 0 0;
     color: #5a6d8f;
-    font-size: 13px;
+    font-size: 14px;
 }
 
 .pref-count {
     border-radius: 999px;
-    border: 1px solid #bfd6fb;
-    background: linear-gradient(180deg, #f0f6ff, #e7f0ff);
+    border: 1px solid #bad2f6;
+    background: linear-gradient(180deg, #eff5ff, #e5efff);
     color: #1d4f99;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 700;
-    padding: 9px 14px;
+    padding: 10px 15px;
     white-space: nowrap;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .pref-table-wrap {
-    border: 1px solid #d6e2f2;
-    border-radius: 14px;
-    overflow: hidden;
+    border: 1px solid #d5e2f4;
+    border-radius: 16px;
+    overflow: auto;
     background: #fff;
 }
 
 .pref-table-wrap table {
     margin: 0;
+    min-width: 980px;
 }
 
 .pref-table-wrap th {
-    background: linear-gradient(180deg, #eef3fb, #e8eef9);
-    color: #163565;
+    background: linear-gradient(180deg, #eef4ff, #e7effe);
+    color: #173d78;
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.05em;
@@ -1567,7 +1840,7 @@ td {
 }
 
 .pref-table-wrap td {
-    border-bottom: 1px solid #e4ebf5;
+    border-bottom: 1px solid #e5ecf7;
 }
 
 .pref-table-wrap tbody tr:last-child td {
@@ -1579,39 +1852,43 @@ td {
 }
 
 .pref-empty {
-    border: 1px dashed #bfd4f3;
-    border-radius: 14px;
-    background: linear-gradient(180deg, #f8fbff, #f2f8ff);
-    color: #395780;
-    padding: 16px;
+    border: 1px dashed #b8d3f8;
+    border-radius: 16px;
+    background: linear-gradient(180deg, #f8fbff, #f1f8ff);
+    color: #365885;
+    padding: 18px;
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 14px;
-    font-weight: 500;
+    font-size: 16px;
+    font-weight: 600;
 }
 
 .pref-empty i {
-    color: #2463bd;
+    color: #1f61bc;
 }
 
 .pref-actions {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(92px, 1fr));
     gap: 7px;
+    border: 1px solid #d5e1f3;
+    border-radius: 12px;
+    padding: 6px;
+    background: linear-gradient(180deg, #f7faff, #f2f7ff);
 }
 
 .pref-actions .action-btn {
     margin-right: 0;
-    border-radius: 9px;
+    border-radius: 8px;
     font-weight: 700;
     font-size: 12px;
-    padding: 7px 12px;
+    padding: 8px 10px;
+    text-align: center;
 }
 
 .pref-edit-btn {
-    background: #0ea5e9;
+    background: linear-gradient(180deg, #20a9e2, #0e92ca);
     color: #fff;
 }
 
@@ -1619,7 +1896,7 @@ td {
     display: inline-flex;
     align-items: center;
     border-radius: 999px;
-    padding: 4px 10px;
+    padding: 5px 11px;
     font-size: 11px;
     font-weight: 700;
     border: 1px solid #cfddf4;
@@ -1668,6 +1945,98 @@ td {
     border-color: #f6dc9d;
 }
 
+.teacher-cards-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #d6e2f4;
+}
+
+.teacher-cards-head h2 {
+    margin: 0;
+    font-size: clamp(28px, 2.3vw, 40px);
+    line-height: 1.08;
+    color: #103266;
+    letter-spacing: -0.02em;
+}
+
+.teacher-cards-head p {
+    margin: 7px 0 0 0;
+    color: #5e7295;
+    font-size: 13px;
+}
+
+.teacher-cards-tools {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    padding: 9px 10px;
+    border: 1px solid #c7d8f1;
+    border-radius: 16px;
+    background:
+        radial-gradient(circle at 0% 0%, rgba(169, 209, 255, 0.2), transparent 35%),
+        linear-gradient(180deg, #f8fbff, #eef5ff);
+    box-shadow: 0 8px 18px rgba(20, 56, 109, 0.08);
+}
+
+.teacher-search-input {
+    min-height: 42px;
+    min-width: 220px;
+    border-radius: 12px;
+    border: 1px solid #bdd0ea;
+    background: #fff;
+    color: #123260;
+    padding: 9px 12px;
+    font: inherit;
+    font-size: 13px;
+}
+
+.teacher-search-select {
+    min-height: 42px;
+    min-width: 140px;
+    border-radius: 12px;
+    border: 1px solid #bdd0ea;
+    background: #fff;
+    color: #123260;
+    padding: 9px 11px;
+    font: inherit;
+    font-size: 13px;
+}
+
+.teacher-search-reset {
+    min-height: 42px;
+    border-radius: 12px;
+    border: 1px solid #b8cdee;
+    background: linear-gradient(180deg, #edf3ff, #e3ecff);
+    color: #21477e;
+    padding: 9px 12px;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.teacher-search-reset:hover {
+    filter: brightness(1.02);
+    box-shadow: 0 5px 11px rgba(23, 62, 123, 0.14);
+}
+
+.teacher-search-count {
+    border-radius: 999px;
+    border: 1px solid #b8cdee;
+    background: linear-gradient(180deg, #ebf3ff, #e0ebff);
+    color: #21467f;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 8px 11px;
+    white-space: nowrap;
+}
+
 .teacher-profile-card {
     background: linear-gradient(180deg, #f1f5fa, #eef3f9);
     border: 1px solid #c7d5e8;
@@ -1678,6 +2047,18 @@ td {
     transition: transform 0.22s ease, box-shadow 0.22s ease;
     display: flex;
     flex-direction: column;
+}
+
+.teacher-card-search-empty {
+    display: none;
+    margin-top: 10px;
+    border: 1px dashed #bfd4f3;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #f8fbff, #f2f8ff);
+    color: #395780;
+    padding: 13px 14px;
+    font-size: 13px;
+    font-weight: 600;
 }
 
 .teacher-profile-card:hover {
@@ -1899,6 +2280,23 @@ td {
 }
 
 @media (max-width: 1200px) {
+    .teacher-cards-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .teacher-cards-tools {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    .teacher-search-input {
+        flex: 1 1 220px;
+    }
+    .teacher-search-select {
+        flex: 0 1 140px;
+    }
+    .teacher-search-count {
+        margin-left: auto;
+    }
     .teacher-profile-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -2317,37 +2715,42 @@ td {
 }
 
 .gen-shell {
-    border: 1px solid #dce5f7;
-    border-radius: 14px;
-    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    border: 1px solid #ccdaf2;
+    border-radius: 18px;
+    background:
+        radial-gradient(circle at 92% -8%, rgba(186, 217, 255, 0.32), transparent 34%),
+        linear-gradient(180deg, #f9fcff 0%, #f3f8ff 100%);
     overflow: hidden;
+    box-shadow: 0 18px 32px rgba(17, 43, 88, 0.08);
 }
 
 .gen-hero {
-    padding: 18px 20px;
-    border-bottom: 1px solid #dbe6fa;
+    padding: 20px 22px;
+    border-bottom: 1px solid #d4e1f7;
     background:
-        radial-gradient(circle at 0% 0%, rgba(255,255,255,0.65), rgba(255,255,255,0)),
-        linear-gradient(90deg, #edf3ff, #e3ecff);
+        radial-gradient(circle at 0% 0%, rgba(255,255,255,0.66), rgba(255,255,255,0)),
+        linear-gradient(90deg, #eef4ff, #e5edff);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
+    gap: 12px;
 }
 
 .gen-hero h2 {
     margin: 0;
-    font-size: 23px;
+    font-size: clamp(28px, 2.3vw, 42px);
+    letter-spacing: -0.02em;
+    color: #153c77;
 }
 
 .gen-hero p {
-    margin: 4px 0 0 0;
-    color: #516490;
-    font-size: 13px;
+    margin: 8px 0 0 0;
+    color: #577099;
+    font-size: 15px;
 }
 
 .gen-body {
-    padding: 16px;
+    padding: 18px;
 }
 
 .gen-metric-grid {
@@ -2365,55 +2768,59 @@ td {
 }
 
 .gen-flow-step {
-    border: 1px solid #d8e4fa;
-    border-radius: 12px;
-    background: #fff;
-    padding: 10px 12px;
+    border: 1px solid #ccdaf3;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #ffffff, #f8fbff);
+    padding: 12px 13px;
+    box-shadow: 0 8px 18px rgba(22, 58, 114, 0.05);
 }
 
 .gen-flow-step .n {
-    font-size: 11px;
-    color: #1d4ed8;
+    font-size: 12px;
+    color: #215dd0;
     font-weight: 700;
+    letter-spacing: 0.04em;
 }
 
 .gen-flow-step .t {
-    margin-top: 3px;
-    font-size: 14px;
+    margin-top: 4px;
+    font-size: 18px;
     font-weight: 700;
-    color: #132a57;
+    color: #163669;
 }
 
 .gen-flow-step .d {
-    margin-top: 2px;
-    font-size: 12px;
-    color: #64748b;
+    margin-top: 4px;
+    font-size: 13px;
+    color: #5f7089;
 }
 
 .gen-metric {
-    border: 1px solid #d8e4fa;
-    border-radius: 12px;
-    background: #fff;
-    padding: 12px;
+    border: 1px solid #ccdaf3;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #ffffff, #f8fbff);
+    padding: 13px 14px;
+    box-shadow: 0 8px 18px rgba(22, 58, 114, 0.05);
 }
 
 .gen-metric .k {
-    font-size: 12px;
-    color: #64748b;
+    font-size: 13px;
+    color: #5f7292;
 }
 
 .gen-metric .v {
     margin-top: 4px;
-    font-size: 28px;
+    font-size: 34px;
     font-weight: 700;
-    color: #132a57;
+    color: #14366a;
 }
 
 .gen-form {
-    border: 1px solid #d8e4fa;
-    border-radius: 12px;
-    background: #fff;
-    padding: 12px;
+    border: 1px solid #ccdaf3;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #ffffff, #f8fbff);
+    padding: 14px;
+    box-shadow: 0 10px 20px rgba(22, 58, 114, 0.05);
 }
 
 .gen-form-row {
@@ -2424,26 +2831,31 @@ td {
 
 .gen-form-row select,
 .gen-form-row input {
-    padding: 10px;
-    border-radius: 9px;
-    border: 1px solid #cfd8eb;
+    padding: 11px 12px;
+    border-radius: 10px;
+    border: 1px solid #bfd0eb;
     font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    color: #10284f;
+    background: #fff;
 }
 
 .gen-form-row button {
     border: none;
-    border-radius: 9px;
-    background: linear-gradient(90deg, #1f63db, #3f7af0);
+    border-radius: 10px;
+    background: linear-gradient(90deg, #215fd3, #3f7af0);
     color: #fff;
-    padding: 10px 14px;
+    padding: 11px 16px;
     cursor: pointer;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 15px;
+    box-shadow: 0 10px 18px rgba(31, 99, 219, 0.26);
 }
 
 .gen-hint {
-    margin-top: 8px;
-    font-size: 12px;
-    color: #64748b;
+    margin-top: 10px;
+    font-size: 13px;
+    color: #5f7292;
 }
 
 .gen-table-wrap {
@@ -2459,6 +2871,311 @@ td {
     padding: 12px;
     border-bottom: 1px solid #e4ebfa;
     font-size: 16px;
+}
+
+.gen-stack-wrap {
+    border-color: #cfdcf3;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #ffffff, #f8fbff);
+}
+
+.gen-stack-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border-bottom: 1px solid #dfe8f7;
+    padding: 12px 14px;
+    background: linear-gradient(90deg, #f1f6ff, #e8f0ff);
+}
+
+.gen-stack-head h3 {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 17px;
+    color: #14366e;
+}
+
+.gen-stack-count {
+    border-radius: 999px;
+    border: 1px solid #bdd1f2;
+    background: #e8f1ff;
+    color: #1f4d94;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 10px;
+    white-space: nowrap;
+}
+
+.gen-stack-wrap th {
+    color: #194787;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 12px;
+    background: #eef4ff;
+}
+
+.gen-stack-wrap td {
+    vertical-align: middle;
+}
+
+.gen-target-chip {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 4px 10px;
+    border: 1px solid #c2d6f2;
+    background: #eaf2ff;
+    color: #1f4f95;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.gen-slot-list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.gen-slot-chip {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 4px 9px;
+    font-size: 11px;
+    font-weight: 700;
+    border: 1px solid transparent;
+}
+
+.gen-slot-chip.valid {
+    border-color: #b6d4ff;
+    background: #edf4ff;
+    color: #1f4f93;
+}
+
+.gen-slot-chip.empty {
+    border-color: #d7deeb;
+    background: #f2f5fb;
+    color: #607089;
+}
+
+.gen-slot-chip.invalid {
+    border-color: #f3c0c0;
+    background: #fff0f0;
+    color: #9f2a2a;
+}
+
+.gen-coverage {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 5px 11px;
+    font-size: 11px;
+    font-weight: 700;
+    border: 1px solid transparent;
+}
+
+.gen-coverage.complete {
+    background: #e8f8ef;
+    color: #166534;
+    border-color: #bce6ce;
+}
+
+.gen-coverage.partial {
+    background: #fff6de;
+    color: #8a5103;
+    border-color: #f6dc9d;
+}
+
+.gen-coverage.missing {
+    background: #ffe9e9;
+    color: #991b1b;
+    border-color: #f7c8c8;
+}
+
+.gen-stack-empty {
+    padding: 16px !important;
+    color: #526582;
+}
+
+.gen-snapshot-wrap {
+    border-color: #ccd9ef;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #ffffff, #f8fbff);
+}
+
+.gen-snapshot-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border-bottom: 1px solid #dbe5f6;
+    padding: 12px 14px;
+    background: linear-gradient(90deg, #eff5ff, #e5eeff);
+}
+
+.gen-snapshot-head h3 {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 17px;
+    color: #15396f;
+}
+
+.gen-snapshot-count {
+    border-radius: 999px;
+    border: 1px solid #bdd1f2;
+    background: #e8f1ff;
+    color: #1f4d94;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 10px;
+    white-space: nowrap;
+}
+
+.gen-snapshot-wrap th {
+    background: #eef4ff;
+    color: #194787;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 12px;
+}
+
+.gen-snapshot-wrap td {
+    vertical-align: middle;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.gen-snapshot-wrap tbody tr:hover td {
+    background: #f7faff;
+}
+
+.gen-snapshot-wrap td:last-child {
+    white-space: nowrap;
+}
+
+.gen-snapshot-wrap .gen-action {
+    border-radius: 999px;
+    padding: 7px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-right: 6px;
+    border: 1px solid transparent;
+}
+
+.gen-snapshot-wrap .gen-action.del {
+    background: linear-gradient(180deg, #ef3f45, #de2a31);
+    border-color: #d4373d;
+}
+
+.gen-snapshot-wrap .gen-action.edit {
+    background: linear-gradient(180deg, #e9eef7, #dbe4f1);
+    color: #1d3557;
+    border-color: #c8d5e8;
+}
+
+.history-shell {
+    border: 1px solid #cddbf1;
+    border-radius: 16px;
+    background:
+        radial-gradient(circle at 100% 0%, rgba(166, 207, 255, 0.16), transparent 35%),
+        linear-gradient(180deg, #fbfdff, #f5f9ff);
+    box-shadow: 0 12px 26px rgba(17, 43, 88, 0.06);
+}
+
+.history-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #d8e4f6;
+}
+
+.history-head h2 {
+    margin: 0;
+    font-size: clamp(30px, 2.2vw, 42px);
+    line-height: 1.08;
+    color: #12356a;
+    letter-spacing: -0.02em;
+}
+
+.history-head p {
+    margin: 7px 0 0 0;
+    font-size: 13px;
+    color: #5e7294;
+}
+
+.history-count {
+    border-radius: 999px;
+    border: 1px solid #bdd1f2;
+    background: #e8f1ff;
+    color: #1f4d94;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 7px 11px;
+    white-space: nowrap;
+}
+
+.history-table-wrap {
+    border: 1px solid #d4e0f3;
+    border-radius: 14px;
+    overflow: auto;
+    background: #fff;
+}
+
+.history-table-wrap table {
+    margin: 0;
+}
+
+.history-table-wrap th {
+    background: linear-gradient(180deg, #eef4ff, #e6efff);
+    color: #1a4a8d;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.history-table-wrap td {
+    border-bottom: 1px solid #e3ebf8;
+    vertical-align: top;
+}
+
+.history-table-wrap tbody tr:hover td {
+    background: #f8fbff;
+}
+
+.history-table-wrap details summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: #234b86;
+}
+
+.history-run-list {
+    margin-top: 8px;
+    display: grid;
+    gap: 6px;
+}
+
+.history-run-item {
+    border: 1px solid #dbe4f2;
+    border-radius: 9px;
+    padding: 8px;
+    background: #f8fbff;
+    font-size: 12px;
+    color: #1f3557;
+}
+
+@media (max-width: 720px) {
+    .history-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }
 
 .gen-table-wrap td input,
@@ -2966,11 +3683,36 @@ td {
         </div>
     </div>
     <div class="card" id="teacher-cards-panel">
-        <h2>Teacher Cards (Signup + Preferences)</h2>
+        <div class="teacher-cards-head">
+            <div>
+                <h2>Teacher Cards (Signup + Preferences)</h2>
+                <p>Track teacher roster, courses, and absence controls in one place.</p>
+            </div>
+            <div class="teacher-cards-tools">
+                <input
+                    type="search"
+                    id="teacherNameSearch"
+                    class="teacher-search-input"
+                    placeholder="Search by teacher name"
+                    aria-label="Search teacher by name"
+                >
+                <select id="teacherDeptSearch" class="teacher-search-select" aria-label="Filter by department">
+                    <option value="ALL">All Depts</option>
+                    <option value="CSE">CSE</option>
+                    <option value="ECE">ECE</option>
+                    <option value="IT">IT</option>
+                    <option value="MNC">MNC</option>
+                    <option value="ME">ME</option>
+                    <option value="ALL-DEPT">ALL</option>
+                </select>
+                <button type="button" id="teacherNameSearchReset" class="teacher-search-reset">Reset</button>
+                <span id="teacherSearchCount" class="teacher-search-count">Showing 0</span>
+            </div>
+        </div>
         {% if teacher_cards %}
         <div class="teacher-grid teacher-profile-grid">
             {% for t in teacher_cards %}
-            <div class="teacher-card teacher-profile-card">
+            <div class="teacher-card teacher-profile-card" data-teacher-name="{{ t.name|lower|e }}" data-teacher-dept="{{ t.department|upper|e }}">
                 <div class="teacher-profile-photo">
                     {% if t.profile_pic %}
                     <img class="teacher-profile-photo-img" src="{{ url_for('static', filename=t.profile_pic) }}" alt="{{ t.name }}">
@@ -3023,6 +3765,7 @@ td {
             </div>
             {% endfor %}
         </div>
+        <div id="teacherCardSearchEmpty" class="teacher-card-search-empty">No teacher found for this name/department filter.</div>
         {% else %}
             <div class="empty">No teachers found.</div>
         {% endif %}
@@ -3262,85 +4005,92 @@ td {
     </div>
 
     <div id="timetable-section" class="admin-section">
-    <div class="card">
-        <h2>Generated Timetable (Admin Edit)</h2>
-        <div style="max-width:520px; margin:10px 0 14px;">
-            <label style="font-size:13px; color:#475569;">Filter by Day</label>
-            <div style="display:flex; gap:8px; margin-top:6px;">
-                <select id="adminDayFilter" style="flex:1; padding:9px 10px; border-radius:8px; border:1px solid #cfd8eb;">
-                    <option value="ALL">All Days</option>
-                    <option value="Mon">Monday</option>
-                    <option value="Tue">Tuesday</option>
-                    <option value="Wed">Wednesday</option>
-                    <option value="Thu">Thursday</option>
-                    <option value="Fri">Friday</option>
-                </select>
-                <button id="adminDayFilterReset" type="button" style="border:none; border-radius:8px; background:#dde6f7; color:#1e293b; padding:9px 12px; cursor:pointer;">Reset</button>
-                <span id="adminDayFilterCount" style="align-self:center; font-size:12px; color:#334155; background:#e9f1ff; border-radius:999px; padding:6px 10px;">Showing 0 rows</span>
+    <div class="card tt-shell">
+        <div class="tt-admin-head">
+            <div class="tt-head-main">
+                <h2>Generated Timetable</h2>
+                <p>Refine entries, resolve teacher absences, and keep timetable quality high.</p>
+            </div>
+            <div class="tt-head-side">
+                <div class="tt-day-tools">
+                    <label for="adminDayFilter">Search by day</label>
+                    <select id="adminDayFilter" class="tt-day-select">
+                        <option value="ALL">All Days</option>
+                        <option value="Mon">Monday</option>
+                        <option value="Tue">Tuesday</option>
+                        <option value="Wed">Wednesday</option>
+                        <option value="Thu">Thursday</option>
+                        <option value="Fri">Friday</option>
+                    </select>
+                    <button id="adminDayFilterReset" type="button" class="tt-day-reset">Reset</button>
+                </div>
+                <div id="adminDayFilterCount" class="tt-count">Showing {{ timetable_rows | length }} row(s)</div>
             </div>
         </div>
 
         {% if timetable_rows %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Day</th>
-                    <th>Slot</th>
-                    <th>Subject</th>
-                    <th>Teacher</th>
-                    <th>Room</th>
-                    <th>Target</th>
-                    <th>Label</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="adminTimetableBodyMain">
-                {% for row in timetable_rows %}
-                <tr
-                    data-day="{{ row.day }}"
-                    data-slot="{{ row.slot }}"
-                    data-subject="{{ row.subject }}"
-                    data-teacher="{{ row.teacher }}"
-                    data-room="{{ row.room }}"
-                    data-target="{{ row.target }}"
-                    data-label="{{ row.label if row.label else '' }}"
-                >
-                    <td>{{ row.day }}</td>
-                    <td>{{ row.slot }}</td>
-                    <td>{{ row.subject }}</td>
-                    <td>{{ row.teacher }}</td>
-                    <td>{{ row.room }}</td>
-                    <td>{{ row.target }}</td>
-                    <td>{{ row.label if row.label else "-" }}</td>
-                    <td>
-                        <div class="tt-actions">
-                            <a class="action-btn reject"
-                               href="{{ url_for('delete_timetable_entry', day=row.day, slot=row.slot, subject=row.subject, room=row.room, teacher=row.teacher, target=row.target) }}">
-                               Delete
-                            </a>
+        <div class="tt-table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Day</th>
+                        <th>Slot</th>
+                        <th>Subject</th>
+                        <th>Teacher</th>
+                        <th>Room</th>
+                        <th>Target</th>
+                        <th>Label</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="adminTimetableBodyMain">
+                    {% for row in timetable_rows %}
+                    <tr
+                        data-day="{{ row.day }}"
+                        data-slot="{{ row.slot }}"
+                        data-subject="{{ row.subject }}"
+                        data-teacher="{{ row.teacher }}"
+                        data-room="{{ row.room }}"
+                        data-target="{{ row.target }}"
+                        data-label="{{ row.label if row.label else '' }}"
+                    >
+                        <td>{{ row.day }}</td>
+                        <td>{{ row.slot }}</td>
+                        <td>{{ row.subject }}</td>
+                        <td>{{ row.teacher }}</td>
+                        <td>{{ row.room }}</td>
+                        <td>{{ row.target }}</td>
+                        <td>{{ row.label if row.label else "-" }}</td>
+                        <td>
+                            <div class="tt-actions">
+                                <a class="action-btn reject"
+                                   href="{{ url_for('delete_timetable_entry', day=row.day, slot=row.slot, subject=row.subject, room=row.room, teacher=row.teacher, target=row.target) }}">
+                                   Delete
+                                </a>
 
-                            {% if row.label == "Teacher Absent" %}
-                            <a class="action-btn tt-btn-clear"
-                               href="{{ url_for('label_timetable_absent', day=row.day, slot=row.slot, subject=row.subject, room=row.room, teacher=row.teacher, target=row.target, clear='1') }}">
-                               Clear Label
-                            </a>
-                            {% else %}
-                            <a class="action-btn tt-btn-mark"
-                               href="{{ url_for('label_timetable_absent', day=row.day, slot=row.slot, subject=row.subject, room=row.room, teacher=row.teacher, target=row.target) }}">
-                               Mark Absent
-                            </a>
-                            {% endif %}
-                            <button type="button"
-                               class="action-btn tt-btn-edit"
-                               onclick="startAdminInlineEdit(this)">
-                               Edit
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                                {% if row.label == "Teacher Absent" %}
+                                <a class="action-btn tt-btn-clear"
+                                   href="{{ url_for('label_timetable_absent', day=row.day, slot=row.slot, subject=row.subject, room=row.room, teacher=row.teacher, target=row.target, clear='1') }}">
+                                   Clear Label
+                                </a>
+                                {% else %}
+                                <a class="action-btn tt-btn-mark"
+                                   href="{{ url_for('label_timetable_absent', day=row.day, slot=row.slot, subject=row.subject, room=row.room, teacher=row.teacher, target=row.target) }}">
+                                   Mark Absent
+                                </a>
+                                {% endif %}
+                                <button type="button"
+                                   class="action-btn tt-btn-edit"
+                                   onclick="startAdminInlineEdit(this)">
+                                   Edit
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% else %}
             <div class="empty">No generated timetable entries found.</div>
         {% endif %}
@@ -3413,8 +4163,11 @@ td {
                 <div class="gen-hint">Semester flow: Jan-Apr, Aug-Nov, Dec Vacation, Jan-May.</div>
             </form>
 
-            <div class="gen-table-wrap">
-                <h3>Generation Stack (Approved Preferences)</h3>
+            <div class="gen-table-wrap gen-stack-wrap">
+                <div class="gen-stack-head">
+                    <h3>Generation Stack (Approved Preferences)</h3>
+                    <span class="gen-stack-count">{{ approved_course_stack | length }} Course(s)</span>
+                </div>
                 {% if approved_course_stack %}
                 <table>
                     <thead>
@@ -3424,6 +4177,7 @@ td {
                             <th>Target</th>
                             <th>Students</th>
                             <th>Preferred Slots</th>
+                            <th>Coverage</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -3431,20 +4185,30 @@ td {
                         <tr>
                             <td>{{ c.teacher }}</td>
                             <td>{{ c.subject }}</td>
-                            <td>{{ c.target }}</td>
+                            <td><span class="gen-target-chip">{{ c.target }}</span></td>
                             <td>{{ c.students }}</td>
-                            <td>{{ c.prefs | join(", ") }}</td>
+                            <td>
+                                <div class="gen-slot-list">
+                                    {% for s in c.slot_items %}
+                                    <span class="gen-slot-chip {{ s.status }}">{{ s.label }}</span>
+                                    {% endfor %}
+                                </div>
+                            </td>
+                            <td><span class="gen-coverage {{ c.coverage_tone }}">{{ c.coverage }}</span></td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
                 {% else %}
-                <div class="empty" style="padding:14px;">No approved preferences stacked yet.</div>
+                <div class="empty gen-stack-empty">No approved preferences stacked yet.</div>
                 {% endif %}
             </div>
 
-            <div class="gen-table-wrap">
-                <h3>Current Semester Timetable Snapshot</h3>
+            <div class="gen-table-wrap gen-snapshot-wrap">
+                <div class="gen-snapshot-head">
+                    <h3>Current Semester Timetable Snapshot</h3>
+                    <span class="gen-snapshot-count">{{ timetable_rows | length }} Rows</span>
+                </div>
                 {% if timetable_rows %}
                 <table>
                     <thead>
@@ -3558,47 +4322,55 @@ td {
     </div>
 
     <div id="history-section" class="admin-section">
-    <div class="card">
-        <h2>Semester-wise Timetable History</h2>
+    <div class="card history-shell">
+        <div class="history-head">
+            <div>
+                <h2>Semester-wise Timetable History</h2>
+                <p>Audit every generation run with semester-level snapshots and metadata.</p>
+            </div>
+            <div class="history-count">{{ timetable_history_grouped | length }} Semester(s)</div>
+        </div>
         {% if timetable_history_grouped %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Semester</th>
-                    <th>Latest Generated At</th>
-                    <th>Latest Rows</th>
-                    <th>Latest Subjects</th>
-                    <th>Generated By</th>
-                    <th>All Runs</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for g in timetable_history_grouped %}
-                <tr>
-                    <td>{{ g.semester }}</td>
-                    <td>{{ g.latest_generated_at }}</td>
-                    <td>{{ g.latest_rows }}</td>
-                    <td>{{ g.latest_subjects | join(", ") }}</td>
-                    <td>{{ g.generated_by }}</td>
-                    <td>
-                        <details>
-                            <summary style="cursor:pointer;">{{ g.total_runs }} run(s)</summary>
-                            <div style="margin-top:8px; display:grid; gap:6px;">
-                                {% for r in g.runs %}
-                                <div style="border:1px solid #dbe4f2; border-radius:8px; padding:8px; background:#f8fbff; font-size:12px;">
-                                    <div><b>{{ r.generated_at }}</b></div>
-                                    <div>Rows: {{ r.total_rows }}</div>
-                                    <div>Subjects: {{ r.subjects | join(", ") }}</div>
-                                    <div>By: {{ r.generated_by }}</div>
+        <div class="history-table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Semester</th>
+                        <th>Latest Generated At</th>
+                        <th>Latest Rows</th>
+                        <th>Latest Subjects</th>
+                        <th>Generated By</th>
+                        <th>All Runs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for g in timetable_history_grouped %}
+                    <tr>
+                        <td>{{ g.semester }}</td>
+                        <td>{{ g.latest_generated_at }}</td>
+                        <td>{{ g.latest_rows }}</td>
+                        <td>{{ g.latest_subjects | join(", ") }}</td>
+                        <td>{{ g.generated_by }}</td>
+                        <td>
+                            <details>
+                                <summary>{{ g.total_runs }} run(s)</summary>
+                                <div class="history-run-list">
+                                    {% for r in g.runs %}
+                                    <div class="history-run-item">
+                                        <div><b>{{ r.generated_at }}</b></div>
+                                        <div>Rows: {{ r.total_rows }}</div>
+                                        <div>Subjects: {{ r.subjects | join(", ") }}</div>
+                                        <div>By: {{ r.generated_by }}</div>
+                                    </div>
+                                    {% endfor %}
                                 </div>
-                                {% endfor %}
-                            </div>
-                        </details>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                            </details>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% else %}
         <div class="empty">No semester-wise timetable generation history yet.</div>
         {% endif %}
@@ -4559,10 +5331,60 @@ function initAdminDayFilter() {
     applyAdminDayFilter();
 }
 
+function applyTeacherNameSearch() {
+    const input = document.getElementById("teacherNameSearch");
+    const deptSelect = document.getElementById("teacherDeptSearch");
+    if (!input || !deptSelect) return;
+
+    const query = (input.value || "").trim().toLowerCase();
+    const selectedDept = (deptSelect.value || "ALL").toUpperCase();
+    const cards = Array.from(document.querySelectorAll("#teacher-cards-panel .teacher-profile-card"));
+    let visible = 0;
+
+    cards.forEach((card) => {
+        const name = (card.dataset.teacherName || "").toLowerCase();
+        const dept = (card.dataset.teacherDept || "ALL").toUpperCase();
+        const nameMatch = !query || name.includes(query);
+        const deptMatch = selectedDept === "ALL" || dept === selectedDept || (selectedDept === "ALL-DEPT" && dept === "ALL");
+        const show = nameMatch && deptMatch;
+        card.style.display = show ? "" : "none";
+        if (show) visible += 1;
+    });
+
+    const emptyTag = document.getElementById("teacherCardSearchEmpty");
+    if (emptyTag) {
+        emptyTag.style.display = visible === 0 ? "block" : "none";
+    }
+
+    const countTag = document.getElementById("teacherSearchCount");
+    if (countTag) {
+        countTag.textContent = `Showing ${visible}`;
+    }
+}
+
+function initTeacherCardSearch() {
+    const input = document.getElementById("teacherNameSearch");
+    const deptSelect = document.getElementById("teacherDeptSearch");
+    const resetBtn = document.getElementById("teacherNameSearchReset");
+    if (!input || !deptSelect || !resetBtn) return;
+
+    input.addEventListener("input", applyTeacherNameSearch);
+    deptSelect.addEventListener("change", applyTeacherNameSearch);
+    resetBtn.onclick = () => {
+        input.value = "";
+        deptSelect.value = "ALL";
+        applyTeacherNameSearch();
+        input.focus();
+    };
+
+    applyTeacherNameSearch();
+}
+
 lucide.createIcons();
 updateLiveAdminHeader();
 setInterval(updateLiveAdminHeader, 60000);
 initAdminDayFilter();
+initTeacherCardSearch();
 
 const params = new URLSearchParams(window.location.search);
 const msg = params.get("message") || "";
