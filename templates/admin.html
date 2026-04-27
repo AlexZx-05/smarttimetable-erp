@@ -334,7 +334,12 @@ td {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
+    width: fit-content;
+    border: 1px solid #d7e3f5;
+    background: #f3f7ff;
+    border-radius: 12px;
+    padding: 4px;
 }
 
 .tt-actions .action-btn {
@@ -343,7 +348,52 @@ td {
     align-items: center;
     justify-content: center;
     min-height: 34px;
+    min-width: 92px;
     line-height: 1;
+    border-radius: 8px;
+    font-weight: 700;
+    padding: 6px 12px;
+    font-size: 13px;
+    border: 1px solid transparent;
+    box-shadow: none;
+    transition: transform 0.14s ease, filter 0.14s ease, box-shadow 0.14s ease;
+}
+
+.tt-actions .action-btn:hover {
+    transform: translateY(-0.5px);
+    filter: brightness(1.02);
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.1);
+}
+
+.tt-actions .action-btn:focus-visible {
+    outline: 2px solid #93c5fd;
+    outline-offset: 2px;
+}
+
+#timetable-section .tt-actions .reject {
+    background: linear-gradient(180deg, #e94b50, #da2f34);
+    border-color: #d6393e;
+    color: #fff;
+}
+
+.tt-btn-mark {
+    background: linear-gradient(180deg, #f7a915, #ed9808);
+    border-color: #df930b;
+    color: #fff;
+}
+
+.tt-btn-clear {
+    background: linear-gradient(180deg, #55657b, #445368);
+    border-color: #48586f;
+    color: #fff;
+}
+
+.tt-btn-edit {
+    border: none;
+    background: linear-gradient(180deg, #1ea6df, #0e93cb);
+    border-color: #0f8fc8;
+    color: #fff;
+    cursor: pointer;
 }
 
 .tt-inline-input,
@@ -1768,21 +1818,18 @@ td {
                             </a>
 
                             {% if row.label == "Teacher Absent" %}
-                            <a class="action-btn"
-                               style="background:#475569;color:#fff;"
+                            <a class="action-btn tt-btn-clear"
                                href="{{ url_for('label_timetable_absent', day=row.day, slot=row.slot, subject=row.subject, room=row.room, teacher=row.teacher, target=row.target, clear='1') }}">
                                Clear Label
                             </a>
                             {% else %}
-                            <a class="action-btn"
-                               style="background:#f59e0b;color:#fff;"
+                            <a class="action-btn tt-btn-mark"
                                href="{{ url_for('label_timetable_absent', day=row.day, slot=row.slot, subject=row.subject, room=row.room, teacher=row.teacher, target=row.target) }}">
                                Mark Absent
                             </a>
                             {% endif %}
                             <button type="button"
-                               class="action-btn"
-                               style="border:none;background:#0ea5e9;color:#fff;cursor:pointer;"
+                               class="action-btn tt-btn-edit"
                                onclick="startAdminInlineEdit(this)">
                                Edit
                             </button>
@@ -2344,16 +2391,16 @@ function buildAdminTimetableActionHtml(row) {
     let labelBtn = "";
     if ((row.label || "") === "Teacher Absent") {
         labelParams.append("clear", "1");
-        labelBtn = `<a class="action-btn" style="background:#475569;color:#fff;" href="/admin/timetable/label_absent?${labelParams.toString()}">Clear Label</a>`;
+        labelBtn = `<a class="action-btn tt-btn-clear" href="/admin/timetable/label_absent?${labelParams.toString()}">Clear Label</a>`;
     } else {
-        labelBtn = `<a class="action-btn" style="background:#f59e0b;color:#fff;" href="/admin/timetable/label_absent?${labelParams.toString()}">Mark Absent</a>`;
+        labelBtn = `<a class="action-btn tt-btn-mark" href="/admin/timetable/label_absent?${labelParams.toString()}">Mark Absent</a>`;
     }
 
     return `
         <div class="tt-actions">
             <a class="action-btn reject" href="${deleteHref}">Delete</a>
             ${labelBtn}
-            <button type="button" class="action-btn" style="border:none;background:#0ea5e9;color:#fff;cursor:pointer;" onclick="startAdminInlineEdit(this)">Edit</button>
+            <button type="button" class="action-btn tt-btn-edit" onclick="startAdminInlineEdit(this)">Edit</button>
         </div>
     `;
 }
@@ -2728,5 +2775,4 @@ setTimeout(() => {
 
 </body>
 </html>
-
 
