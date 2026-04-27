@@ -1881,19 +1881,18 @@ def mark_teacher_all_absent():
                     updated += 1
 
     save_timetable_rows(rows)
-    teacher_section_anchor = "#teacher-cards-panel"
     if clear:
         if matched_rows == 0:
-            return redirect("/admin/dashboard?teacher_action_msg=No+classes+found+for+this+teacher.&teacher_action_tone=warn&section=dashboard-section" + teacher_section_anchor)
+            return redirect("/admin/dashboard?teacher_action_msg=No+classes+found+for+this+teacher.&teacher_action_tone=warn&section=dashboard-section")
         if updated == 0:
-            return redirect("/admin/dashboard?teacher_action_msg=All+classes+were+already+marked+present.&teacher_action_tone=info&section=dashboard-section" + teacher_section_anchor)
-        return redirect("/admin/dashboard?teacher_action_msg=Teacher+marked+present+for+all+classes.&teacher_action_tone=ok&section=dashboard-section" + teacher_section_anchor)
+            return redirect("/admin/dashboard?teacher_action_msg=All+classes+were+already+marked+present.&teacher_action_tone=info&section=dashboard-section")
+        return redirect("/admin/dashboard?teacher_action_msg=Teacher+marked+present+for+all+classes.&teacher_action_tone=ok&section=dashboard-section")
 
     if matched_rows == 0:
-        return redirect("/admin/dashboard?teacher_action_msg=No+classes+found+for+this+teacher.&teacher_action_tone=warn&section=dashboard-section" + teacher_section_anchor)
+        return redirect("/admin/dashboard?teacher_action_msg=No+classes+found+for+this+teacher.&teacher_action_tone=warn&section=dashboard-section")
     if updated == 0:
-        return redirect("/admin/dashboard?teacher_action_msg=Teacher+was+already+marked+absent+for+all+classes.&teacher_action_tone=info&section=dashboard-section" + teacher_section_anchor)
-    return redirect("/admin/dashboard?teacher_action_msg=Teacher+marked+absent+for+all+classes.&teacher_action_tone=ok&section=dashboard-section" + teacher_section_anchor)
+        return redirect("/admin/dashboard?teacher_action_msg=Teacher+was+already+marked+absent+for+all+classes.&teacher_action_tone=info&section=dashboard-section")
+    return redirect("/admin/dashboard?teacher_action_msg=Teacher+marked+absent+for+all+classes.&teacher_action_tone=ok&section=dashboard-section")
 
 
 @app.route("/events")

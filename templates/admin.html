@@ -453,31 +453,158 @@ td {
 
 .events-layout {
     display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
-    gap: 14px;
+    grid-template-columns: minmax(0, 2.1fr) minmax(300px, 1fr);
+    gap: 16px;
 }
 
 .events-main-card {
-    border: 1px solid #d7e3f5;
-    border-radius: 14px;
-    background: linear-gradient(180deg, #ffffff, #f9fbff);
-    padding: 14px;
+    border: 1px solid #d5e3f8;
+    border-radius: 18px;
+    background:
+        radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.1), transparent 28%),
+        linear-gradient(180deg, #ffffff, #f8fbff);
+    padding: 16px;
+    box-shadow: 0 16px 30px rgba(15, 23, 42, 0.06);
 }
 
 .events-main-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
     margin-bottom: 10px;
 }
 
 .events-main-head h3 {
     margin: 0;
-    font-size: 18px;
-    color: #132747;
+    font-size: 22px;
+    color: #10264d;
+    letter-spacing: -0.02em;
 }
 
 .events-main-head p {
     margin: 5px 0 0 0;
     font-size: 13px;
     color: #5a6a87;
+}
+
+.event-open-modal-btn {
+    border: 1px solid #b9d8f5;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #16a8df, #1497d2);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 9px 13px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.event-open-modal-btn:hover {
+    filter: brightness(1.04);
+}
+
+.event-create-modal {
+    max-width: 680px;
+    border-radius: 18px;
+    border: 1px solid #cfe0f6;
+    overflow: hidden;
+    box-shadow: 0 30px 54px rgba(15, 23, 42, 0.28);
+}
+
+.event-create-modal .edit-modal-head {
+    padding: 16px 18px;
+    border-bottom: 1px solid #d8e6fb;
+    background:
+        radial-gradient(circle at 0% 0%, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0)),
+        linear-gradient(105deg, #eaf2ff, #e2eeff);
+}
+
+.event-create-modal .edit-modal-head h4 {
+    font-size: 28px;
+    letter-spacing: -0.02em;
+    color: #113362;
+}
+
+.event-create-modal .edit-modal-close {
+    border: 1px solid #d2def0;
+    background: #f8fbff;
+    color: #1e293b;
+}
+
+.event-create-modal .edit-modal-body {
+    padding: 16px 18px 18px 18px;
+    background: linear-gradient(180deg, #ffffff, #f7faff);
+}
+
+.event-create-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.event-create-grid .full {
+    grid-column: 1 / -1;
+}
+
+.event-create-grid label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 12px;
+    color: #516385;
+    letter-spacing: 0.02em;
+    font-weight: 600;
+}
+
+.event-create-grid input,
+.event-create-grid select {
+    width: 100%;
+    min-height: 40px;
+    box-sizing: border-box;
+    padding: 11px 12px;
+    border: 1px solid #c7d8f2;
+    border-radius: 12px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    color: #0f2f59;
+    background: #fff;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.event-create-grid input:focus,
+.event-create-grid select:focus {
+    outline: none;
+    border-color: #1f7fd6;
+    background: #fbfdff;
+    box-shadow: 0 0 0 4px rgba(31, 127, 214, 0.18);
+}
+
+.event-create-actions {
+    margin-top: 14px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.event-create-actions .cancel {
+    border: 1px solid #cfd9ea;
+    background: #eef3fb;
+    color: #314158;
+    border-radius: 10px;
+    min-height: 42px;
+    min-width: 92px;
+    font-weight: 600;
+}
+
+.event-create-actions .event-add-btn {
+    border-radius: 11px;
+    min-height: 42px;
+    min-width: 124px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    box-shadow: 0 10px 18px rgba(20, 151, 210, 0.28);
 }
 
 .event-form-grid {
@@ -525,12 +652,166 @@ td {
     overflow-x: auto;
 }
 
-.admin-calendar-surface {
-    border: 1px solid #d6e0ef;
+.events-published-section {
+    margin-top: 16px;
+}
+
+.events-records-card {
+    margin-top: 0;
+    border: 1px solid #d0def3;
     border-radius: 16px;
-    background: #fff;
-    padding: 10px;
+    background:
+        radial-gradient(circle at 100% 0%, rgba(56, 189, 248, 0.08), transparent 34%),
+        linear-gradient(180deg, #ffffff, #f8fbff);
+    padding: 14px;
+    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.04);
+}
+
+.events-records-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
     margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #d9e6f7;
+}
+
+.events-records-head h3 {
+    margin: 0;
+    font-size: 24px;
+    color: #143968;
+    letter-spacing: -0.02em;
+}
+
+.events-records-head p {
+    margin: 4px 0 0 0;
+    font-size: 13px;
+    color: #5b6f91;
+}
+
+.events-records-count {
+    border-radius: 999px;
+    border: 1px solid #bfd6fb;
+    background: linear-gradient(180deg, #f0f6ff, #e7f0ff);
+    color: #1d4f99;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 9px 14px;
+    white-space: nowrap;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.events-records-card .events-table-wrap {
+    border: 1px solid #d6e2f2;
+    border-radius: 14px;
+    background: #fff;
+}
+
+.events-records-card .events-table-wrap table {
+    margin: 0;
+}
+
+.events-records-card .events-table-wrap th {
+    background: linear-gradient(180deg, #eef3fb, #e8eef9);
+    color: #163565;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.events-records-card .events-table-wrap td {
+    border-bottom: 1px solid #e4ebf5;
+}
+
+.events-records-card .events-table-wrap tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.events-records-card .events-table-wrap tbody tr:hover td {
+    background: #f8fbff;
+}
+
+.evt-chip {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 5px 11px;
+    font-size: 11px;
+    font-weight: 700;
+    border: 1px solid transparent;
+}
+
+.evt-type-chip.general {
+    background: #eaf2ff;
+    color: #1f4f95;
+    border-color: #c7d9f7;
+}
+
+.evt-type-chip.exam {
+    background: #fff1df;
+    color: #9a5a00;
+    border-color: #f2d09e;
+}
+
+.evt-type-chip.test {
+    background: #efe9ff;
+    color: #5b3aa6;
+    border-color: #d5c8f7;
+}
+
+.evt-type-chip.vacation,
+.evt-type-chip.government_holiday {
+    background: #e8f8ef;
+    color: #166534;
+    border-color: #bce6ce;
+}
+
+.evt-important-chip.yes {
+    background: #ffe8e8;
+    color: #991b1b;
+    border-color: #f4c2c2;
+}
+
+.evt-important-chip.no {
+    background: #eef3fb;
+    color: #334155;
+    border-color: #d3dce8;
+}
+
+.event-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.event-actions .action-btn {
+    margin-right: 0;
+    border-radius: 9px;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 8px 14px;
+}
+
+.event-actions .evt-edit-btn {
+    border: none;
+    background: linear-gradient(180deg, #16a8df, #1497d2);
+    color: #fff;
+    cursor: pointer;
+}
+
+.event-actions .evt-edit-btn:hover {
+    filter: brightness(1.03);
+}
+
+.admin-calendar-surface {
+    border: 1px solid #d2e2f7;
+    border-radius: 18px;
+    background: linear-gradient(180deg, #ffffff, #f8fbff);
+    padding: 12px;
+    margin-bottom: 12px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
 }
 
 #adminCalendarUI .fc {
@@ -568,13 +849,13 @@ td {
 }
 
 #adminCalendarUI .fc-button {
-    border: 1px solid #bedef1 !important;
+    border: 1px solid #b8d8f7 !important;
     background: linear-gradient(90deg, #16a8df, #1497d2) !important;
     color: #fff !important;
-    border-radius: 8px !important;
+    border-radius: 9px !important;
     font-weight: 600 !important;
     text-transform: capitalize !important;
-    box-shadow: none !important;
+    box-shadow: 0 6px 14px rgba(20, 151, 210, 0.2) !important;
 }
 
 #adminCalendarUI .fc-button-group {
@@ -593,10 +874,30 @@ td {
 }
 
 #adminCalendarUI .fc-button:hover {
-    filter: brightness(1.04);
+    filter: brightness(1.06);
+    transform: translateY(-0.5px);
 }
 
 @media (max-width: 980px) {
+    .overview-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .overview-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .users-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .pref-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
     #adminCalendarUI .fc-toolbar.fc-header-toolbar {
         grid-template-columns: 1fr;
         gap: 8px;
@@ -611,9 +912,13 @@ td {
     border: none !important;
 }
 
+#adminCalendarUI .fc .fc-scrollgrid-section-sticky > * {
+    position: static !important;
+}
+
 #adminCalendarUI .fc-col-header-cell {
     border: none !important;
-    background: linear-gradient(90deg, #16ace0, #1496d1);
+    background: linear-gradient(90deg, #0ea5d7, #1a8fca);
 }
 
 #adminCalendarUI .fc-col-header-cell:first-child {
@@ -635,6 +940,11 @@ td {
 
 #adminCalendarUI .fc-daygrid-day-frame {
     min-height: 76px;
+    transition: background 0.18s ease;
+}
+
+#adminCalendarUI .fc-daygrid-day:hover .fc-daygrid-day-frame {
+    background: #f4f9ff;
 }
 
 #adminCalendarUI .fc-daygrid-day-number {
@@ -645,6 +955,7 @@ td {
 
 #adminCalendarUI .fc .fc-daygrid-day.fc-day-today {
     background: #e8f6ff !important;
+    box-shadow: inset 0 0 0 1px #bee3f8;
 }
 
 #adminCalendarUI .fc-event {
@@ -656,6 +967,7 @@ td {
     font-size: 11px !important;
     font-weight: 600 !important;
     padding: 2px 6px !important;
+    cursor: pointer !important;
 }
 
 #adminCalendarUI .fc-event-title,
@@ -688,11 +1000,14 @@ td {
 }
 
 .events-upcoming {
-    border: 1px dashed #9ecadd;
-    border-radius: 14px;
-    background: linear-gradient(180deg, #f9fdff, #f3fbff);
-    padding: 14px;
+    border: 1px solid #c9ddf7;
+    border-radius: 18px;
+    background:
+        radial-gradient(circle at 100% 0%, rgba(56, 189, 248, 0.12), transparent 36%),
+        linear-gradient(180deg, #f9fdff, #f2f9ff);
+    padding: 16px;
     height: fit-content;
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.06);
 }
 
 .events-upcoming h3 {
@@ -719,10 +1034,103 @@ td {
     display: flex;
     gap: 8px;
     align-items: center;
-    border: 1px solid #d5e8f3;
+    border: 1px solid #cee2f3;
     border-radius: 10px;
     background: #fff;
     padding: 8px;
+}
+
+.selected-event-panel {
+    margin-top: 14px;
+    border: 1px solid #c9daf5;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #ffffff, #f5f9ff);
+    padding: 12px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.selected-event-panel.has-event {
+    border-color: #bcd5f7;
+    box-shadow: 0 10px 20px rgba(20, 73, 147, 0.08);
+}
+
+.selected-event-panel.no-event {
+    border-color: #d8e2f0;
+    box-shadow: none;
+}
+
+.selected-event-panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.selected-event-panel h4 {
+    margin: 0;
+    font-size: 14px;
+    color: #123a72;
+}
+
+.selected-event-chip {
+    border-radius: 999px;
+    padding: 4px 9px;
+    font-size: 10px;
+    font-weight: 700;
+    border: 1px solid #c8dbf8;
+    background: #eaf3ff;
+    color: #1f4e95;
+    text-transform: uppercase;
+}
+
+.selected-event-chip.no-event {
+    background: #f1f5f9;
+    color: #475569;
+    border-color: #d4dce8;
+}
+
+.selected-event-title {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    color: #173c73;
+    line-height: 1.25;
+}
+
+.selected-event-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.selected-event-item {
+    border: 1px solid #d8e6f7;
+    border-radius: 10px;
+    background: #fff;
+    padding: 8px 9px;
+}
+
+.selected-event-item .k {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #6b7ea4;
+    margin-bottom: 4px;
+    font-weight: 700;
+}
+
+.selected-event-item .v {
+    display: block;
+    font-size: 13px;
+    color: #133460;
+    font-weight: 600;
+}
+
+.selected-event-empty {
+    color: #4c6a7f;
+    font-size: 12px;
+    margin: 0;
 }
 
 .events-upcoming-date {
@@ -748,11 +1156,924 @@ td {
     gap: 16px;
 }
 
+.teacher-profile-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+    align-items: stretch;
+}
+
 .teacher-card {
     border: 1px solid #e2e8f0;
     border-radius: 10px;
     padding: 14px;
     background: #f8fafc;
+}
+
+.dashboard-overview-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #d6e1f3;
+    border-radius: 20px;
+    background:
+        radial-gradient(circle at 12% 0%, rgba(41, 121, 255, 0.14), transparent 34%),
+        radial-gradient(circle at 92% 100%, rgba(13, 148, 136, 0.12), transparent 30%),
+        linear-gradient(140deg, #ffffff, #f7faff 62%, #eff5ff);
+    box-shadow: 0 16px 34px rgba(15, 23, 42, 0.08);
+}
+
+.dashboard-overview-card::before {
+    content: none;
+}
+
+.overview-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.overview-head h2 {
+    margin: 0;
+    font-size: clamp(22px, 2.3vw, 30px);
+    color: #0f2453;
+    letter-spacing: -0.02em;
+}
+
+.overview-head p {
+    margin: 3px 0 0 0;
+    color: #4b5f86;
+    font-size: 13px;
+}
+
+.overview-badge {
+    border: 1px solid #bfdbfe;
+    background: linear-gradient(180deg, #f0f7ff, #eaf4ff);
+    color: #1d4ed8;
+    border-radius: 999px;
+    padding: 7px 11px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.overview-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.overview-stat {
+    border-radius: 16px;
+    border: 1px solid transparent;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 122px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.overview-stat:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
+}
+
+.overview-stat.stat-signups {
+    background: linear-gradient(180deg, #f8fbff, #edf6ff);
+    border-color: #cfe2ff;
+}
+
+.overview-stat.stat-preferences {
+    background: linear-gradient(180deg, #f5fdf9, #e9f8f1);
+    border-color: #bce6d2;
+}
+
+.overview-stat.stat-timetable {
+    background: linear-gradient(180deg, #fff8f1, #fff1e4);
+    border-color: #f5d7b1;
+}
+
+.overview-stat-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.overview-k {
+    font-size: 13px;
+    color: #4d5f80;
+    font-weight: 600;
+}
+
+.overview-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #0f3a80;
+    background: rgba(255, 255, 255, 0.68);
+    border: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+.overview-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.overview-v {
+    font-size: clamp(30px, 2.8vw, 40px);
+    line-height: 1;
+    font-weight: 700;
+    color: #0f2047;
+    letter-spacing: -0.03em;
+}
+
+.overview-note {
+    color: #5c6e91;
+    font-size: 12px;
+    margin-top: auto;
+}
+
+.users-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #d7e3f5;
+    border-radius: 18px;
+    background:
+        radial-gradient(circle at 100% 0%, rgba(56, 189, 248, 0.1), transparent 32%),
+        linear-gradient(180deg, #ffffff, #f8fbff);
+    box-shadow: 0 14px 28px rgba(15, 23, 42, 0.06);
+}
+
+.users-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: linear-gradient(90deg, #1f6fe5, #0ea5e9);
+    opacity: 0.78;
+}
+
+.users-card + .users-card {
+    margin-top: 18px;
+}
+
+.users-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dce7f8;
+}
+
+.users-head-main {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.users-head-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
+    border: 1px solid #c6d9f5;
+    background: linear-gradient(180deg, #ecf3ff, #e2edff);
+    color: #1f56a8;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.users-head-icon svg {
+    width: 21px;
+    height: 21px;
+}
+
+.users-head h2 {
+    margin: 0;
+    font-size: clamp(24px, 2.1vw, 34px);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    color: #123267;
+    font-weight: 700;
+}
+
+.users-head p {
+    margin: 5px 0 0 0;
+    color: #5a6d8f;
+    font-size: 13px;
+}
+
+.users-count {
+    border-radius: 999px;
+    border: 1px solid #bfd6fb;
+    background: linear-gradient(180deg, #f0f6ff, #e7f0ff);
+    color: #1d4f99;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 9px 14px;
+    white-space: nowrap;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.users-table-wrap {
+    border: 1px solid #d6e2f2;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.users-table-wrap table {
+    margin: 0;
+}
+
+.users-table-wrap th {
+    background: linear-gradient(180deg, #eef3fb, #e8eef9);
+    color: #163565;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.users-table-wrap td {
+    border-bottom: 1px solid #e4ebf5;
+}
+
+.users-table-wrap tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.users-table-wrap tbody tr:hover td {
+    background: #f8fbff;
+}
+
+.role-chip {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: capitalize;
+    border: 1px solid #cfddf4;
+    background: #ecf3ff;
+    color: #1e4f92;
+}
+
+.decision-chip {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 5px 11px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: capitalize;
+    border: 1px solid transparent;
+}
+
+.decision-chip.approved {
+    background: #e8f8ef;
+    color: #166534;
+    border-color: #bce6ce;
+}
+
+.decision-chip.rejected {
+    background: #ffe9e9;
+    color: #991b1b;
+    border-color: #f7c8c8;
+}
+
+.signup-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.signup-actions .action-btn {
+    margin-right: 0;
+    border-radius: 9px;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 7px 12px;
+}
+
+.users-empty {
+    border: 1px dashed #bfd4f3;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #f8fbff, #f2f8ff);
+    color: #395780;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.users-empty i {
+    color: #2463bd;
+}
+
+.pref-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #d7e3f5;
+    border-radius: 18px;
+    background:
+        radial-gradient(circle at 100% 0%, rgba(56, 189, 248, 0.1), transparent 30%),
+        linear-gradient(180deg, #ffffff, #f8fbff);
+    box-shadow: 0 14px 28px rgba(15, 23, 42, 0.06);
+}
+
+.pref-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: linear-gradient(90deg, #1f6fe5, #0ea5e9);
+    opacity: 0.78;
+}
+
+.pref-card + .pref-card {
+    margin-top: 18px;
+}
+
+.pref-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dce7f8;
+}
+
+.pref-head h2 {
+    margin: 0;
+    font-size: clamp(24px, 2.1vw, 34px);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    color: #123267;
+    font-weight: 700;
+}
+
+.pref-head p {
+    margin: 5px 0 0 0;
+    color: #5a6d8f;
+    font-size: 13px;
+}
+
+.pref-count {
+    border-radius: 999px;
+    border: 1px solid #bfd6fb;
+    background: linear-gradient(180deg, #f0f6ff, #e7f0ff);
+    color: #1d4f99;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 9px 14px;
+    white-space: nowrap;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.pref-table-wrap {
+    border: 1px solid #d6e2f2;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.pref-table-wrap table {
+    margin: 0;
+}
+
+.pref-table-wrap th {
+    background: linear-gradient(180deg, #eef3fb, #e8eef9);
+    color: #163565;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.pref-table-wrap td {
+    border-bottom: 1px solid #e4ebf5;
+}
+
+.pref-table-wrap tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.pref-table-wrap tbody tr:hover td {
+    background: #f8fbff;
+}
+
+.pref-empty {
+    border: 1px dashed #bfd4f3;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #f8fbff, #f2f8ff);
+    color: #395780;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.pref-empty i {
+    color: #2463bd;
+}
+
+.pref-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.pref-actions .action-btn {
+    margin-right: 0;
+    border-radius: 9px;
+    font-weight: 700;
+    font-size: 12px;
+    padding: 7px 12px;
+}
+
+.pref-edit-btn {
+    background: #0ea5e9;
+    color: #fff;
+}
+
+.pref-chip {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    border: 1px solid #cfddf4;
+    background: #ecf3ff;
+    color: #1e4f92;
+}
+
+.pref-chip.target {
+    border-color: #cfddf4;
+    background: #eaf3ff;
+    color: #1f4f95;
+}
+
+.pref-chip.students {
+    border-color: #cfdaf0;
+    background: #edf2fb;
+    color: #37557f;
+}
+
+.pref-decision-chip {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 5px 11px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: capitalize;
+    border: 1px solid transparent;
+}
+
+.pref-decision-chip.approved {
+    background: #e8f8ef;
+    color: #166534;
+    border-color: #bce6ce;
+}
+
+.pref-decision-chip.rejected {
+    background: #ffe9e9;
+    color: #991b1b;
+    border-color: #f7c8c8;
+}
+
+.pref-decision-chip.edited {
+    background: #fff6de;
+    color: #8a5103;
+    border-color: #f6dc9d;
+}
+
+.teacher-profile-card {
+    background: linear-gradient(180deg, #f1f5fa, #eef3f9);
+    border: 1px solid #c7d5e8;
+    border-radius: 22px;
+    padding: 16px;
+    color: #142f60;
+    box-shadow: 0 8px 18px rgba(16, 50, 98, 0.06);
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.teacher-profile-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 26px rgba(16, 50, 98, 0.11);
+}
+
+.teacher-profile-photo {
+    height: 210px;
+    border-radius: 18px;
+    border: 1px solid #c3d2e8;
+    background: linear-gradient(145deg, #c0cde0, #b7c5db);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.teacher-profile-avatar {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: linear-gradient(150deg, #3f84ff, #2a61d9);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 42px;
+    font-weight: 700;
+    box-shadow: 0 10px 20px rgba(39, 95, 214, 0.30);
+}
+
+.teacher-profile-photo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 18px;
+}
+
+.teacher-profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.teacher-profile-meta h3 {
+    margin: 0;
+    font-size: clamp(30px, 2.05vw, 40px);
+    line-height: 1.12;
+    font-weight: 700;
+    color: #0e2f63;
+    letter-spacing: -0.4px;
+    text-align: center;
+    min-height: 2.24em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-wrap: balance;
+}
+
+.teacher-profile-email {
+    border: 1px solid #aec4e8;
+    border-radius: 13px;
+    background: linear-gradient(180deg, #e9eff8, #e3ebf6);
+    padding: 12px 14px;
+    margin: 0 0 12px 0;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.teacher-profile-email .label {
+    display: block;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #5b77a5;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.teacher-profile-email .value {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    color: #163b73;
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+    word-break: break-word;
+}
+
+.teacher-profile-stats {
+    display: flex;
+    gap: 9px;
+    margin: 0 0 11px 0;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.teacher-pill {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.teacher-pill.dept {
+    background: #e7edf8;
+    color: #244a82;
+    border: 1px solid #b9cae6;
+}
+
+.teacher-pill.classes {
+    background: #d6f1dc;
+    color: #246447;
+    border: 1px solid #b5e3bf;
+}
+
+.teacher-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+    margin-top: auto;
+    padding-top: 10px;
+}
+
+.teacher-actions .action-btn {
+    margin-right: 0;
+    border-radius: 10px;
+    padding: 9px 10px;
+    font-weight: 700;
+    border: 1px solid transparent;
+    font-size: 12px;
+    text-align: center;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0;
+    width: 100%;
+    box-sizing: border-box;
+    white-space: nowrap;
+    transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+}
+
+.view-courses-btn {
+    background: #dbe7f7;
+    border-color: #bdd0ea;
+    color: #2a558b;
+    cursor: pointer;
+}
+.view-courses-btn:hover {
+    filter: brightness(0.98);
+    box-shadow: 0 6px 14px rgba(34, 82, 150, 0.12);
+}
+
+.teacher-actions a.action-btn.absent-btn {
+    background: #f59e0b;
+    color: #fff;
+    border-color: #ec980c;
+}
+.teacher-actions a.action-btn.absent-btn:hover {
+    filter: brightness(0.97);
+    box-shadow: 0 7px 16px rgba(220, 130, 5, 0.22);
+}
+
+.teacher-actions a.action-btn.clear-btn {
+    background: #475569;
+    color: #fff;
+    border-color: #475569;
+}
+
+.teacher-action-notice {
+    margin-top: 14px;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.24s ease, transform 0.24s ease;
+    pointer-events: none;
+}
+
+.teacher-action-notice.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.teacher-action-notice.ok {
+    background: #e8f8ef;
+    border-color: #bde7cd;
+    color: #166534;
+}
+
+.teacher-action-notice.warn {
+    background: #fff5df;
+    border-color: #f8dfad;
+    color: #92400e;
+}
+
+.teacher-action-notice.info {
+    background: #eaf2ff;
+    border-color: #c9dcff;
+    color: #1f4f9a;
+}
+
+@media (max-width: 1400px) {
+    .teacher-profile-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 1200px) {
+    .teacher-profile-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .teacher-profile-photo {
+        height: 180px;
+    }
+    .teacher-profile-meta h3 {
+        font-size: clamp(26px, 3.4vw, 34px);
+    }
+}
+
+@media (max-width: 720px) {
+    .teacher-profile-grid {
+        grid-template-columns: 1fr;
+    }
+    .teacher-profile-card {
+        padding: 12px;
+    }
+    .teacher-profile-photo {
+        height: 160px;
+        margin-bottom: 12px;
+    }
+    .teacher-profile-avatar {
+        width: 74px;
+        height: 74px;
+        font-size: 36px;
+    }
+    .teacher-profile-meta h3 {
+        font-size: 22px;
+        letter-spacing: -0.3px;
+    }
+    .teacher-profile-email .label {
+        font-size: 11px;
+        margin-bottom: 4px;
+    }
+    .teacher-profile-email .value {
+        font-size: 15px;
+    }
+    .teacher-pill {
+        font-size: 14px;
+        padding: 6px 11px;
+    }
+    .teacher-actions {
+        gap: 8px;
+    }
+    .teacher-actions .action-btn {
+        font-size: 12px;
+        min-height: 38px;
+        padding: 8px 8px;
+    }
+}
+
+.teacher-courses-modal {
+    width: min(760px, calc(100vw - 24px));
+}
+
+.teacher-courses-modal .edit-modal-head {
+    background: linear-gradient(120deg, #edf3ff, #dfe9ff);
+}
+
+.teacher-courses-modal .edit-modal-head h4 {
+    font-size: 30px;
+    color: #1d2d50;
+}
+
+.teacher-courses-meta-line {
+    font-size: 17px;
+    color: #4a5e83;
+    margin-bottom: 12px;
+}
+
+.teacher-courses-summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.teacher-courses-summary .summary-item {
+    border: 1px solid #d1dcf3;
+    background: linear-gradient(180deg, #f8fbff, #edf3ff);
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+
+.teacher-courses-summary .summary-item .k {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #637ba7;
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+
+.teacher-courses-summary .summary-item .v {
+    font-size: 20px;
+    font-weight: 700;
+    color: #173b72;
+}
+
+.teacher-courses-modal .course-list {
+    margin: 6px 0 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 10px;
+}
+
+.teacher-courses-modal .course-item {
+    border: 1px solid #d7e3f7;
+    background: #f8fbff;
+    border-radius: 12px;
+    padding: 10px 12px;
+}
+
+.teacher-courses-modal .course-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1d355f;
+    margin-bottom: 6px;
+}
+
+.teacher-courses-modal .course-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+}
+
+.teacher-courses-modal .course-chip {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    border: 1px solid #c7d8f2;
+    background: #eaf2ff;
+    color: #21508f;
+}
+
+.teacher-courses-modal .course-chip.target {
+    border-color: #b7ccef;
+    background: #e6f0ff;
+}
+
+.teacher-courses-modal .course-chip.slots {
+    border-color: #bfe6ca;
+    background: #e7f7ec;
+    color: #216447;
+}
+
+.teacher-courses-modal .course-prefs {
+    font-size: 14px;
+    color: #334b70;
+    line-height: 1.35;
+}
+
+.teacher-courses-modal .meta-line {
+    font-size: 14px;
+    color: #596f98;
+    margin: 8px 0 2px 0;
+}
+
+@media (max-width: 860px) {
+    .teacher-courses-modal .edit-modal-head h4 {
+        font-size: 22px;
+    }
+    .teacher-courses-meta-line {
+        font-size: 15px;
+    }
+    .teacher-courses-summary {
+        grid-template-columns: 1fr;
+    }
 }
 
 .badge {
@@ -976,6 +2297,19 @@ td {
     }
     .events-layout {
         grid-template-columns: 1fr;
+    }
+    .events-main-head {
+        flex-direction: column;
+    }
+    .selected-event-grid {
+        grid-template-columns: 1fr;
+    }
+    .events-records-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .event-create-modal .edit-modal-head h4 {
+        font-size: 22px;
     }
     .event-form-grid {
         grid-template-columns: 1fr;
@@ -1263,6 +2597,9 @@ td {
     .edit-grid {
         grid-template-columns: 1fr;
     }
+    .event-create-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 720px) {
@@ -1430,76 +2767,8 @@ td {
         <h2>Calendar Event Management</h2>
         <div class="events-layout">
             <div class="events-main-card">
-                <div class="events-main-head">
-                    <h3>Publish And Maintain Events</h3>
-                    <p>Keep exam, test, and holiday notices professional and easy to scan.</p>
-                </div>
-                <form action="/admin/events/add" method="POST" class="event-form-grid">
-                    <input type="text" name="title" placeholder="Event title (Exam, Test, Holiday, Leave)" required>
-                    <input type="date" name="date" required>
-                    <select name="event_type">
-                        <option value="general">General</option>
-                        <option value="test">Test</option>
-                        <option value="exam">Exam</option>
-                        <option value="vacation">Holiday / Leave</option>
-                    </select>
-                    <select name="important">
-                        <option value="no">Normal</option>
-                        <option value="yes">Important</option>
-                    </select>
-                    <button type="submit" class="event-add-btn">Add Event</button>
-                </form>
                 <div id="adminCalendarUI" class="admin-calendar-surface"></div>
-                <div id="adminCalendarNote" class="admin-calendar-note">Tip: click any date to prefill the add-event date field.</div>
-
-                {% if admin_events %}
-                <div class="events-table-wrap">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Title</th>
-                                <th>Type</th>
-                                <th>Creator</th>
-                                <th>Important</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for e in admin_events %}
-                            <tr
-                                data-event-id="{{ e.id }}"
-                                data-event-date="{{ e.date }}"
-                                data-event-title="{{ e.title }}"
-                                data-event-type="{{ e.type }}"
-                                data-event-important="{{ 'yes' if e.important else 'no' }}"
-                                data-event-creator="{{ e.creator_name }}"
-                            >
-                                <td class="event-col-date">{{ e.date }}</td>
-                                <td class="event-col-title">{{ e.title }}</td>
-                                <td class="event-col-type">
-                                    {% if e.type == "vacation" %}
-                                        Holiday / Leave
-                                    {% elif e.type == "government_holiday" %}
-                                        Government Holiday
-                                    {% else %}
-                                        {{ e.type|capitalize }}
-                                    {% endif %}
-                                </td>
-                                <td class="event-col-creator">{{ e.creator_name }}</td>
-                                <td class="event-col-important">{{ "Yes" if e.important else "No" }}</td>
-                                <td class="event-col-action">
-                                    <button type="button" class="action-btn" style="border:none;background:#0ea5e9;color:#fff;cursor:pointer;" onclick="startInlineEventEdit(this)">Edit</button>
-                                    <a class="action-btn reject" href="/admin/events/delete?id={{ e.id }}">Delete</a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                {% else %}
-                    <div class="empty">No calendar events yet.</div>
-                {% endif %}
+                <div id="adminCalendarNote" class="admin-calendar-note">Tip: click a date to add, or click an existing event to inspect details below.</div>
             </div>
 
             <div class="events-upcoming">
@@ -1517,6 +2786,135 @@ td {
                 {% else %}
                 <div class="vacation-empty">No upcoming holiday announcements.</div>
                 {% endif %}
+
+                <div class="selected-event-panel" id="selectedEventPanel">
+                    <div class="selected-event-panel-head">
+                        <h4>Selected Event Details</h4>
+                        <span class="selected-event-chip" id="selectedEventTypeChip">General</span>
+                    </div>
+                    <p class="selected-event-title" id="selectedEventTitle">No event selected</p>
+                    <div class="selected-event-grid">
+                        <div class="selected-event-item">
+                            <span class="k">Date</span>
+                            <span class="v" id="selectedEventDate">-</span>
+                        </div>
+                        <div class="selected-event-item">
+                            <span class="k">Type</span>
+                            <span class="v" id="selectedEventType">-</span>
+                        </div>
+                        <div class="selected-event-item">
+                            <span class="k">Priority</span>
+                            <span class="v" id="selectedEventPriority">-</span>
+                        </div>
+                        <div class="selected-event-item">
+                            <span class="k">Created By</span>
+                            <span class="v" id="selectedEventCreator">-</span>
+                        </div>
+                    </div>
+                    <p class="selected-event-empty" id="selectedEventEmpty">Click any event on the calendar to preview details here.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card events-published-section">
+        <div class="events-records-card">
+            <div class="events-records-head">
+                <div>
+                    <h3>Published Events</h3>
+                    <p>Dedicated section to manage all published calendar events professionally.</p>
+                </div>
+                <div class="events-records-count">{{ admin_events | length }} Events</div>
+            </div>
+
+            {% if admin_events %}
+            <div class="events-table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Title</th>
+                            <th>Type</th>
+                            <th>Creator</th>
+                            <th>Important</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for e in admin_events %}
+                        <tr
+                            data-event-id="{{ e.id }}"
+                            data-event-date="{{ e.date }}"
+                            data-event-title="{{ e.title }}"
+                            data-event-type="{{ e.type }}"
+                            data-event-important="{{ 'yes' if e.important else 'no' }}"
+                            data-event-creator="{{ e.creator_name }}"
+                        >
+                            <td class="event-col-date">{{ e.date }}</td>
+                            <td class="event-col-title">{{ e.title }}</td>
+                            <td class="event-col-type">
+                                <span class="evt-chip evt-type-chip {{ e.type }}">{{ "Holiday / Leave" if e.type == "vacation" else ("Government Holiday" if e.type == "government_holiday" else e.type|capitalize) }}</span>
+                            </td>
+                            <td class="event-col-creator">{{ e.creator_name }}</td>
+                            <td class="event-col-important">
+                                <span class="evt-chip evt-important-chip {{ 'yes' if e.important else 'no' }}">{{ "Yes" if e.important else "No" }}</span>
+                            </td>
+                            <td class="event-col-action">
+                                <div class="event-actions">
+                                    <button type="button" class="action-btn evt-edit-btn" onclick="startInlineEventEdit(this)">Edit</button>
+                                    <a class="action-btn reject" href="/admin/events/delete?id={{ e.id }}">Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+                <div class="empty">No calendar events yet.</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="edit-modal-overlay" id="eventCreateModal" onclick="closeEventCreateModal(event)">
+        <div class="edit-modal event-create-modal">
+            <div class="edit-modal-head">
+                <h4>Add Calendar Event</h4>
+                <button type="button" class="edit-modal-close" onclick="closeEventCreateModal()">x</button>
+            </div>
+            <div class="edit-modal-body">
+                <form id="eventCreateForm" action="/admin/events/add" method="POST">
+                    <div class="event-create-grid">
+                        <div class="full">
+                            <label for="eventModalTitle">Event Title</label>
+                            <input id="eventModalTitle" type="text" name="title" placeholder="Exam, Test, Holiday, Leave" required>
+                        </div>
+                        <div>
+                            <label for="eventModalDate">Date</label>
+                            <input id="eventModalDate" type="date" name="date" required>
+                        </div>
+                        <div>
+                            <label for="eventModalType">Event Type</label>
+                            <select id="eventModalType" name="event_type">
+                                <option value="general">General</option>
+                                <option value="test">Test</option>
+                                <option value="exam">Exam</option>
+                                <option value="vacation">Holiday / Leave</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="eventModalImportant">Importance</label>
+                            <select id="eventModalImportant" name="important">
+                                <option value="no">Normal</option>
+                                <option value="yes">Important</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="event-create-actions">
+                        <button type="button" class="gen-action edit cancel" onclick="closeEventCreateModal()">Cancel</button>
+                        <button type="submit" class="event-add-btn">Add Event</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -1529,66 +2927,98 @@ td {
     {% if general_msg %}
     <div class="notice ok">{{ general_msg }}</div>
     {% endif %}
-    <div class="card">
-        <h2>Dashboard Overview</h2>
-        <div class="teacher-grid">
-            <div class="teacher-card">
-                <div style="font-size:13px; color:#64748b;">Pending Signups</div>
-                <div style="font-size:28px; font-weight:700;">{{ pending | length }}</div>
+    <div class="card dashboard-overview-card">
+        <div class="overview-head">
+            <div>
+                <h2>Dashboard Overview</h2>
+                <p>Live administrative snapshot for onboarding and schedule readiness.</p>
             </div>
-            <div class="teacher-card">
-                <div style="font-size:13px; color:#64748b;">Pending Preferences</div>
-                <div style="font-size:28px; font-weight:700;">{{ preference_requests | length }}</div>
+            <div class="overview-badge">Admin Analytics</div>
+        </div>
+
+        <div class="overview-grid">
+            <div class="overview-stat stat-signups">
+                <div class="overview-stat-top">
+                    <div class="overview-k">Pending Signups</div>
+                    <div class="overview-icon"><i data-lucide="user-plus"></i></div>
+                </div>
+                <div class="overview-v">{{ pending | length }}</div>
+                <div class="overview-note">Awaiting approval from the admin panel.</div>
             </div>
-            <div class="teacher-card">
-                <div style="font-size:13px; color:#64748b;">Timetable Rows</div>
-                <div style="font-size:28px; font-weight:700;">{{ timetable_rows | length }}</div>
+
+            <div class="overview-stat stat-preferences">
+                <div class="overview-stat-top">
+                    <div class="overview-k">Pending Preferences</div>
+                    <div class="overview-icon"><i data-lucide="sliders-horizontal"></i></div>
+                </div>
+                <div class="overview-v">{{ preference_requests | length }}</div>
+                <div class="overview-note">Teacher requests waiting for review.</div>
+            </div>
+
+            <div class="overview-stat stat-timetable">
+                <div class="overview-stat-top">
+                    <div class="overview-k">Timetable Rows</div>
+                    <div class="overview-icon"><i data-lucide="calendar-days"></i></div>
+                </div>
+                <div class="overview-v">{{ timetable_rows | length }}</div>
+                <div class="overview-note">Currently active timetable entries.</div>
             </div>
         </div>
     </div>
-    <div class="card">
+    <div class="card" id="teacher-cards-panel">
         <h2>Teacher Cards (Signup + Preferences)</h2>
         {% if teacher_cards %}
-        <div class="teacher-grid">
+        <div class="teacher-grid teacher-profile-grid">
             {% for t in teacher_cards %}
-            <div class="teacher-card">
-                <h3 style="margin:0 0 8px 0;">{{ t.name }}</h3>
-                <div style="font-size:13px; color:#475569; margin-bottom:10px;">
-                    {{ t.email }} | Dept: {{ t.department }}
-                </div>
-
-                <div style="margin-bottom:10px;">
-                    <span class="badge ok">Classes: {{ t.timetable_count }}</span>
-                    {% if t.is_all_absent %}
-                    <span class="badge warn">All Marked Absent</span>
-                    {% endif %}
-                </div>
-
-                <div style="font-size:13px; margin-bottom:10px;">
-                    <b>Preferences/Courses:</b>
-                    {% if t.courses %}
-                    <ul style="margin:6px 0 0 18px; padding:0;">
-                        {% for c in t.courses %}
-                        <li>{{ c.subject }} ({{ c.target }}) - {{ c.prefs | join(", ") }}</li>
-                        {% endfor %}
-                    </ul>
+            <div class="teacher-card teacher-profile-card">
+                <div class="teacher-profile-photo">
+                    {% if t.profile_pic %}
+                    <img class="teacher-profile-photo-img" src="{{ url_for('static', filename=t.profile_pic) }}" alt="{{ t.name }}">
                     {% else %}
-                    <div style="color:#64748b;">No approved preferences yet.</div>
+                    <div class="teacher-profile-avatar">
+                        {{ (t.name[:1] if t.name else "T") | upper }}
+                    </div>
                     {% endif %}
                 </div>
 
-                <div>
+                <div class="teacher-profile-meta">
+                    <h3>{{ t.name }}</h3>
+                </div>
+
+                <div class="teacher-profile-email">
+                    <span class="label">Registered Email</span>
+                    <span class="value">{{ t.email }}</span>
+                </div>
+
+                <div class="teacher-profile-stats">
+                    <span class="teacher-pill dept">Dept: {{ t.department }}</span>
+                    <span class="teacher-pill classes">Classes: {{ t.timetable_count }}</span>
+                </div>
+
+                <div class="teacher-actions">
                     {% if t.is_all_absent %}
-                    <a class="action-btn" style="background:#475569;color:#fff;"
+                    <a class="action-btn clear-btn"
                        href="{{ url_for('mark_teacher_all_absent', teacher=t.name, clear='1') }}">
                        Clear Absent
                     </a>
                     {% else %}
-                    <a class="action-btn" style="background:#f59e0b;color:#fff;"
+                    <a class="action-btn absent-btn"
                        href="{{ url_for('mark_teacher_all_absent', teacher=t.name) }}">
                        Mark Teacher Absent
                     </a>
                     {% endif %}
+
+                    <button
+                        type="button"
+                        class="action-btn view-courses-btn"
+                        data-teacher-name="{{ t.name|e }}"
+                        data-teacher-email="{{ t.email|e }}"
+                        data-teacher-dept="{{ t.department|e }}"
+                        data-teacher-classes="{{ t.timetable_count }}"
+                        data-teacher-courses='{{ t.courses | tojson | forceescape }}'
+                        onclick="openTeacherCoursesModal(this)">
+                        View Courses
+                    </button>
                 </div>
             </div>
             {% endfor %}
@@ -1596,87 +3026,137 @@ td {
         {% else %}
             <div class="empty">No teachers found.</div>
         {% endif %}
+        <div
+            id="teacherActionNotice"
+            class="teacher-action-notice {{ teacher_action_tone if teacher_action_tone else '' }}"
+            {% if not teacher_action_msg %}style="display:none;"{% endif %}
+        >
+            {{ teacher_action_msg }}
+        </div>
     </div>
+    </div>
+
+    <div class="edit-modal-overlay" id="teacherCoursesModal" onclick="closeTeacherCoursesModal(event)">
+        <div class="edit-modal teacher-courses-modal">
+            <div class="edit-modal-head">
+                <h4 id="teacherCoursesTitle">Teacher Courses</h4>
+                <button type="button" class="edit-modal-close" onclick="closeTeacherCoursesModal()">x</button>
+            </div>
+            <div class="edit-modal-body">
+                <div class="teacher-courses-meta-line" id="teacherCoursesMeta"></div>
+                <div class="teacher-courses-summary" id="teacherCoursesSummary"></div>
+                <ul class="course-list" id="teacherCoursesList"></ul>
+                <div class="empty" id="teacherCoursesEmpty" style="display:none; padding:0;">No approved courses found.</div>
+            </div>
+        </div>
     </div>
 
     <div id="users-section" class="admin-section">
-    <div class="card">
-        <h2>Pending Signup Approvals</h2>
+    <div class="card users-card">
+        <div class="users-head">
+            <div class="users-head-main">
+                <div>
+                    <h2>Pending Signup Approvals</h2>
+                    <p>Review and process new account access requests.</p>
+                </div>
+            </div>
+            <div class="users-count">{{ pending | length }} Pending</div>
+        </div>
 
         {% if pending %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Email</th>
-                    <th>Name</th>
-                    <th>Department</th>
-                    <th>Role</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for u in pending %}
-                <tr>
-                    <td>{{ u.email }}</td>
-                    <td>{{ u.name }}</td>
-                    <td>{{ u.department }}</td>
-                    <td style="text-transform:capitalize;">{{ u.role }}</td>
-                    <td>
-                        <a class="action-btn approve"
-                           href="/admin/approve?email={{ u.email }}">
-                           Approve
-                        </a>
+        <div class="users-table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Role</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in pending %}
+                    <tr>
+                        <td>{{ u.email }}</td>
+                        <td>{{ u.name }}</td>
+                        <td>{{ u.department }}</td>
+                        <td><span class="role-chip">{{ u.role }}</span></td>
+                        <td>
+                            <div class="signup-actions">
+                                <a class="action-btn approve"
+                                   href="/admin/approve?email={{ u.email }}">
+                                   Approve
+                                </a>
 
-                        <a class="action-btn reject"
-                           href="/admin/reject?email={{ u.email }}&role={{ u.role }}">
-                           Reject
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                                <a class="action-btn reject"
+                                   href="/admin/reject?email={{ u.email }}&role={{ u.role }}">
+                                   Reject
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% else %}
-            <div class="empty">
-                No pending signup requests.
+            <div class="users-empty">
+                <i data-lucide="inbox"></i>
+                <span>No pending signup requests.</span>
             </div>
         {% endif %}
 
     </div>
 
-    <div class="card">
-        <h2>Approval / Rejection History</h2>
+    <div class="card users-card">
+        <div class="users-head">
+            <div class="users-head-main">
+                <div>
+                    <h2>Approval / Rejection History</h2>
+                    <p>Latest account decisions and admin traceability log.</p>
+                </div>
+            </div>
+            <div class="users-count">{{ history | length }} Records</div>
+        </div>
 
         {% if history %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Time</th>
-                    <th>Action</th>
-                    <th>Email</th>
-                    <th>Name</th>
-                    <th>Department</th>
-                    <th>Role</th>
-                    <th>Admin</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for h in history %}
-                <tr>
-                    <td>{{ h.timestamp }}</td>
-                    <td style="text-transform:capitalize;">{{ h.action }}</td>
-                    <td>{{ h.email }}</td>
-                    <td>{{ h.name }}</td>
-                    <td>{{ h.department }}</td>
-                    <td style="text-transform:capitalize;">{{ h.role }}</td>
-                    <td>{{ h.admin }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="users-table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Action</th>
+                        <th>Email</th>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Role</th>
+                        <th>Admin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for h in history %}
+                    <tr>
+                        <td>{{ h.timestamp }}</td>
+                        <td>
+                            <span class="decision-chip {{ 'approved' if h.action == 'approved' else 'rejected' }}">
+                                {{ h.action }}
+                            </span>
+                        </td>
+                        <td>{{ h.email }}</td>
+                        <td>{{ h.name }}</td>
+                        <td>{{ h.department }}</td>
+                        <td><span class="role-chip">{{ h.role }}</span></td>
+                        <td>{{ h.admin }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% else %}
-            <div class="empty">
-                No approval or rejection history yet.
+            <div class="users-empty">
+                <i data-lucide="file-clock"></i>
+                <span>No approval or rejection history yet.</span>
             </div>
         {% endif %}
 
@@ -1684,76 +3164,98 @@ td {
     </div>
 
     <div id="preferences-section" class="admin-section">
-    <div class="card">
-        <h2>Pending Preference Requests</h2>
+    <div class="card pref-card">
+        <div class="pref-head">
+            <div>
+                <h2>Pending Preference Requests</h2>
+                <p>Review pending course preferences before timetable generation.</p>
+            </div>
+            <div class="pref-count">{{ preference_requests | length }} Pending</div>
+        </div>
 
         {% if preference_requests %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Subject</th>
-                    <th>Teacher</th>
-                    <th>Students</th>
-                    <th>Target</th>
-                    <th>Preferences</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for r in preference_requests %}
-                <tr>
-                    <td>{{ r.subject }}</td>
-                    <td>{{ r.teacher }}</td>
-                    <td>{{ r.students }}</td>
-                    <td>{{ r.target }}</td>
-                    <td>{{ r.prefs | join(", ") }}</td>
-                    <td>
-                        <a class="action-btn approve" href="/admin/preferences/approve?id={{ r.id }}">Approve</a>
-                        <a class="action-btn reject" href="/admin/preferences/reject?id={{ r.id }}">Reject</a>
-                        <a class="action-btn" style="background:#0ea5e9;color:#fff;" href="/admin/preferences/edit?id={{ r.id }}">Edit</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="pref-table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Teacher</th>
+                        <th>Students</th>
+                        <th>Target</th>
+                        <th>Preferences</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in preference_requests %}
+                    <tr>
+                        <td>{{ r.subject }}</td>
+                        <td>{{ r.teacher }}</td>
+                        <td><span class="pref-chip students">{{ r.students }}</span></td>
+                        <td><span class="pref-chip target">{{ r.target }}</span></td>
+                        <td>{{ r.prefs | join(", ") }}</td>
+                        <td>
+                            <div class="pref-actions">
+                                <a class="action-btn approve" href="/admin/preferences/approve?id={{ r.id }}">Approve</a>
+                                <a class="action-btn reject" href="/admin/preferences/reject?id={{ r.id }}">Reject</a>
+                                <a class="action-btn pref-edit-btn" href="/admin/preferences/edit?id={{ r.id }}">Edit</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% else %}
-            <div class="empty">
-                No pending preference requests.
+            <div class="pref-empty">
+                <i data-lucide="clipboard-list"></i>
+                <span>No pending preference requests.</span>
             </div>
         {% endif %}
     </div>
 
-    <div class="card">
-        <h2>Preference Decision History</h2>
+    <div class="card pref-card">
+        <div class="pref-head">
+            <div>
+                <h2>Preference Decision History</h2>
+                <p>Track all approved, rejected, and edited preference decisions.</p>
+            </div>
+            <div class="pref-count">{{ preference_history | length }} Records</div>
+        </div>
 
         {% if preference_history %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Time</th>
-                    <th>Action</th>
-                    <th>Subject</th>
-                    <th>Teacher</th>
-                    <th>Target</th>
-                    <th>Admin</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for h in preference_history %}
-                <tr>
-                    <td>{{ h.timestamp }}</td>
-                    <td style="text-transform:capitalize;">{{ h.action }}</td>
-                    <td>{{ h.subject }}</td>
-                    <td>{{ h.teacher }}</td>
-                    <td>{{ h.target }}</td>
-                    <td>{{ h.admin }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="pref-table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Action</th>
+                        <th>Subject</th>
+                        <th>Teacher</th>
+                        <th>Target</th>
+                        <th>Admin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for h in preference_history %}
+                    <tr>
+                        <td>{{ h.timestamp }}</td>
+                        <td>
+                            <span class="pref-decision-chip {{ h.action | lower }}">{{ h.action }}</span>
+                        </td>
+                        <td>{{ h.subject }}</td>
+                        <td>{{ h.teacher }}</td>
+                        <td><span class="pref-chip target">{{ h.target }}</span></td>
+                        <td>{{ h.admin }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% else %}
-            <div class="empty">
-                No preference decision history yet.
+            <div class="pref-empty">
+                <i data-lucide="history"></i>
+                <span>No preference decision history yet.</span>
             </div>
         {% endif %}
     </div>
@@ -2144,6 +3646,114 @@ function openProfileSection(e) {
     if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+function openTeacherCoursesModal(btn) {
+    if (!btn) return;
+    const modal = document.getElementById("teacherCoursesModal");
+    const title = document.getElementById("teacherCoursesTitle");
+    const meta = document.getElementById("teacherCoursesMeta");
+    const summary = document.getElementById("teacherCoursesSummary");
+    const list = document.getElementById("teacherCoursesList");
+    const empty = document.getElementById("teacherCoursesEmpty");
+    if (!modal || !title || !meta || !summary || !list || !empty) return;
+
+    const name = btn.dataset.teacherName || "Teacher";
+    const email = btn.dataset.teacherEmail || "-";
+    const dept = btn.dataset.teacherDept || "-";
+    const classRows = parseInt(btn.dataset.teacherClasses || "0", 10) || 0;
+    let courses = [];
+
+    try {
+        const raw = btn.dataset.teacherCourses || "[]";
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) courses = parsed;
+    } catch (e) {
+        courses = [];
+    }
+
+    title.textContent = `${name} - Course Details`;
+    list.innerHTML = "";
+    summary.innerHTML = "";
+
+    let preferredSlotsCount = 0;
+
+    courses.forEach((c) => {
+        const prefs = c && Array.isArray(c.prefs) ? c.prefs.filter(Boolean) : [];
+        preferredSlotsCount += prefs.length;
+    });
+
+    meta.textContent = `${email} | Dept: ${dept}`;
+
+    const summaryItems = [
+        { key: "Courses", value: String(courses.length) },
+        { key: "Class Rows", value: String(classRows) },
+        { key: "Preferred Slots", value: String(preferredSlotsCount) }
+    ];
+    summaryItems.forEach((item) => {
+        const card = document.createElement("div");
+        card.className = "summary-item";
+        const k = document.createElement("span");
+        k.className = "k";
+        k.textContent = item.key;
+        const v = document.createElement("span");
+        v.className = "v";
+        v.textContent = item.value;
+        card.appendChild(k);
+        card.appendChild(v);
+        summary.appendChild(card);
+    });
+
+    list.innerHTML = "";
+
+    if (!courses.length) {
+        empty.style.display = "block";
+    } else {
+        empty.style.display = "none";
+        courses.forEach((c, idx) => {
+            const subject = c && c.subject ? c.subject : "Untitled Subject";
+            const target = c && c.target ? c.target : "ALL";
+            const prefs = c && Array.isArray(c.prefs) && c.prefs.length ? c.prefs.filter(Boolean) : [];
+
+            const li = document.createElement("li");
+            li.className = "course-item";
+
+            const courseTitle = document.createElement("div");
+            courseTitle.className = "course-title";
+            courseTitle.textContent = `${idx + 1}. ${subject}`;
+
+            const courseMeta = document.createElement("div");
+            courseMeta.className = "course-meta";
+
+            const targetChip = document.createElement("span");
+            targetChip.className = "course-chip target";
+            targetChip.textContent = `Target: ${target}`;
+
+            const slotsChip = document.createElement("span");
+            slotsChip.className = "course-chip slots";
+            slotsChip.textContent = `Slots: ${prefs.length}`;
+
+            courseMeta.appendChild(targetChip);
+            courseMeta.appendChild(slotsChip);
+
+            const coursePrefs = document.createElement("div");
+            coursePrefs.className = "course-prefs";
+            coursePrefs.textContent = prefs.length ? `Preferred Times: ${prefs.join(", ")}` : "Preferred Times: Not specified";
+
+            li.appendChild(courseTitle);
+            li.appendChild(courseMeta);
+            li.appendChild(coursePrefs);
+            list.appendChild(li);
+        });
+    }
+
+    modal.classList.add("show");
+}
+
+function closeTeacherCoursesModal(e) {
+    if (e && e.target !== e.currentTarget) return;
+    const modal = document.getElementById("teacherCoursesModal");
+    if (modal) modal.classList.remove("show");
+}
+
 function formatEventTypeLabel(type) {
     if (type === "vacation") return "Holiday / Leave";
     if (type === "government_holiday") return "Government Holiday";
@@ -2156,6 +3766,152 @@ function setAdminCalendarNote(message, tone = "info") {
     if (!note) return;
     note.textContent = message || "";
     note.style.color = tone === "error" ? "#b42318" : "#46687f";
+}
+
+function formatEventDateLabel(startObj, startStr) {
+    if (startObj instanceof Date && !isNaN(startObj.getTime())) {
+        return startObj.toLocaleDateString([], {
+            weekday: "short",
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        });
+    }
+    if (startStr) {
+        const d = new Date(startStr);
+        if (!isNaN(d.getTime())) {
+            return d.toLocaleDateString([], {
+                weekday: "short",
+                day: "2-digit",
+                month: "short",
+                year: "numeric"
+            });
+        }
+    }
+    return "-";
+}
+
+function toLocalISODate(dateObj) {
+    if (!(dateObj instanceof Date) || isNaN(dateObj.getTime())) return "";
+    const y = dateObj.getFullYear();
+    const m = String(dateObj.getMonth() + 1).padStart(2, "0");
+    const d = String(dateObj.getDate()).padStart(2, "0");
+    return `${y}-${m}-${d}`;
+}
+
+function getEventISODate(eventObj) {
+    if (!eventObj) return "";
+    const startStr = eventObj.startStr || "";
+    if (startStr) return startStr.slice(0, 10);
+    if (eventObj.start) return toLocalISODate(eventObj.start);
+    return "";
+}
+
+function setNoEventDetails(dateStr = "") {
+    const panel = document.getElementById("selectedEventPanel");
+    if (!panel) return;
+
+    const titleEl = document.getElementById("selectedEventTitle");
+    const dateEl = document.getElementById("selectedEventDate");
+    const typeEl = document.getElementById("selectedEventType");
+    const priorityEl = document.getElementById("selectedEventPriority");
+    const creatorEl = document.getElementById("selectedEventCreator");
+    const chipEl = document.getElementById("selectedEventTypeChip");
+    const emptyEl = document.getElementById("selectedEventEmpty");
+
+    if (titleEl) {
+        titleEl.textContent = dateStr ? `No event on ${dateStr}` : "No event today";
+    }
+    if (dateEl) dateEl.textContent = dateStr || toLocalISODate(new Date()) || "-";
+    if (typeEl) typeEl.textContent = "-";
+    if (priorityEl) priorityEl.textContent = "-";
+    if (creatorEl) creatorEl.textContent = "-";
+
+    if (chipEl) {
+        chipEl.textContent = "No Event";
+        chipEl.classList.add("no-event");
+    }
+
+    if (emptyEl) {
+        emptyEl.textContent = dateStr
+            ? "No events are scheduled for this date."
+            : "No events are scheduled for today.";
+        emptyEl.style.display = "";
+    }
+
+    panel.classList.remove("has-event");
+    panel.classList.add("no-event");
+}
+
+function setSelectedEventDetails(eventObj, meta = {}) {
+    const panel = document.getElementById("selectedEventPanel");
+    if (!panel || !eventObj) return;
+
+    const ext = eventObj.extendedProps || {};
+    const titleEl = document.getElementById("selectedEventTitle");
+    const dateEl = document.getElementById("selectedEventDate");
+    const typeEl = document.getElementById("selectedEventType");
+    const priorityEl = document.getElementById("selectedEventPriority");
+    const creatorEl = document.getElementById("selectedEventCreator");
+    const chipEl = document.getElementById("selectedEventTypeChip");
+    const emptyEl = document.getElementById("selectedEventEmpty");
+
+    const type = ext.type || "general";
+    const typeLabel = ext.type_label || formatEventTypeLabel(type);
+    const creatorName = ext.creator_name || ext.creator || "System";
+    const important = !!ext.important;
+    const dateLabel = formatEventDateLabel(eventObj.start, eventObj.startStr);
+    const count = Number(meta.count || 0);
+
+    if (titleEl) titleEl.textContent = eventObj.title || "Untitled Event";
+    if (dateEl) dateEl.textContent = dateLabel;
+    if (typeEl) typeEl.textContent = typeLabel;
+    if (priorityEl) priorityEl.textContent = important ? "Important" : "Normal";
+    if (creatorEl) creatorEl.textContent = creatorName;
+
+    if (chipEl) {
+        chipEl.textContent = count > 1 ? `${typeLabel} | ${count} Events` : typeLabel;
+        chipEl.classList.remove("no-event");
+        chipEl.style.background = important ? "#fff1dd" : "#eaf3ff";
+        chipEl.style.color = important ? "#9a3412" : "#1f4e95";
+        chipEl.style.borderColor = important ? "#f3cf9e" : "#c8dbf8";
+    }
+
+    if (emptyEl) {
+        emptyEl.textContent = count > 1
+            ? `This date has ${count} events. Showing the first match.`
+            : "Selected from the calendar.";
+        emptyEl.style.display = "";
+    }
+
+    panel.classList.remove("no-event");
+    panel.classList.add("has-event");
+}
+
+function updateSelectedEventPanelForDate(dateStr) {
+    if (!adminCalendar || !dateStr) {
+        setNoEventDetails(dateStr || "");
+        return 0;
+    }
+
+    const events = adminCalendar.getEvents().filter((ev) => getEventISODate(ev) === dateStr);
+    if (!events.length) {
+        setNoEventDetails(dateStr);
+        return 0;
+    }
+
+    setSelectedEventDetails(events[0], { count: events.length });
+    return events.length;
+}
+
+function initSelectedEventPanel() {
+    const today = toLocalISODate(new Date());
+    const count = updateSelectedEventPanelForDate(today);
+    if (count > 0) {
+        setAdminCalendarNote(`${count} event(s) scheduled for today (${today}).`);
+    } else {
+        setAdminCalendarNote(`No event today (${today}). Click any date to check details or add one.`);
+    }
 }
 
 function updateLiveAdminHeader() {
@@ -2209,6 +3965,58 @@ function applyReadableEventStyle(eventEl) {
     });
 }
 
+function eventTypeChipClass(type) {
+    const t = (type || "general").toLowerCase();
+    if (t === "exam") return "exam";
+    if (t === "test") return "test";
+    if (t === "vacation") return "vacation";
+    if (t === "government_holiday") return "government_holiday";
+    return "general";
+}
+
+function buildEventTypeChipHtml(type) {
+    return `<span class="evt-chip evt-type-chip ${eventTypeChipClass(type)}">${formatEventTypeLabel(type)}</span>`;
+}
+
+function buildEventImportantChipHtml(isImportant) {
+    return `<span class="evt-chip evt-important-chip ${isImportant ? "yes" : "no"}">${isImportant ? "Yes" : "No"}</span>`;
+}
+
+function buildEventActionHtml(eventId) {
+    return `
+        <div class="event-actions">
+            <button type="button" class="action-btn evt-edit-btn" onclick="startInlineEventEdit(this)">Edit</button>
+            <a class="action-btn reject" href="/admin/events/delete?id=${encodeURIComponent(eventId)}">Delete</a>
+        </div>
+    `;
+}
+
+function openEventCreateModal(prefillDate = "") {
+    const modal = document.getElementById("eventCreateModal");
+    if (!modal) return;
+    const form = document.getElementById("eventCreateForm");
+    if (form) form.reset();
+
+    const dateInput = document.getElementById("eventModalDate");
+    if (dateInput) {
+        if (prefillDate) {
+            dateInput.value = prefillDate;
+        } else if (!dateInput.value) {
+            dateInput.value = new Date().toISOString().slice(0, 10);
+        }
+    }
+
+    modal.classList.add("show");
+    const titleInput = document.getElementById("eventModalTitle");
+    if (titleInput) setTimeout(() => titleInput.focus(), 50);
+}
+
+function closeEventCreateModal(e) {
+    if (e && e.target !== e.currentTarget) return;
+    const modal = document.getElementById("eventCreateModal");
+    if (modal) modal.classList.remove("show");
+}
+
 function initAdminCalendar() {
     if (adminCalendarInitialized) {
         setTimeout(() => {
@@ -2223,6 +4031,7 @@ function initAdminCalendar() {
     adminCalendar = new FullCalendar.Calendar(calendarEl, {
         initialView: "dayGridMonth",
         height: "auto",
+        stickyHeaderDates: false,
         dayMaxEventRows: 3,
         headerToolbar: {
             left: "prev,next today",
@@ -2252,22 +4061,26 @@ function initAdminCalendar() {
             applyReadableEventStyle(info.el);
         },
         dateClick: function(info) {
-            const dateInput = document.querySelector('#events-section input[name="date"]');
-            if (dateInput) {
-                dateInput.value = info.dateStr;
+            const count = updateSelectedEventPanelForDate(info.dateStr);
+            if (count > 0) {
+                setAdminCalendarNote(`Date selected: ${info.dateStr}. Found ${count} event(s).`);
+            } else {
+                setAdminCalendarNote(`Date selected: ${info.dateStr}. No events found, add one now.`);
+                openEventCreateModal(info.dateStr);
             }
-            setAdminCalendarNote(`Date selected: ${info.dateStr}. Add event form is prefilled.`);
         },
         eventClick: function(info) {
             const ext = info.event.extendedProps || {};
             const dateStr = (info.event.startStr || "").slice(0, 10);
             const typeLabel = ext.type_label || formatEventTypeLabel(ext.type || "general");
+            setSelectedEventDetails(info.event);
             setAdminCalendarNote(`Selected "${info.event.title}" on ${dateStr} (${typeLabel}).`);
         }
     });
 
     adminCalendar.render();
     adminCalendarInitialized = true;
+    initSelectedEventPanel();
 }
 
 function renderAdminEventRow(tr, eventData) {
@@ -2281,13 +4094,10 @@ function renderAdminEventRow(tr, eventData) {
 
     tr.querySelector(".event-col-date").textContent = eventData.date;
     tr.querySelector(".event-col-title").textContent = eventData.title;
-    tr.querySelector(".event-col-type").textContent = formatEventTypeLabel(eventData.type);
+    tr.querySelector(".event-col-type").innerHTML = buildEventTypeChipHtml(eventData.type);
     tr.querySelector(".event-col-creator").textContent = eventData.creator_name;
-    tr.querySelector(".event-col-important").textContent = eventData.important ? "Yes" : "No";
-    tr.querySelector(".event-col-action").innerHTML = `
-        <button type="button" class="action-btn" style="border:none;background:#0ea5e9;color:#fff;cursor:pointer;" onclick="startInlineEventEdit(this)">Edit</button>
-        <a class="action-btn reject" href="/admin/events/delete?id=${encodeURIComponent(eventData.id)}">Delete</a>
-    `;
+    tr.querySelector(".event-col-important").innerHTML = buildEventImportantChipHtml(!!eventData.important);
+    tr.querySelector(".event-col-action").innerHTML = buildEventActionHtml(eventData.id);
 }
 
 function startInlineEventEdit(btn) {
@@ -2758,10 +4568,35 @@ const params = new URLSearchParams(window.location.search);
 const msg = params.get("message") || "";
 const err = params.get("error") || "";
 const section = params.get("section") || "";
+const teacherActionMsg = params.get("teacher_action_msg") || "";
+const teacherActionTone = params.get("teacher_action_tone") || "";
 if (section) {
     showSection(section);
 } else if (msg.includes("Timetable generated") || err.includes("feasible") || err.includes("Timetable") || err.includes("ERROR:")) {
     showSection("generate-section");
+}
+
+if (teacherActionMsg) {
+    const notice = document.getElementById("teacherActionNotice");
+    const panel = document.getElementById("teacher-cards-panel");
+    if (notice) {
+        notice.style.display = "";
+        notice.textContent = teacherActionMsg;
+        notice.classList.remove("ok", "warn", "info");
+        if (teacherActionTone === "ok" || teacherActionTone === "warn" || teacherActionTone === "info") {
+            notice.classList.add(teacherActionTone);
+        } else {
+            notice.classList.add("ok");
+        }
+        requestAnimationFrame(() => notice.classList.add("show"));
+        setTimeout(() => {
+            notice.classList.remove("show");
+            setTimeout(() => { notice.style.display = "none"; }, 260);
+        }, 2500);
+    }
+    if (panel) {
+        panel.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
 }
 
 setTimeout(() => {
@@ -2771,8 +4606,13 @@ setTimeout(() => {
         setTimeout(() => n.remove(), 450);
     });
 }, 3500);
+
+document.addEventListener("keydown", function(e) {
+    if (e.key !== "Escape") return;
+    closeTeacherCoursesModal();
+    closeEventCreateModal();
+});
 </script>
 
 </body>
 </html>
-
