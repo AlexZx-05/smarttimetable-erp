@@ -94,6 +94,19 @@ body {
     display: inline-block;
 }
 
+.sidebar i[data-lucide] {
+    width: 20px;
+    min-width: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-style: normal;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    color: currentColor;
+}
+
 .sidebar span {
     opacity: 0;
     width: 0;
@@ -3384,7 +3397,7 @@ td {
 <div class="sidebar" id="sidebar">
 
     <div class="sidebar-header" onclick="toggleSidebar()">
-        <i data-lucide="menu"></i>
+        <i data-lucide="menu">M</i>
     </div>
 
     <div class="sidebar-profile" onclick="openProfileSection(event)">
@@ -3402,42 +3415,42 @@ td {
     </div>
 
     <a href="#" class="nav-link active" data-section="dashboard-section" onclick="showSection('dashboard-section', this); return false;">
-        <i data-lucide="layout-dashboard"></i>
+        <i data-lucide="layout-dashboard">D</i>
         <span>Dashboard</span>
     </a>
 
     <a href="#" class="nav-link" data-section="users-section" onclick="showSection('users-section', this); return false;">
-        <i data-lucide="users"></i>
+        <i data-lucide="users">U</i>
         <span>User Approvals</span>
     </a>
 
     <a href="#" class="nav-link" data-section="preferences-section" onclick="showSection('preferences-section', this); return false;">
-        <i data-lucide="clipboard-check"></i>
+        <i data-lucide="clipboard-check">P</i>
         <span>Preferences</span>
     </a>
 
     <a href="#" class="nav-link" data-section="events-section" onclick="showSection('events-section', this); return false;">
-        <i data-lucide="calendar-days"></i>
+        <i data-lucide="calendar-days">E</i>
         <span>Event Management</span>
     </a>
 
     <a href="#" class="nav-link" data-section="timetable-section" onclick="showSection('timetable-section', this); return false;">
-        <i data-lucide="table-2"></i>
+        <i data-lucide="table-2">T</i>
         <span>Timetable</span>
     </a>
 
     <a href="#" class="nav-link" data-section="generate-section" onclick="showSection('generate-section', this); return false;">
-        <i data-lucide="calendar-plus"></i>
+        <i data-lucide="calendar-plus">G</i>
         <span>Generate Timetable</span>
     </a>
 
     <a href="#" class="nav-link" data-section="history-section" onclick="showSection('history-section', this); return false;">
-        <i data-lucide="history"></i>
+        <i data-lucide="history">H</i>
         <span>Semester History</span>
     </a>
 
     <a href="/logout">
-        <i data-lucide="log-out"></i>
+        <i data-lucide="log-out">L</i>
         <span>Logout</span>
     </a>
 
