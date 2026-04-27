@@ -64,6 +64,7 @@ body {
 .sidebar a {
     display: flex;
     align-items: center;
+    justify-content: center;
     text-decoration: none;
     color: #d8e1ff;
     padding: 14px 18px;
@@ -89,6 +90,8 @@ body {
     stroke-width: 2;
     margin-right: 0;
     min-width: 20px;
+    opacity: 1;
+    display: inline-block;
 }
 
 .sidebar span {
@@ -99,6 +102,7 @@ body {
     font-weight: 500;
 }
 .sidebar.expanded svg { margin-right: 15px; }
+.sidebar.expanded a { justify-content: flex-start; }
 .sidebar.expanded span {
     opacity: 1;
     width: auto;
@@ -4428,6 +4432,10 @@ td {
 </div>
 
 <script>
+if (window.lucide && typeof window.lucide.createIcons === "function") {
+    window.lucide.createIcons();
+}
+
 let adminCalendar = null;
 let adminCalendarInitialized = false;
 const adminDisplayName = "{{ admin_name }}";
