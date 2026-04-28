@@ -212,6 +212,64 @@ body {
     font-weight: 700;
 }
 
+.announce-bar {
+    margin: 10px 0 18px 0;
+    border: 1px solid #c9dbf6;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #f2f7ff, #eaf2ff);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.announce-label {
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #1f4c9a;
+    padding: 10px 12px;
+    border-right: 1px solid #c9dbf6;
+    background: rgba(255,255,255,0.6);
+}
+
+.announce-track-wrap {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+}
+
+.announce-track-lane {
+    display: flex;
+    width: max-content;
+    min-width: 100%;
+    animation: announceScroll 24s linear infinite;
+    will-change: transform;
+}
+
+.announce-track {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    padding-right: 38px;
+    color: #153668;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.announce-item {
+    margin-right: 38px;
+}
+
+@keyframes announceScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
 .top-pill {
     display: inline-flex;
     align-items: center;
@@ -1676,6 +1734,31 @@ td {
                 <div class="meta">
                     <div class="name">{{ student_name }}</div>
                     <div class="role">Student</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="announce-bar">
+        <div class="announce-label">Announcements</div>
+        <div class="announce-track-wrap">
+            <div class="announce-track-lane">
+                <div class="announce-track">
+                    {% if announcements %}
+                        {% for a in announcements %}
+                        <span class="announce-item">{{ a.text }} ({{ a.created_by_name }})</span>
+                        {% endfor %}
+                    {% else %}
+                        <span class="announce-item">No announcements available right now.</span>
+                    {% endif %}
+                </div>
+                <div class="announce-track" aria-hidden="true">
+                    {% if announcements %}
+                        {% for a in announcements %}
+                        <span class="announce-item">{{ a.text }} ({{ a.created_by_name }})</span>
+                        {% endfor %}
+                    {% else %}
+                        <span class="announce-item">No announcements available right now.</span>
+                    {% endif %}
                 </div>
             </div>
         </div>

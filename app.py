@@ -5,11 +5,13 @@ import timetable
 import os
 import time
 import base64
+import smtplib
 from datetime import datetime
 import json
 import uuid
 import re
 import secrets
+from email.message import EmailMessage
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
@@ -48,6 +50,8 @@ MAX_ROOM_CAPACITY = 120
 PROFILE_UPLOAD_DIR = os.path.join(BASE_DIR, "static", "profile_pics")
 ALLOWED_IMAGE_EXT = {".png", ".jpg", ".jpeg", ".webp"}
 EVENTS_FILE = os.path.join(BASE_DIR, "events.txt")
+ANNOUNCEMENTS_FILE = os.path.join(BASE_DIR, "announcements.txt")
+CONTACT_MESSAGES_FILE = os.path.join(BASE_DIR, "contact_messages.txt")
 TIMETABLE_HISTORY_FILE = os.path.join(BASE_DIR, "timetable_history.txt")
 SEMESTER_OPTIONS = [
     ("jan_apr", "Jan-Apr Semester"),
@@ -56,6 +60,7 @@ SEMESTER_OPTIONS = [
     ("jan_may", "Jan-May Semester")
 ]
 ALLOWED_DEPARTMENTS = {"ALL", "CSE", "ECE", "IT", "ME"}
+STUDENT_EMAIL_DOMAIN = "iiitr.ac.in"
 GOVERNMENT_HOLIDAYS = [
     ("01-26", "Republic Day"),
     ("08-15", "Independence Day"),
@@ -72,6 +77,12 @@ GOOGLE_ALLOWED_DOMAIN = os.environ.get("GOOGLE_ALLOWED_DOMAIN", "").strip().lowe
 TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID", "").strip()
 TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN", "").strip()
 TWILIO_VERIFY_SERVICE_SID = os.environ.get("TWILIO_VERIFY_SERVICE_SID", "").strip()
+SMTP_HOST = os.environ.get("SMTP_HOST", "").strip()
+SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
+SMTP_USERNAME = os.environ.get("SMTP_USERNAME", "").strip()
+SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD", "").strip()
+SMTP_SENDER_EMAIL = os.environ.get("SMTP_SENDER_EMAIL", SMTP_USERNAME).strip()
+SMTP_USE_TLS = os.environ.get("SMTP_USE_TLS", "1").strip().lower() not in ("0", "false", "no")
 OTP_EXPIRY_SECONDS = int(os.environ.get("OTP_EXPIRY_SECONDS", "300"))
 OTP_MAX_ATTEMPTS = int(os.environ.get("OTP_MAX_ATTEMPTS", "5"))
 OTP_RESEND_COOLDOWN_SECONDS = int(os.environ.get("OTP_RESEND_COOLDOWN_SECONDS", "30"))
@@ -79,6 +90,7 @@ OTP_MAX_REQUESTS_PER_HOUR = int(os.environ.get("OTP_MAX_REQUESTS_PER_HOUR", "5")
 MAX_EVENTS_PER_DAY = 3
 _OTP_SESSION_STATE = {}
 _OTP_PHONE_SEND_LOGS = {}
+_EMAIL_OTP_STATE = {}
 
 
 def infer_default_semester_key(month):
@@ -122,14 +134,23 @@ def parse_user_line(line):
         return None
     profile_pic = parts[5] if len(parts) >= 6 else ""
     phone = parts[6] if len(parts) >= 7 else ""
+    verified = parts[7].strip() if len(parts) >= 8 else ""
+    role = parts[2]
+    if role == "student" and len(parts) < 8:
+        verified_flag = "1"
+    else:
+        verified_flag = "1" if role == "student" and verified == "1" else "0"
+    if role != "student":
+        verified_flag = "1"
     return {
         "email": parts[0],
         "hash": parts[1],
-        "role": parts[2],
+        "role": role,
         "name": parts[3],
         "department": parts[4] if len(parts) >= 5 else "ALL",
         "profile_pic": profile_pic,
-        "phone": phone
+        "phone": phone,
+        "verified": verified_flag
     }
 
 
@@ -454,17 +475,21 @@ def parse_disabled_user_line(line):
     parts = line.strip().split(",")
     if len(parts) < 10:
         return None
+    verified = parts[10] if len(parts) >= 11 else ""
+    role = parts[2]
+    verified_flag = "1" if role != "student" else ("1" if verified == "1" else "0")
     return {
         "email": parts[0],
         "hash": parts[1],
-        "role": parts[2],
+        "role": role,
         "name": parts[3],
         "department": parts[4] if len(parts) >= 5 else "ALL",
         "profile_pic": parts[5] if len(parts) >= 6 else "",
         "phone": parts[6] if len(parts) >= 7 else "",
         "disabled_at": parts[7] if len(parts) >= 8 else "",
         "reason": parts[8] if len(parts) >= 9 else "",
-        "disabled_by": parts[9] if len(parts) >= 10 else ""
+        "disabled_by": parts[9] if len(parts) >= 10 else "",
+        "verified": verified_flag
     }
 
 
@@ -479,7 +504,8 @@ def serialize_disabled_user(user):
         user.get("phone", ""),
         user.get("disabled_at", ""),
         user.get("reason", ""),
-        user.get("disabled_by", "")
+        user.get("disabled_by", ""),
+        user.get("verified", "1" if user.get("role", "") != "student" else "0")
     ])
 
 
@@ -593,9 +619,11 @@ def save_users(users):
             department = u.get("department", "ALL") or "ALL"
             profile_pic = u.get("profile_pic", "")
             phone = u.get("phone", "")
+            role = u.get("role", "")
+            verified = u.get("verified", "1" if role != "student" else "0")
             f.write(
                 f"{u['email']},{u['hash']},{u['role']},"
-                f"{u['name']},{department},{profile_pic},{phone}\n"
+                f"{u['name']},{department},{profile_pic},{phone},{verified}\n"
             )
 
 
@@ -620,6 +648,81 @@ def save_events(events):
     with open(EVENTS_FILE, "w") as f:
         for e in events:
             f.write(json.dumps(e) + "\n")
+
+
+def load_announcements():
+    items = []
+    if os.path.exists(ANNOUNCEMENTS_FILE):
+        with open(ANNOUNCEMENTS_FILE) as f:
+            for line in f:
+                row = line.strip()
+                if not row:
+                    continue
+                try:
+                    obj = json.loads(row)
+                except json.JSONDecodeError:
+                    continue
+                if not obj.get("id") or not obj.get("text"):
+                    continue
+                items.append(obj)
+    items.sort(key=lambda x: x.get("created_at", ""), reverse=True)
+    return items
+
+
+def save_announcements(items):
+    with open(ANNOUNCEMENTS_FILE, "w") as f:
+        for item in items:
+            f.write(json.dumps(item) + "\n")
+
+
+def load_contact_messages():
+    items = []
+    if os.path.exists(CONTACT_MESSAGES_FILE):
+        with open(CONTACT_MESSAGES_FILE) as f:
+            for line in f:
+                row = line.strip()
+                if not row:
+                    continue
+                try:
+                    obj = json.loads(row)
+                except json.JSONDecodeError:
+                    continue
+                if not obj.get("id") or not obj.get("teacher_email"):
+                    continue
+                items.append(obj)
+    items.sort(key=lambda x: x.get("created_at", ""), reverse=True)
+    return items
+
+
+def save_contact_messages(items):
+    with open(CONTACT_MESSAGES_FILE, "w") as f:
+        for item in items:
+            f.write(json.dumps(item) + "\n")
+
+
+def announcement_visible_to_role(item, role):
+    role_norm = (role or "").strip().lower()
+    audience = (item.get("audience", "both") or "both").strip().lower()
+    if role_norm == "admin":
+        return True
+    if role_norm == "student":
+        return audience in ("student", "both", "student_admin")
+    if role_norm == "teacher":
+        return audience in ("teacher", "both")
+    return False
+
+
+def announcement_manageable_by_user(item, role, email):
+    role_norm = (role or "").strip().lower()
+    email_norm = (email or "").strip().lower()
+    if role_norm == "admin":
+        return True
+    if role_norm == "teacher":
+        return (
+            (item.get("created_by_role", "") or "").strip().lower() == "teacher"
+            and (item.get("created_by_email", "") or "").strip().lower() == email_norm
+        )
+    return False
 
 
 def build_government_holidays(year):
@@ -924,6 +1027,11 @@ def build_login_error_redirect(message):
     return redirect("/login?" + urlencode({"error": msg}))
 
 
+def is_allowed_student_email(email):
+    email_norm = (email or "").strip().lower()
+    return bool(email_norm.endswith(f"@{STUDENT_EMAIL_DOMAIN}"))
+
+
 def normalize_phone_e164_india(raw_phone):
     phone = re.sub(r"\D", "", (raw_phone or "").strip())
     if phone.startswith("0") and len(phone) == 11:
@@ -988,6 +1096,56 @@ def mask_phone(phone):
     return f"+{digits[:2]}******{digits[-2:]}"
 
 
+def mask_email(email):
+    email_norm = (email or "").strip().lower()
+    if "@" not in email_norm:
+        return "***"
+    local, domain = email_norm.split("@", 1)
+    if len(local) <= 2:
+        local_masked = local[0] + "*"
+    else:
+        local_masked = local[0] + ("*" * (len(local) - 2)) + local[-1]
+    return f"{local_masked}@{domain}"
+
+
+def is_email_otp_configured():
+    return bool(SMTP_HOST and SMTP_PORT and SMTP_USERNAME and SMTP_PASSWORD and SMTP_SENDER_EMAIL)
+
+
+def send_email_otp(to_email, code):
+    msg = EmailMessage()
+    msg["Subject"] = "SmartTimetable Student Login OTP"
+    msg["From"] = SMTP_SENDER_EMAIL
+    msg["To"] = to_email
+    msg.set_content(
+        f"Your SmartTimetable OTP is {code}.\n"
+        f"This OTP will expire in {OTP_EXPIRY_SECONDS // 60} minutes.\n"
+        "If you did not request this, ignore this email."
+    )
+
+    with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=15) as server:
+        if SMTP_USE_TLS:
+            server.starttls()
+        server.login(SMTP_USERNAME, SMTP_PASSWORD)
+        server.send_message(msg)
+
+
+def save_email_otp_session(email, role, code):
+    key = otp_session_key(email, role)
+    _EMAIL_OTP_STATE[key] = {
+        "email": (email or "").strip().lower(),
+        "role": (role or "").strip().lower(),
+        "code": str(code).strip(),
+        "sent_at": int(time.time()),
+        "attempts": 0
+    }
+
+
+def get_email_otp_session(email, role):
+    key = otp_session_key(email, role)
+    return _EMAIL_OTP_STATE.get(key)
+
+
 def get_google_missing_keys():
     missing = []
     if not GOOGLE_CLIENT_ID:
@@ -1022,9 +1180,12 @@ def login():
         )
 
     # ---------------- ADMIN / TEACHER ----------------
-    role = request.form.get("role", "").strip()
-    email = request.form.get("email", "").strip()
+    role = request.form.get("role", "").strip().lower()
+    email = request.form.get("email", "").strip().lower()
     password = request.form.get("password", "").strip()
+
+    if role == "student" and not is_allowed_student_email(email):
+        return redirect("/login?error=Student+login+is+allowed+only+with+@iiitr.ac.in+email.")
 
     if not os.path.exists(USERS_FILE):
         return redirect("/login?error=No+users+found.+Admin+must+create+accounts.")
@@ -1040,6 +1201,10 @@ def login():
                 and user["role"] == role
                 and check_password_hash(user["hash"], password)
             ):
+                if role == "student" and user.get("verified", "0") != "1":
+                    session["pending_student_email"] = email
+                    session["pending_student_role"] = role
+                    return redirect("/verify-otp")
                 set_user_session(user)
 
                 if role == "admin":
@@ -1190,6 +1355,8 @@ def auth_google_callback():
         email_domain = email.split("@")[-1].lower() if "@" in email else ""
         if email_domain != GOOGLE_ALLOWED_DOMAIN:
             return build_login_error_redirect("Use your institutional Google account only.")
+    if role == "student" and not is_allowed_student_email(email):
+        return build_login_error_redirect("Student access is allowed only with @iiitr.ac.in email.")
 
     if mode == "signup":
         if not name:
@@ -1204,12 +1371,24 @@ def auth_google_callback():
             return redirect("/login?message=Google+signup+already+pending+admin+approval.")
 
         random_password_hash = generate_password_hash(secrets.token_urlsafe(24))
+        if role == "student":
+            append_line_safe(
+                USERS_FILE,
+                f"{email},{random_password_hash},{role},{name},{department},,,1"
+            )
+            return redirect("/login?message=Student+account+created+via+Google.+Login+now.")
+
         append_line_safe(PENDING_FILE, f"{email},{name},{department},{role},{random_password_hash}")
         return redirect("/login?message=Google+signup+submitted.+Wait+for+admin+approval.")
 
     user = find_approved_user(email, role)
     if not user:
         return redirect("/login?error=No+approved+account+for+this+email+and+role.")
+
+    if role == "student" and user.get("verified", "0") != "1":
+        session["pending_student_email"] = email
+        session["pending_student_role"] = role
+        return redirect("/verify-otp")
 
     set_user_session(user)
 
@@ -1231,6 +1410,8 @@ def auth_phone_send_otp():
         return jsonify({"ok": False, "error": "Select Teacher or Student role."}), 400
     if not email or not phone:
         return jsonify({"ok": False, "error": "Email and valid Indian phone number are required."}), 400
+    if role == "student" and not is_allowed_student_email(email):
+        return jsonify({"ok": False, "error": "Student login is allowed only with @iiitr.ac.in email."}), 400
     if not TWILIO_ACCOUNT_SID or not TWILIO_AUTH_TOKEN or not TWILIO_VERIFY_SERVICE_SID:
         return jsonify({"ok": False, "error": "Phone OTP is not configured on server."}), 500
 
@@ -1353,6 +1534,18 @@ def auth_phone_verify_otp():
         _OTP_SESSION_STATE.pop(otp_session_key(email, role), None)
         return jsonify({"ok": False, "error": "This account is linked to a different phone."}), 409
 
+    if role == "student" and user.get("verified", "0") != "1":
+        users = load_users()
+        for u in users:
+            if (
+                (u.get("email", "").strip().lower() == email)
+                and (u.get("role", "").strip().lower() == "student")
+            ):
+                u["verified"] = "1"
+                user = u
+                break
+        save_users(users)
+
     set_user_session(user)
     _OTP_SESSION_STATE.pop(otp_session_key(email, role), None)
     return jsonify({"ok": True, "redirect": role_dashboard_path(role), "message": "Phone OTP login successful."})
@@ -1364,9 +1557,9 @@ def auth_phone_verify_otp():
 @app.route("/signup", methods=["POST"])
 def signup():
 
-    role = request.form.get("role", "").strip()
+    role = request.form.get("role", "").strip().lower()
     name = request.form.get("name", "").strip()
-    email = request.form.get("email", "").strip()
+    email = request.form.get("email", "").strip().lower()
     department = request.form.get("department", "").strip()
     password = request.form.get("password", "").strip()
 
@@ -1375,6 +1568,8 @@ def signup():
 
     if not name or not email or not department or not password:
         return redirect("/login?error=All+signup+fields+are+required.")
+    if role == "student" and not is_allowed_student_email(email):
+        return redirect("/login?error=Student+signup+is+allowed+only+with+@iiitr.ac.in+email.")
 
     if os.path.exists(USERS_FILE):
         with open(USERS_FILE) as f:
@@ -1391,9 +1586,115 @@ def signup():
                     return redirect("/login?error=Signup+request+already+pending+admin+approval.")
 
     hashed = generate_password_hash(password)
-    append_line_safe(PENDING_FILE, f"{email},{name},{department},{role},{hashed}")
+    if role == "student":
+        append_line_safe(USERS_FILE, f"{email},{hashed},{role},{name},{department},,,0")
+        return redirect("/login?message=Student+signup+successful.+Verify+with+OTP+on+first+login.")
 
+    append_line_safe(PENDING_FILE, f"{email},{name},{department},{role},{hashed}")
     return redirect("/login?message=Signup+request+submitted.+Wait+for+admin+approval.")
+
+
+@app.route("/verify-otp", methods=["GET"])
+def verify_otp_page():
+    email = (session.get("pending_student_email") or "").strip().lower()
+    role = (session.get("pending_student_role") or "").strip().lower()
+    if role != "student" or not email:
+        return redirect("/login?error=OTP+verification+session+expired.+Please+login+again.")
+    return render_template(
+        "verify_otp.html",
+        email=email,
+        role=role,
+        message=request.args.get("message", ""),
+        error=request.args.get("error", "")
+    )
+
+
+@app.route("/auth/student/send-first-otp", methods=["POST"])
+def send_student_first_otp():
+    email = (session.get("pending_student_email") or "").strip().lower()
+    role = (session.get("pending_student_role") or "").strip().lower()
+    if role != "student" or not email:
+        return jsonify({"ok": False, "error": "OTP session expired. Login again."}), 401
+    if not is_email_otp_configured():
+        return jsonify({"ok": False, "error": "Email OTP is not configured on server."}), 500
+
+    user = find_approved_user(email, "student")
+    if not user:
+        return jsonify({"ok": False, "error": "Student account not found."}), 404
+
+    otp_state = get_email_otp_session(email, "student")
+    now = int(time.time())
+    if otp_state and now - otp_state.get("sent_at", 0) < OTP_RESEND_COOLDOWN_SECONDS:
+        return jsonify({"ok": False, "error": f"Please wait {OTP_RESEND_COOLDOWN_SECONDS} seconds before resending OTP."}), 429
+    code = f"{secrets.randbelow(1000000):06d}"
+    try:
+        send_email_otp(email, code)
+    except Exception:
+        details = "Unable to send OTP right now."
+        return jsonify({"ok": False, "error": details}), 502
+    save_email_otp_session(email, "student", code)
+
+    return jsonify({
+        "ok": True,
+        "message": f"OTP sent to {mask_email(email)}.",
+        "cooldown_seconds": OTP_RESEND_COOLDOWN_SECONDS,
+        "expires_in_seconds": OTP_EXPIRY_SECONDS
+    })
+
+
+@app.route("/auth/student/verify-first-otp", methods=["POST"])
+def verify_student_first_otp():
+    email = (session.get("pending_student_email") or "").strip().lower()
+    role = (session.get("pending_student_role") or "").strip().lower()
+    code = (request.form.get("otp") or "").strip()
+    if role != "student" or not email:
+        return jsonify({"ok": False, "error": "OTP session expired. Login again."}), 401
+    if not code:
+        return jsonify({"ok": False, "error": "OTP is required."}), 400
+
+    otp_state = get_email_otp_session(email, "student")
+    if not otp_state:
+        return jsonify({"ok": False, "error": "Send OTP first."}), 400
+
+    now = int(time.time())
+    sent_at = int(otp_state.get("sent_at", 0))
+    if now - sent_at > OTP_EXPIRY_SECONDS:
+        _EMAIL_OTP_STATE.pop(otp_session_key(email, "student"), None)
+        return jsonify({"ok": False, "error": "OTP expired. Send a new OTP."}), 400
+
+    attempts = int(otp_state.get("attempts", 0))
+    if attempts >= OTP_MAX_ATTEMPTS:
+        _EMAIL_OTP_STATE.pop(otp_session_key(email, "student"), None)
+        return jsonify({"ok": False, "error": "Maximum OTP attempts reached. Send new OTP."}), 429
+
+    if otp_state.get("code", "") != code:
+        otp_state["attempts"] = attempts + 1
+        remaining = max(OTP_MAX_ATTEMPTS - otp_state["attempts"], 0)
+        if remaining == 0:
+            _EMAIL_OTP_STATE.pop(otp_session_key(email, "student"), None)
+            return jsonify({"ok": False, "error": "Invalid OTP. Maximum attempts reached."}), 429
+        return jsonify({"ok": False, "error": f"Invalid OTP. {remaining} attempt(s) left."}), 400
+
+    users = load_users()
+    target = None
+    for u in users:
+        if (
+            u.get("email", "").strip().lower() == email
+            and u.get("role", "").strip().lower() == "student"
+        ):
+            u["verified"] = "1"
+            target = u
+            break
+    if target is None:
+        _EMAIL_OTP_STATE.pop(otp_session_key(email, "student"), None)
+        return jsonify({"ok": False, "error": "Student account not found."}), 404
+
+    save_users(users)
+    set_user_session(target)
+    session.pop("pending_student_email", None)
+    session.pop("pending_student_role", None)
+    _EMAIL_OTP_STATE.pop(otp_session_key(email, "student"), None)
+    return jsonify({"ok": True, "redirect": "/student/dashboard"})
 
 
 # =====================================================
@@ -1473,6 +1774,9 @@ def admin_dashboard():
     teacher_cards = []
     login_managed_users = []
     past_teachers = []
+    announcements = load_announcements()
+    contact_messages = load_contact_messages()
+    unread_contact_count = len([m for m in contact_messages if not m.get("admin_reply", "").strip()])
 
     if os.path.exists(PENDING_FILE):
         with open(PENDING_FILE) as f:
@@ -1562,6 +1866,9 @@ def admin_dashboard():
         login_managed_users=login_managed_users,
         past_teachers=past_teachers,
         admin_events=admin_events,
+        announcements=announcements,
+        contact_messages=contact_messages,
+        unread_contact_count=unread_contact_count,
         vacations=vacations,
         admin_name=session.get("name", "Admin"),
         admin_email=session.get("email", ""),
@@ -1654,7 +1961,8 @@ def reactivate_user_login():
             "name": target.get("name", ""),
             "department": target.get("department", "ALL"),
             "profile_pic": target.get("profile_pic", ""),
-            "phone": target.get("phone", "")
+            "phone": target.get("phone", ""),
+            "verified": target.get("verified", "1" if target.get("role", "") != "student" else "0")
         })
 
     save_users(users)
@@ -1704,7 +2012,8 @@ def approve_teacher():
         USERS_FILE,
         (
             f"{approved['email']},{approved['hash']},{approved['role']},"
-            f"{approved['name']},{approved['department']}"
+            f"{approved['name']},{approved['department']},,,"
+            f"{'1' if approved['role'] != 'student' else '0'}"
         )
     )
     log_admin_action("approved", approved)
@@ -2147,6 +2456,163 @@ def mark_teacher_all_absent():
     if updated == 0:
         return redirect("/admin/dashboard?teacher_action_msg=Teacher+was+already+marked+absent+for+all+classes.&teacher_action_tone=info&section=dashboard-section")
     return redirect("/admin/dashboard?teacher_action_msg=Teacher+marked+absent+for+all+classes.&teacher_action_tone=ok&section=dashboard-section")
+
+
+@app.route("/admin/announcements/add", methods=["POST"])
+def admin_add_announcement():
+    if session.get("role") != "admin":
+        return "Unauthorized"
+
+    text = (request.form.get("text") or "").strip()
+    audience = (request.form.get("audience") or "both").strip().lower()
+    if audience not in ("student", "teacher", "both"):
+        audience = "both"
+    if not text:
+        return redirect("/admin/dashboard?error=Announcement+text+is+required.&section=dashboard-section")
+    if len(text) > 220:
+        return redirect("/admin/dashboard?error=Announcement+must+be+220+characters+or+less.&section=dashboard-section")
+
+    items = load_announcements()
+    items.append({
+        "id": str(uuid.uuid4()),
+        "text": text,
+        "audience": audience,
+        "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "created_by_role": "admin",
+        "created_by_name": session.get("name", "Admin"),
+        "created_by_email": session.get("email", "")
+    })
+    save_announcements(items)
+    return redirect("/admin/dashboard?message=Announcement+published.&section=dashboard-section")
+
+
+@app.route("/teacher/announcements/add", methods=["POST"])
+def teacher_add_announcement():
+    if session.get("role") != "teacher":
+        return "Unauthorized"
+
+    text = (request.form.get("text") or "").strip()
+    if not text:
+        return redirect("/teacher/dashboard?error=Announcement+text+is+required.")
+    if len(text) > 220:
+        return redirect("/teacher/dashboard?error=Announcement+must+be+220+characters+or+less.")
+
+    items = load_announcements()
+    items.append({
+        "id": str(uuid.uuid4()),
+        "text": text,
+        "audience": "student_admin",
+        "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "created_by_role": "teacher",
+        "created_by_name": session.get("name", "Teacher"),
+        "created_by_email": session.get("email", "")
+    })
+    save_announcements(items)
+    return redirect("/teacher/dashboard?message=Announcement+published.")
+
+
+@app.route("/admin/announcements/delete")
+def admin_delete_announcement():
+    if session.get("role") != "admin":
+        return "Unauthorized"
+    announcement_id = (request.args.get("id") or "").strip()
+    if not announcement_id:
+        return redirect("/admin/dashboard?error=Invalid+announcement+id.&section=dashboard-section")
+    items = load_announcements()
+    kept = [a for a in items if a.get("id", "") != announcement_id]
+    save_announcements(kept)
+    return redirect("/admin/dashboard?message=Announcement+deleted.&section=dashboard-section")
+
+
+@app.route("/admin/announcements/update", methods=["POST"])
+def admin_update_announcement():
+    if session.get("role") != "admin":
+        return "Unauthorized"
+
+    announcement_id = (request.form.get("id") or "").strip()
+    text = (request.form.get("text") or "").strip()
+    audience = (request.form.get("audience") or "both").strip().lower()
+    if audience not in ("student", "teacher", "both", "student_admin"):
+        audience = "both"
+    if not announcement_id or not text:
+        return redirect("/admin/dashboard?error=Announcement+id+and+text+are+required.&section=dashboard-section")
+    if len(text) > 220:
+        return redirect("/admin/dashboard?error=Announcement+must+be+220+characters+or+less.&section=dashboard-section")
+
+    items = load_announcements()
+    updated = False
+    for item in items:
+        if item.get("id", "") == announcement_id:
+            item["text"] = text
+            item["audience"] = audience
+            item["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            updated = True
+            break
+    if not updated:
+        return redirect("/admin/dashboard?error=Announcement+not+found.&section=dashboard-section")
+
+    save_announcements(items)
+    return redirect("/admin/dashboard?message=Announcement+updated.&section=dashboard-section")
+
+
+@app.route("/teacher/announcements/delete")
+def teacher_delete_announcement():
+    return "Unauthorized", 401
+
+
+@app.route("/teacher/contact-admin/send", methods=["POST"])
+def teacher_contact_admin_send():
+    if session.get("role") != "teacher":
+        return "Unauthorized", 401
+
+    subject = (request.form.get("subject") or "").strip()
+    message = (request.form.get("message") or "").strip()
+    if not subject or not message:
+        return redirect("/teacher/dashboard?error=Subject+and+message+are+required.&section=contact-admin")
+    if len(subject) > 180:
+        return redirect("/teacher/dashboard?error=Subject+must+be+180+characters+or+less.&section=contact-admin")
+
+    items = load_contact_messages()
+    items.append({
+        "id": str(uuid.uuid4()),
+        "teacher_name": session.get("name", "Teacher"),
+        "teacher_email": session.get("email", ""),
+        "teacher_department": session.get("department", "ALL"),
+        "subject": subject,
+        "message": message,
+        "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "admin_reply": "",
+        "admin_replied_by": "",
+        "admin_replied_at": ""
+    })
+    save_contact_messages(items)
+    return redirect("/teacher/dashboard?message=Query+sent+to+admin.&section=contact-admin")
+
+
+@app.route("/admin/contact/reply", methods=["POST"])
+def admin_contact_reply():
+    if session.get("role") != "admin":
+        return "Unauthorized", 401
+
+    msg_id = (request.form.get("id") or "").strip()
+    reply = (request.form.get("reply") or "").strip()
+    if not msg_id or not reply:
+        return redirect("/admin/dashboard?error=Message+id+and+reply+are+required.&section=contact-admin-section")
+
+    items = load_contact_messages()
+    updated = False
+    for item in items:
+        if item.get("id", "") == msg_id:
+            item["admin_reply"] = reply
+            item["admin_replied_by"] = session.get("name", "Admin")
+            item["admin_replied_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            updated = True
+            break
+    if not updated:
+        return redirect("/admin/dashboard?error=Contact+query+not+found.&section=contact-admin-section")
+
+    save_contact_messages(items)
+    return redirect("/admin/dashboard?message=Reply+sent+to+teacher.&section=contact-admin-section")
 
 
 @app.route("/events")
@@ -2602,6 +3068,16 @@ def teacher_dashboard():
                 today_classes.append(row)
 
     today_classes.sort(key=lambda r: r["slot"])
+    all_announcements = load_announcements()
+    teacher_announcements = [a for a in all_announcements if announcement_visible_to_role(a, "teacher")]
+    teacher_manageable_announcements = [
+        a for a in all_announcements
+        if announcement_manageable_by_user(a, "teacher", session.get("email", ""))
+    ]
+    teacher_contact_messages = [
+        m for m in load_contact_messages()
+        if (m.get("teacher_email", "") or "").strip().lower() == (session.get("email", "") or "").strip().lower()
+    ]
 
     return render_template(
         "teacher_dashboard.html",
@@ -2613,6 +3089,9 @@ def teacher_dashboard():
         pending_rows=pending_rows,
         institute_timetable=institute_timetable,
         my_timetable=my_timetable,
+        announcements=teacher_announcements,
+        manageable_announcements=teacher_manageable_announcements,
+        teacher_contact_messages=teacher_contact_messages,
         vacations=get_upcoming_vacations(),
         today_name=today_name,
         today_classes=today_classes
@@ -2715,6 +3194,8 @@ def student_dashboard():
     )
     my_today.sort(key=lambda r: (slot_order.get(r["slot"], 99), r["subject"]))
     institute_today.sort(key=lambda r: (slot_order.get(r["slot"], 99), r["subject"]))
+    all_announcements = load_announcements()
+    student_announcements = [a for a in all_announcements if announcement_visible_to_role(a, "student")]
 
     return render_template(
         "student_dashboard.html",
@@ -2726,6 +3207,7 @@ def student_dashboard():
         my_timetable=my_timetable,
         my_today=my_today,
         institute_today=institute_today,
+        announcements=student_announcements,
         vacations=get_upcoming_vacations(),
         today_name=today_name
     )

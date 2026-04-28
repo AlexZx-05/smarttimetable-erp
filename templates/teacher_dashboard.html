@@ -258,6 +258,412 @@
             font-weight: 700;
         }
 
+        .announce-bar {
+            margin: 10px 0 18px 0;
+            border: 1px solid #c9dbf6;
+            border-radius: 12px;
+            background: linear-gradient(180deg, #f2f7ff, #eaf2ff);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        .announce-label {
+            flex-shrink: 0;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #1f4c9a;
+            padding: 10px 12px;
+            border-right: 1px solid #c9dbf6;
+            background: rgba(255,255,255,0.6);
+        }
+
+        .announce-track-wrap {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            min-height: 36px;
+        }
+
+        .announce-track {
+            position: absolute;
+            white-space: nowrap;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            animation: announceScroll 40s linear infinite;
+            color: #153668;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .announce-item {
+            margin-right: 38px;
+        }
+
+        @keyframes announceScroll {
+            0% { left: 100%; }
+            100% { left: -200%; }
+        }
+
+        .announce-teacher-card {
+            order: 99;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #cfe0f7;
+            border-radius: 22px;
+            padding: 24px 30px;
+            background:
+                radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.08), transparent 32%),
+                linear-gradient(90deg, #f5f9ff, #ebf2fb);
+            box-shadow: none;
+        }
+
+        .announce-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+
+        .announce-badge {
+            flex-shrink: 0;
+            border-radius: 999px;
+            border: 1px solid #abc7f2;
+            background: linear-gradient(180deg, #edf4ff, #e4eeff);
+            color: #2458b5;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 10px 20px;
+        }
+
+        .announce-teacher-card h3 {
+            margin: 0;
+            color: #123267;
+            font-size: clamp(30px, 2.2vw, 42px);
+            line-height: 1.04;
+            letter-spacing: -0.02em;
+        }
+
+        .announce-teacher-card .courses-sub {
+            display: none;
+        }
+
+        .announce-teacher-form {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 140px;
+            gap: 12px;
+            margin: 0 0 10px 0;
+        }
+
+        .announce-input-wrap {
+            position: relative;
+        }
+
+        .announce-teacher-form input {
+            width: 100%;
+            min-height: 54px;
+            border-radius: 14px;
+            border: 1px solid #b7cced;
+            padding: 0 14px;
+            font: inherit;
+            font-size: 17px;
+            line-height: 1;
+            color: #13315e;
+            background: #ffffff;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .announce-teacher-form input::placeholder {
+            color: #6c7ea2;
+            font-weight: 500;
+        }
+
+        .announce-teacher-form input:focus {
+            outline: none;
+            border-color: #3f7ae2;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(63, 122, 226, 0.14);
+        }
+
+        .announce-teacher-form button {
+            min-height: 46px;
+            min-width: 0;
+            width: 100%;
+            border: 1px solid #2b63ca;
+            border-radius: 14px;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0)),
+                linear-gradient(135deg, #2d6cdf, #3f7cec);
+            color: #fff;
+            font-weight: 800;
+            font-size: 17px;
+            letter-spacing: 0.01em;
+            line-height: 1;
+            padding: 0 10px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(45, 108, 223, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.26);
+            transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease, background 0.16s ease, border-color 0.16s ease;
+        }
+
+        .announce-teacher-form button:hover {
+            transform: translateY(-1.5px);
+            box-shadow: 0 14px 26px rgba(45, 108, 223, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.30);
+            filter: saturate(1.08);
+        }
+
+        .announce-teacher-form button:active {
+            transform: translateY(0.5px);
+            box-shadow: 0 6px 12px rgba(45, 108, 223, 0.24), inset 0 2px 5px rgba(0, 0, 0, 0.12);
+            filter: saturate(0.98);
+        }
+
+        .announce-teacher-list {
+            border: 1px solid #cfdced;
+            border-radius: 14px;
+            background: #ffffff;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .announce-meta-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 2px;
+            color: #5e739a;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .announce-teacher-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 120px 180px;
+            gap: 12px;
+            align-items: center;
+            min-height: 56px;
+            padding: 0 14px;
+            border-bottom: 1px solid #e4ebf5;
+            font-size: 14px;
+            line-height: 1.35;
+            color: #12294f;
+        }
+
+        .announce-teacher-row > div:nth-child(2) {
+            justify-self: stretch;
+            text-align: center;
+            color: #1f4f9f;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid #b9cff0;
+            border-radius: 999px;
+            background: #edf4ff;
+            padding: 5px 10px;
+        }
+
+        .announce-teacher-row > div:nth-child(3) {
+            text-align: right;
+            color: #5f7398;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .announce-teacher-row:last-child { border-bottom: none; }
+
+        .contact-admin-card {
+            border: 1px solid #d5e2f6;
+            border-radius: 18px;
+            background:
+                radial-gradient(circle at 100% 0%, rgba(125, 211, 252, 0.10), transparent 34%),
+                linear-gradient(180deg, #ffffff, #f8fbff);
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.06);
+        }
+
+        .contact-admin-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .contact-admin-head h3 {
+            margin: 0;
+            font-size: clamp(26px, 2vw, 34px);
+            line-height: 1.08;
+            letter-spacing: -0.02em;
+            color: #123267;
+        }
+
+        .contact-admin-head p {
+            margin: 6px 0 0 0;
+            color: #4f648c;
+            font-size: 14px;
+            line-height: 1.45;
+        }
+
+        .contact-admin-badge {
+            border-radius: 999px;
+            border: 1px solid #c8daf6;
+            background: linear-gradient(180deg, #f3f8ff, #eaf2ff);
+            color: #1a4e9e;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 7px 11px;
+            white-space: nowrap;
+        }
+
+        .contact-admin-form {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .contact-admin-form input,
+        .contact-admin-form textarea {
+            width: 100%;
+            border: 1px solid #c9d8ef;
+            border-radius: 12px;
+            padding: 11px 13px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            color: #12284f;
+            background: #fff;
+            box-sizing: border-box;
+            margin: 0;
+        }
+
+        .contact-admin-form textarea {
+            min-height: 112px;
+            resize: vertical;
+        }
+
+        .contact-admin-form input:focus,
+        .contact-admin-form textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+        }
+
+        .contact-admin-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .contact-admin-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .contact-admin-link {
+            text-decoration: none;
+            border: 1px solid #cfe0ff;
+            background: #eef4ff;
+            color: #1f4297;
+            border-radius: 999px;
+            padding: 6px 11px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .contact-admin-send {
+            border: 1px solid #2b63ca;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #2d6cdf, #3f7cec);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 10px 16px;
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(45, 108, 223, 0.2);
+        }
+
+        .contact-admin-time {
+            margin-top: 10px;
+            text-align: right;
+            color: #5f7398;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .contact-thread-list {
+            margin-top: 12px;
+            display: grid;
+            gap: 10px;
+        }
+
+        .contact-thread-item {
+            border: 1px solid #d5e2f6;
+            border-radius: 12px;
+            background: #fff;
+            padding: 12px 14px;
+        }
+
+        .contact-thread-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .contact-thread-subject {
+            margin: 0;
+            color: #123267;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .contact-thread-meta {
+            color: #5f7398;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .contact-thread-body {
+            color: #2b3f66;
+            font-size: 13px;
+            margin: 0;
+            line-height: 1.45;
+        }
+
+        .contact-thread-reply {
+            margin-top: 8px;
+            border-top: 1px dashed #d8e3f6;
+            padding-top: 8px;
+        }
+
+        .contact-thread-reply .label {
+            color: #1f4f9f;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .contact-thread-empty {
+            margin-top: 10px;
+            border: 1px dashed #c5d8f1;
+            border-radius: 12px;
+            background: linear-gradient(180deg, #f8fbff, #eef5ff);
+            color: #4f678f;
+            font-size: 13px;
+            padding: 12px 14px;
+        }
+
         .top-right {
             display: flex;
             align-items: center;
@@ -508,6 +914,11 @@
             display: block;
         }
 
+        #dashboard.section.active {
+            display: flex;
+            flex-direction: column;
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -528,6 +939,269 @@
             border: 1px solid var(--line);
             box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
             margin-bottom: 30px;
+        }
+
+        .dashboard-intro {
+            border: 1px solid #d5e2f6;
+            background:
+                radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.08), transparent 34%),
+                linear-gradient(180deg, #ffffff, #f8fbff);
+            border-radius: 18px;
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.06);
+        }
+
+        .dashboard-intro h3 {
+            margin: 0 0 10px 0;
+            font-size: clamp(34px, 2.6vw, 48px);
+            line-height: 1.05;
+            color: #103b73;
+            letter-spacing: -0.025em;
+        }
+
+        .dashboard-intro p {
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #4c638b;
+            max-width: none;
+            white-space: nowrap;
+        }
+
+        .overview-quick-grid {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .overview-quick-card {
+            border: 1px solid #d7e4f7;
+            border-radius: 14px;
+            padding: 14px 16px;
+            text-decoration: none;
+            background: linear-gradient(180deg, #f4f8ff, #edf3ff);
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+            transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+            color: inherit;
+            display: block;
+        }
+
+        .overview-quick-card:nth-child(1) {
+            border-color: #c8dbf7;
+            background: linear-gradient(180deg, #f1f6ff, #e9f1ff);
+        }
+
+        .overview-quick-card:nth-child(2) {
+            border-color: #b9decf;
+            background: linear-gradient(180deg, #edf8f2, #e5f2ea);
+        }
+
+        .overview-quick-card:nth-child(3) {
+            border-color: #efc99c;
+            background: linear-gradient(180deg, #fff4e7, #f7ebde);
+        }
+
+        .overview-quick-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(24, 55, 106, 0.10);
+            filter: saturate(1.03);
+        }
+
+        .overview-quick-card:focus-visible {
+            outline: none;
+            border-color: #3f7ae2;
+            box-shadow: 0 0 0 3px rgba(63, 122, 226, 0.16), 0 10px 24px rgba(24, 55, 106, 0.14);
+        }
+
+        .overview-quick-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .overview-quick-title {
+            margin: 0;
+            color: #173a73;
+            font-size: 17px;
+            line-height: 1.2;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .overview-quick-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            border: 1px solid #ccdcf6;
+            background: linear-gradient(180deg, #f6f9ff, #eef3ff);
+            color: #1f4e9f;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9);
+        }
+
+        .overview-quick-card:nth-child(2) .overview-quick-icon {
+            border-color: #bfdfd2;
+            background: linear-gradient(180deg, #f1faf5, #e8f4ee);
+            color: #2b6e55;
+        }
+
+        .overview-quick-card:nth-child(3) .overview-quick-icon {
+            border-color: #f0cfa7;
+            background: linear-gradient(180deg, #fff7ee, #f9eedf);
+            color: #8b5b2f;
+        }
+
+        .overview-quick-icon svg {
+            width: 17px;
+            height: 17px;
+        }
+
+        .overview-quick-card p {
+            margin: 0;
+            color: #58709b;
+            font-size: 13px;
+            line-height: 1.4;
+            max-width: none;
+        }
+
+        .today-plan-card {
+            border: 1px solid #d5e2f6;
+            background:
+                radial-gradient(circle at 100% 0%, rgba(125, 211, 252, 0.09), transparent 34%),
+                linear-gradient(180deg, #ffffff, #f8fbff);
+            border-radius: 18px;
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.06);
+        }
+
+        @media (max-width: 900px) {
+            .announce-head {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+                margin-bottom: 8px;
+            }
+            .announce-teacher-card h3 {
+                font-size: 32px;
+            }
+            .announce-teacher-form {
+                grid-template-columns: 1fr;
+            }
+            .announce-teacher-form input {
+                min-height: 52px;
+                font-size: 16px;
+            }
+            .announce-teacher-form button {
+                width: 100%;
+                min-height: 52px;
+                font-size: 16px;
+                min-width: 0;
+            }
+            .announce-teacher-row {
+                grid-template-columns: 1fr;
+                gap: 6px;
+                font-size: 14px;
+                min-height: 0;
+                padding: 12px 14px;
+            }
+            .announce-teacher-row > div:nth-child(2) {
+                justify-self: start;
+                padding: 4px 10px;
+            }
+            .announce-teacher-row > div:nth-child(3) {
+                text-align: left;
+            }
+            .overview-quick-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .dashboard-intro p {
+                white-space: normal;
+            }
+        }
+
+        .today-plan-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #dce7f8;
+        }
+
+        .today-plan-head h3 {
+            margin: 0;
+            font-size: clamp(28px, 2.2vw, 38px);
+            line-height: 1.08;
+            letter-spacing: -0.02em;
+            color: #123267;
+        }
+
+        .today-count-pill {
+            border-radius: 999px;
+            border: 1px solid #bfd6fb;
+            background: linear-gradient(180deg, #f0f6ff, #e7f0ff);
+            color: #1d4f99;
+            font-size: 15px;
+            font-weight: 700;
+            padding: 8px 13px;
+            white-space: nowrap;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+
+        .today-summary {
+            margin: 0 0 12px 0;
+            color: #5b6f91;
+            font-size: 15px;
+        }
+
+        .today-summary b {
+            color: #1e429f;
+            font-size: 20px;
+        }
+
+        .today-plan-table-wrap {
+            border: 1px solid #d6e2f2;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .today-plan-table-wrap table {
+            margin: 0;
+        }
+
+        .today-plan-table-wrap th {
+            background: linear-gradient(180deg, #eef3fb, #e8eef9);
+            color: #163565;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .today-plan-table-wrap td {
+            border-bottom: 1px solid #e4ebf5;
+            color: #12294f;
+        }
+
+        .today-plan-table-wrap tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .today-empty {
+            margin: 0;
+            border: 1px dashed #c4d6ef;
+            border-radius: 14px;
+            background: linear-gradient(180deg, #f7fbff, #eef5ff);
+            padding: 16px;
+            color: #4e658b;
+            font-size: 16px;
         }
 
         /* ===== TABLE ===== */
@@ -573,8 +1247,11 @@
 
         .courses-card {
             border: 1px solid #dbe6f8;
-            border-radius: 16px;
-            background: linear-gradient(180deg, #ffffff, #f9fbff);
+            border-radius: 18px;
+            background:
+                radial-gradient(circle at 100% 0%, rgba(125, 211, 252, 0.10), transparent 34%),
+                linear-gradient(180deg, #ffffff, #f8fbff);
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.06);
         }
 
         .courses-head {
@@ -582,38 +1259,56 @@
             justify-content: space-between;
             align-items: flex-start;
             gap: 12px;
-            margin-bottom: 14px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #dce7f8;
         }
 
         .courses-head h3 {
             margin: 0;
-            font-size: 32px;
-            letter-spacing: -0.3px;
+            font-size: clamp(30px, 2.3vw, 40px);
+            line-height: 1.08;
+            letter-spacing: -0.02em;
+            color: #123267;
         }
 
         .courses-sub {
             margin: 6px 0 0 0;
-            color: #526489;
-            font-size: 13px;
-            line-height: 1.5;
+            color: #50658e;
+            font-size: 16px;
+            line-height: 1.45;
+            max-width: 940px;
         }
 
         .courses-count {
             white-space: nowrap;
             border-radius: 999px;
-            border: 1px solid #cfe0ff;
-            background: #eef4ff;
+            border: 1px solid #bfd6fb;
+            background: linear-gradient(180deg, #f0f6ff, #e7f0ff);
             color: #1f4297;
-            font-size: 12px;
+            font-size: 15px;
             font-weight: 700;
-            padding: 7px 11px;
+            padding: 8px 14px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
         }
 
         .pro-table-wrap {
             border: 1px solid #e0e8f8;
-            border-radius: 12px;
+            border-radius: 14px;
             overflow: hidden;
             background: #fff;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+        }
+
+        .courses-empty {
+            margin: 2px 0 0 0;
+            border: 1px dashed #c5d8f1;
+            border-radius: 14px;
+            background: linear-gradient(180deg, #f8fbff, #eef5ff);
+            color: #4f678f;
+            font-size: 22px;
+            line-height: 1.45;
+            padding: 16px 18px;
         }
 
         .pro-table {
@@ -766,6 +1461,153 @@
             font-size: 11px;
             background: #fef3c7;
             color: #92400e;
+        }
+
+        .my-timetable-card {
+            border: 1px solid #d5e2f6;
+            border-radius: 18px;
+            background:
+                radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.08), transparent 34%),
+                linear-gradient(180deg, #ffffff, #f8fbff);
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.06);
+        }
+
+        .my-timetable-head {
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #dce7f8;
+        }
+
+        .my-timetable-head h3 {
+            margin: 0;
+            font-size: clamp(30px, 2.3vw, 40px);
+            line-height: 1.08;
+            letter-spacing: -0.02em;
+            color: #123267;
+        }
+
+        .my-timetable-sub {
+            margin: 6px 0 0 0;
+            color: #50658e;
+            font-size: 15px;
+            line-height: 1.45;
+        }
+
+        .my-tt-empty {
+            margin: 4px 0 0 0;
+            border: 1px dashed #c5d8f1;
+            border-radius: 14px;
+            background: linear-gradient(180deg, #f8fbff, #eef5ff);
+            color: #4f678f;
+            font-size: 16px;
+            line-height: 1.45;
+            padding: 16px 18px;
+        }
+
+        .institute-card {
+            border: 1px solid #d5e2f6;
+            border-radius: 18px;
+            background:
+                radial-gradient(circle at 100% 0%, rgba(125, 211, 252, 0.10), transparent 34%),
+                linear-gradient(180deg, #ffffff, #f8fbff);
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.06);
+        }
+
+        .institute-toolbar {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            flex-direction: row;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+
+        .institute-title h3 {
+            margin: 0;
+            font-size: clamp(28px, 2.1vw, 36px);
+            line-height: 1.08;
+            letter-spacing: -0.02em;
+            color: #123267;
+        }
+
+        .institute-title p {
+            margin: 4px 0 0 0;
+            color: #50658e;
+            font-size: 14px;
+            line-height: 1.45;
+        }
+
+        .institute-filter-box {
+            min-width: 0;
+            width: min(760px, 100%);
+            border: 1px solid #d7e4f7;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 10px 12px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+            margin-left: auto;
+        }
+
+        .institute-filter-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: #3e5888;
+            margin-bottom: 7px;
+        }
+
+        .institute-filter-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .institute-filter-row select {
+            flex: 1 1 180px;
+            min-height: 40px;
+            margin: 0;
+            border-radius: 9px;
+            border: 1px solid #c9d8ef;
+            padding: 8px 10px;
+            font-size: 13px;
+            color: #12284f;
+            background: #fff;
+        }
+
+        .institute-filter-row select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+        }
+
+        .institute-filter-row button {
+            flex: 0 0 auto;
+            min-height: 40px;
+            border-radius: 9px;
+            border: 1px solid #c6d8f6;
+            background: linear-gradient(180deg, #f3f7ff, #e8f0ff);
+            color: #1f4297;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 0 13px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+
+        .institute-filter-row button:hover {
+            border-color: #a9c4ee;
+            background: linear-gradient(180deg, #edf4ff, #deebff);
+        }
+
+        .institute-filter-count {
+            margin-top: 0;
+            margin-left: 4px;
+            font-size: 11px;
+            color: #334155;
+            font-weight: 700;
+            white-space: nowrap;
         }
 
         /* ===== FORM ===== */
@@ -1705,6 +2547,21 @@
             .calendar-main-grid {
                 grid-template-columns: 1fr;
             }
+            .institute-toolbar {
+                flex-direction: column;
+            }
+            .institute-filter-box {
+                min-width: 0;
+                width: 100%;
+                margin-left: 0;
+            }
+            .institute-filter-row {
+                align-items: stretch;
+            }
+            .institute-filter-count {
+                width: 100%;
+                margin-left: 0;
+            }
         }
     </style>
 </head>
@@ -1764,6 +2621,11 @@
                 <span>Academic Calendar</span>
             </a>
 
+            <a href="#" class="nav-link" data-section="contact-admin" onclick="showSection('contact-admin', this)">
+                <i data-lucide="message-square"></i>
+                <span>Contact Admin</span>
+            </a>
+
             <a href="/logout" class="logout-link">
                 <i data-lucide="log-out"></i>
                 <span>Logout</span>
@@ -1800,6 +2662,20 @@
                             <div class="name">{{ teacher }}</div>
                             <div class="role">Teacher</div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="announce-bar">
+                <div class="announce-label">Announcements</div>
+                <div class="announce-track-wrap">
+                    <div class="announce-track">
+                        {% if announcements %}
+                            {% for a in announcements %}
+                            <span class="announce-item">{{ a.text }} ({{ a.created_by_name }})</span>
+                            {% endfor %}
+                        {% else %}
+                            <span class="announce-item">No announcements available right now.</span>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -1866,44 +2742,156 @@
 
             <!-- DASHBOARD -->
             <div id="dashboard" class="section active">
-                <div class="card">
+                <div class="card announce-teacher-card">
+                    <div class="announce-head">
+                        <h3>Announcement Control</h3>
+                        <span class="announce-badge">Live Broadcast</span>
+                    </div>
+                    <form class="announce-teacher-form" action="/teacher/announcements/add" method="POST">
+                        <div class="announce-input-wrap">
+                            <input id="teacherAnnouncementInput" type="text" name="text" maxlength="220" placeholder="Write an announcement (max 220 chars)" required>
+                        </div>
+                        <input type="hidden" name="audience" value="Both">
+                        <button type="submit">Publish</button>
+                    </form>
+                    <div class="announce-meta-row">
+                        <span>Every announcement is visible to both Students and Admin.</span>
+                        <span id="teacherAnnouncementCount" class="announce-char-count">0/220</span>
+                    </div>
+                    <div class="announce-teacher-list">
+                        {% if manageable_announcements %}
+                            {% for a in manageable_announcements %}
+                            <div class="announce-teacher-row">
+                                <div>{{ a.text }}</div>
+                                <div>Both</div>
+                                <div>{{ a.created_at }}</div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="announce-teacher-row">
+                                <div>No announcements created yet.</div>
+                                <div>Both</div>
+                                <div>-</div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card today-plan-card">
+                    <div class="today-plan-head">
+                        <h3>Today's Teaching Plan ({{ today_name }})</h3>
+                        <span class="today-count-pill">{{ today_classes | length }} class(es)</span>
+                    </div>
+                    <p class="today-summary">
+                        Total classes today: <b>{{ today_classes | length }}</b>
+                    </p>
+                    {% if today_classes %}
+                    <div class="today-plan-table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Slot</th>
+                                    <th>Subject</th>
+                                    <th>Department</th>
+                                    <th>Room</th>
+                                    <th>Label</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in today_classes %}
+                                <tr>
+                                    <td>{{ row.slot }}</td>
+                                    <td>{{ row.subject }}</td>
+                                    <td>{{ row.target }}</td>
+                                    <td>{{ row.room }}</td>
+                                    <td>{{ row.label if row.label else "-" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="today-empty">No classes assigned today.</p>
+                    {% endif %}
+                </div>
+                <div class="card dashboard-intro">
                     <h3>Teacher Overview</h3>
                     <p>
                         Manage your courses, submit preferences and schedule academic events
                         using the navigation menu.
                     </p>
+                    <div class="overview-quick-grid">
+                        <a href="#" class="overview-quick-card" onclick="showSection('courses'); return false;">
+                            <div class="overview-quick-top">
+                                <h4 class="overview-quick-title">Your Submitted Courses</h4>
+                                <span class="overview-quick-icon"><i data-lucide="book-open"></i></span>
+                            </div>
+                            <p>Review approved subjects, student load and target departments.</p>
+                        </a>
+                        <a href="#" class="overview-quick-card" onclick="showSection('preferences'); return false;">
+                            <div class="overview-quick-top">
+                                <h4 class="overview-quick-title">Add / Update Preferences</h4>
+                                <span class="overview-quick-icon"><i data-lucide="edit-3"></i></span>
+                            </div>
+                            <p>Update preferred slots and class preferences before timetable generation.</p>
+                        </a>
+                        <a href="#" class="overview-quick-card" onclick="showSection('my-timetable'); return false;">
+                            <div class="overview-quick-top">
+                                <h4 class="overview-quick-title">My Timetable</h4>
+                                <span class="overview-quick-icon"><i data-lucide="calendar-check"></i></span>
+                            </div>
+                            <p>Open your weekly teaching plan and track class schedule details.</p>
+                        </a>
+                    </div>
                 </div>
-                <div class="card">
-                    <h3>Today's Teaching Plan ({{ today_name }})</h3>
-                    <p style="color:#64748b; margin-top:0;">
-                        Total classes today: <b>{{ today_classes | length }}</b>
-                    </p>
-                    {% if today_classes %}
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Slot</th>
-                                <th>Subject</th>
-                                <th>Department</th>
-                                <th>Room</th>
-                                <th>Label</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for row in today_classes %}
-                            <tr>
-                                <td>{{ row.slot }}</td>
-                                <td>{{ row.subject }}</td>
-                                <td>{{ row.target }}</td>
-                                <td>{{ row.room }}</td>
-                                <td>{{ row.label if row.label else "-" }}</td>
-                            </tr>
+            </div>
+
+            <div id="contact-admin" class="section">
+                <div class="card contact-admin-card">
+                    <div class="contact-admin-head">
+                        <div>
+                            <h3>Contact Admin</h3>
+                            <p>Send a quick message to the admin team for timetable issues, approvals or urgent support.</p>
+                        </div>
+                        <span class="contact-admin-badge">Support Desk</span>
+                    </div>
+                    <form class="contact-admin-form" action="/teacher/contact-admin/send" method="POST">
+                        <input id="adminContactSubject" name="subject" type="text" placeholder="Subject (e.g. Timetable correction request)" required>
+                        <textarea id="adminContactMessage" name="message" placeholder="Write your message to admin..." required></textarea>
+                        <div class="contact-admin-actions">
+                            <div class="contact-admin-links">
+                                <a class="contact-admin-link" href="mailto:admin@smarttimetable.local">Email Admin</a>
+                                <a class="contact-admin-link" href="tel:+911234567890">Call Office</a>
+                            </div>
+                            <button class="contact-admin-send" type="submit">Send To Admin</button>
+                        </div>
+                        <div id="contactAdminTimestamp" class="contact-admin-time"></div>
+                    </form>
+                    <div class="contact-thread-list">
+                        {% if teacher_contact_messages %}
+                            {% for m in teacher_contact_messages %}
+                            <div class="contact-thread-item">
+                                <div class="contact-thread-head">
+                                    <p class="contact-thread-subject">{{ m.subject }}</p>
+                                    <span class="contact-thread-meta">{{ m.created_at }}</span>
+                                </div>
+                                <p class="contact-thread-body">{{ m.message }}</p>
+                                {% if m.admin_reply %}
+                                <div class="contact-thread-reply">
+                                    <div class="label">Admin Reply{% if m.admin_replied_at %} • {{ m.admin_replied_at }}{% endif %}</div>
+                                    <p class="contact-thread-body">{{ m.admin_reply }}</p>
+                                </div>
+                                {% else %}
+                                <div class="contact-thread-reply">
+                                    <div class="label">Admin Reply</div>
+                                    <p class="contact-thread-body">Pending response from admin.</p>
+                                </div>
+                                {% endif %}
+                            </div>
                             {% endfor %}
-                        </tbody>
-                    </table>
-                    {% else %}
-                    <p style="color:#64748b;">No classes assigned today.</p>
-                    {% endif %}
+                        {% else %}
+                            <div class="contact-thread-empty">No queries sent yet. Your messages and admin replies will appear here.</div>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
 
@@ -1955,7 +2943,7 @@
                     </table>
                     </div>
                     {% else %}
-                    <p style="color:#64748b;">No courses submitted yet.</p>
+                    <div class="courses-empty">No courses submitted yet.</div>
                     {% endif %}
                 </div>
             </div>
@@ -2070,23 +3058,30 @@
 
             <!-- MY TIMETABLE -->
             <div id="my-timetable" class="section">
-                <div class="card">
-                    <h3>My Timetable</h3>
+                <div class="card my-timetable-card">
+                    <div class="my-timetable-head">
+                        <h3>My Timetable</h3>
+                        <p class="my-timetable-sub">Track your weekly classes, room allocation and department-wise schedule at a glance.</p>
+                    </div>
                     <div id="teacherMyTimetableSummary"></div>
                 </div>
             </div>
 
             <!-- INSTITUTE TIMETABLE -->
             <div id="institute-timetable" class="section">
-                <div class="card">
-                    <h3>Institute Timetable</h3>
-                    <div style="max-width:360px; margin-bottom:14px;">
-                        <label style="font-size:13px; color:#475569;">Filter by Department</label>
-                        <div style="display:flex; gap:8px; margin-top:6px;">
-                            <select id="teacherDeptFilter" style="flex:1; padding:9px 10px; border-radius:8px; border:1px solid #cfd8eb;">
+                <div class="card institute-card">
+                    <div class="institute-toolbar">
+                        <div class="institute-title">
+                            <h3>Institute Timetable</h3>
+                            <p>View institute-wide classes and narrow results using department and day filters.</p>
+                        </div>
+                        <div class="institute-filter-box">
+                            <label class="institute-filter-label">Filter Schedule</label>
+                            <div class="institute-filter-row">
+                                <select id="teacherDeptFilter">
                                 <option value="ALL">All Departments</option>
                             </select>
-                            <select id="teacherDayFilter" style="flex:1; padding:9px 10px; border-radius:8px; border:1px solid #cfd8eb;">
+                                <select id="teacherDayFilter">
                                 <option value="ALL">All Days</option>
                                 <option value="Mon">Monday</option>
                                 <option value="Tue">Tuesday</option>
@@ -2094,9 +3089,10 @@
                                 <option value="Thu">Thursday</option>
                                 <option value="Fri">Friday</option>
                             </select>
-                            <button id="teacherDeptReset" type="button" style="border:none; border-radius:8px; background:#dde6f7; color:#1e293b; padding:9px 12px; cursor:pointer;">Reset</button>
+                                <button id="teacherDeptReset" type="button">Reset</button>
+                                <div id="teacherFilterCount" class="institute-filter-count"></div>
+                            </div>
                         </div>
-                        <div id="teacherFilterCount" style="margin-top:8px; font-size:12px; color:#334155;"></div>
                     </div>
                     <div id="teacherInstituteTimetableSummary"></div>
                 </div>
@@ -2106,16 +3102,7 @@
             <div id="calendar" class="section">
                 <div class="card">
                     <h3>Academic Calendar</h3>
-                    <div class="calendar-toolbar">
-                        <div>
-                            <h4>Faculty Event Planner</h4>
-                            <p>Click any date to create an event. Click your event to edit or delete.</p>
-                        </div>
-                        <div class="calendar-toolbar-right">
-                            <div id="calendarActionMsg" class="calendar-action-msg"></div>
-                            <button type="button" class="calendar-add-btn" onclick="openTeacherEventModal('add', { date: '', type: 'general', target: '{{ teacher_department | upper }}', important: false })">Add Event</button>
-                        </div>
-                    </div>
+                    <div id="calendarActionMsg" class="calendar-action-msg"></div>
                     <div class="calendar-main-grid">
                         <div id="calendarUI" class="calendar-surface"></div>
                         <div class="vacation-panel">
@@ -2227,7 +3214,7 @@
         let teacherEventLabelColor = "";
         const teacherDisplayName = "{{ teacher }}";
         const teacherDeptName = "{{ teacher_department }}";
-        const teacherTodayClassesCount = {{ today_classes | length }};
+        const teacherTodayClassesCount = parseInt("{{ today_classes | length }}", 10) || 0;
 
         function getTeacherActiveSectionLabel() {
             const activeLink = document.querySelector(".nav-link.active span");
@@ -2336,7 +3323,7 @@
         function renderTeacherTimetable() {
             const container = document.getElementById("teacherMyTimetableSummary");
             if (!teacherMyRows.length) {
-                container.innerHTML = "<p style='color:#64748b;'>No timetable generated for your courses yet.</p>";
+                container.innerHTML = "<div class='my-tt-empty'>No timetable generated for your courses yet.</div>";
                 return;
             }
 
@@ -2642,12 +3629,58 @@
             showSection("profile", profileNav);
         }
 
+        function sendAdminContact(event) {
+            event.preventDefault();
+            const subjectEl = document.getElementById("adminContactSubject");
+            const messageEl = document.getElementById("adminContactMessage");
+            if (!subjectEl || !messageEl) return;
+
+            const subject = (subjectEl.value || "").trim();
+            const message = (messageEl.value || "").trim();
+            if (!subject || !message) return;
+
+            const body = `Teacher: ${teacherDisplayName}\nDepartment: ${teacherDeptName}\n\n${message}`;
+            const href = `mailto:admin@smarttimetable.local?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = href;
+        }
+
+        function updateContactAdminTimestamp() {
+            const el = document.getElementById("contactAdminTimestamp");
+            if (!el) return;
+            const now = new Date();
+            const datePart = now.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "2-digit" });
+            const timePart = now.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+            el.textContent = `Date: ${datePart} | Time: ${timePart}`;
+        }
+
+        function initTeacherAnnouncementCounter() {
+            const input = document.getElementById("teacherAnnouncementInput");
+            const counter = document.getElementById("teacherAnnouncementCount");
+            if (!input || !counter) return;
+
+            const update = () => {
+                counter.textContent = `${input.value.length}/220`;
+            };
+
+            input.addEventListener("input", update);
+            update();
+        }
+
         lucide.createIcons();
         updateLiveTeacherHeader();
         setInterval(updateLiveTeacherHeader, 30000);
         renderTeacherTimetable();
         initInstituteFilter();
         renderInstituteTimetable();
+        initTeacherAnnouncementCounter();
+        updateContactAdminTimestamp();
+        setInterval(updateContactAdminTimestamp, 1000);
+
+        const teacherParams = new URLSearchParams(window.location.search);
+        const teacherSection = teacherParams.get("section");
+        if (teacherSection) {
+            showSection(teacherSection);
+        }
 
     </script>
 
