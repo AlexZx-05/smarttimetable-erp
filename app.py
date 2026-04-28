@@ -41,6 +41,7 @@ PENDING_FILE = os.path.join(BASE_DIR, "users_pending.txt")
 DATA_FILE = os.path.join(BASE_DIR, "data.txt")
 TIMETABLE_FILE = os.path.join(BASE_DIR, "timetable_output.txt")
 HISTORY_FILE = os.path.join(BASE_DIR, "approval_history.txt")
+DISABLED_USERS_FILE = os.path.join(BASE_DIR, "disabled_users.txt")
 PREFERENCE_REQUESTS_FILE = os.path.join(BASE_DIR, "preference_requests.txt")
 PREFERENCE_HISTORY_FILE = os.path.join(BASE_DIR, "preference_history.txt")
 MAX_ROOM_CAPACITY = 120
@@ -447,6 +448,56 @@ def parse_history_line(line):
         "role": parts[5],
         "admin": parts[6]
     }
+
+
+def parse_disabled_user_line(line):
+    parts = line.strip().split(",")
+    if len(parts) < 10:
+        return None
+    return {
+        "email": parts[0],
+        "hash": parts[1],
+        "role": parts[2],
+        "name": parts[3],
+        "department": parts[4] if len(parts) >= 5 else "ALL",
+        "profile_pic": parts[5] if len(parts) >= 6 else "",
+        "phone": parts[6] if len(parts) >= 7 else "",
+        "disabled_at": parts[7] if len(parts) >= 8 else "",
+        "reason": parts[8] if len(parts) >= 9 else "",
+        "disabled_by": parts[9] if len(parts) >= 10 else ""
+    }
+
+
+def serialize_disabled_user(user):
+    return ",".join([
+        user.get("email", ""),
+        user.get("hash", ""),
+        user.get("role", ""),
+        user.get("name", ""),
+        user.get("department", "ALL"),
+        user.get("profile_pic", ""),
+        user.get("phone", ""),
+        user.get("disabled_at", ""),
+        user.get("reason", ""),
+        user.get("disabled_by", "")
+    ])
+
+
+def load_disabled_users():
+    rows = []
+    if os.path.exists(DISABLED_USERS_FILE):
+        with open(DISABLED_USERS_FILE) as f:
+            for line in f:
+                parsed = parse_disabled_user_line(line)
+                if parsed:
+                    rows.append(parsed)
+    return rows
+
+
+def save_disabled_users(rows):
+    with open(DISABLED_USERS_FILE, "w") as f:
+        for row in rows:
+            f.write(serialize_disabled_user(row) + "\n")
 
 
 def log_admin_action(action, pending_user):
@@ -1417,8 +1468,11 @@ def admin_dashboard():
     admin_events.sort(key=lambda x: x.get("date", ""))
     vacations = get_upcoming_vacations()
     users = load_users()
+    disabled_users = load_disabled_users()
     courses = load_courses()
     teacher_cards = []
+    login_managed_users = []
+    past_teachers = []
 
     if os.path.exists(PENDING_FILE):
         with open(PENDING_FILE) as f:
@@ -1445,6 +1499,15 @@ def admin_dashboard():
     preference_history.reverse()
 
     for user in users:
+        if user["role"] in ("teacher", "student"):
+            login_managed_users.append({
+                "name": user.get("name", ""),
+                "email": user.get("email", ""),
+                "role": user.get("role", ""),
+                "department": user.get("department", "ALL"),
+                "status": "active"
+            })
+
         if user["role"] != "teacher":
             continue
 
@@ -1464,6 +1527,23 @@ def admin_dashboard():
             "is_all_absent": len(teacher_rows) > 0 and absent_count == len(teacher_rows)
         })
 
+    for user in disabled_users:
+        if user.get("role", "") in ("teacher", "student"):
+            login_managed_users.append({
+                "name": user.get("name", ""),
+                "email": user.get("email", ""),
+                "role": user.get("role", ""),
+                "department": user.get("department", "ALL"),
+                "status": "disabled",
+                "disabled_at": user.get("disabled_at", ""),
+                "reason": user.get("reason", "")
+            })
+        if user.get("role", "") == "teacher":
+            past_teachers.append(user)
+
+    login_managed_users.sort(key=lambda u: (u.get("status", ""), u.get("role", ""), u.get("name", "")))
+    past_teachers.sort(key=lambda u: u.get("disabled_at", ""), reverse=True)
+
     return render_template(
         "admin.html",
         pending=pending,
@@ -1479,6 +1559,8 @@ def admin_dashboard():
         default_semester_key=default_semester_key,
         default_semester_year=default_semester_year,
         teacher_cards=teacher_cards,
+        login_managed_users=login_managed_users,
+        past_teachers=past_teachers,
         admin_events=admin_events,
         vacations=vacations,
         admin_name=session.get("name", "Admin"),
@@ -1486,8 +1568,102 @@ def admin_dashboard():
         admin_profile_pic=session.get("profile_pic", ""),
         teacher_action_msg=request.args.get("teacher_action_msg", ""),
         teacher_action_tone=request.args.get("teacher_action_tone", ""),
+        access_action_msg=request.args.get("access_action_msg", ""),
+        access_action_tone=request.args.get("access_action_tone", ""),
         message=request.args.get("message", ""),
         error=request.args.get("error", "")
+    )
+
+
+@app.route("/admin/users/deactivate")
+def deactivate_user_login():
+    if session.get("role") != "admin":
+        return "Unauthorized"
+
+    email = request.args.get("email", "").strip().lower()
+    role = request.args.get("role", "").strip().lower()
+    reason = request.args.get("reason", "").strip() or "Left college / inactive account"
+    if not email or role not in ("teacher", "student"):
+        return redirect("/admin/dashboard?error=Invalid+deactivation+request.&section=dashboard-section")
+
+    users = load_users()
+    disabled_users = load_disabled_users()
+    target = None
+    kept_users = []
+    for user in users:
+        if target is None and user.get("email", "").strip().lower() == email and user.get("role", "").strip().lower() == role:
+            target = user
+            continue
+        kept_users.append(user)
+
+    if target is None:
+        return redirect("/admin/dashboard?error=User+not+found+or+already+disabled.&section=dashboard-section")
+
+    exists_disabled = any(
+        d.get("email", "").strip().lower() == email and d.get("role", "").strip().lower() == role
+        for d in disabled_users
+    )
+    if not exists_disabled:
+        target["disabled_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        target["reason"] = reason
+        target["disabled_by"] = session.get("email", "admin")
+        disabled_users.append(target)
+
+    save_users(kept_users)
+    save_disabled_users(disabled_users)
+    return redirect(
+        "/admin/dashboard?"
+        "section=dashboard-section&"
+        "access_action_msg=Login+access+removed+successfully.&"
+        "access_action_tone=ok"
+    )
+
+
+@app.route("/admin/users/reactivate")
+def reactivate_user_login():
+    if session.get("role") != "admin":
+        return "Unauthorized"
+
+    email = request.args.get("email", "").strip().lower()
+    role = request.args.get("role", "").strip().lower()
+    if not email or role not in ("teacher", "student"):
+        return redirect("/admin/dashboard?error=Invalid+reactivation+request.&section=dashboard-section")
+
+    users = load_users()
+    disabled_users = load_disabled_users()
+    target = None
+    kept_disabled = []
+    for user in disabled_users:
+        if target is None and user.get("email", "").strip().lower() == email and user.get("role", "").strip().lower() == role:
+            target = user
+            continue
+        kept_disabled.append(user)
+
+    if target is None:
+        return redirect("/admin/dashboard?error=Disabled+user+record+not+found.&section=dashboard-section")
+
+    already_active = any(
+        u.get("email", "").strip().lower() == email and u.get("role", "").strip().lower() == role
+        for u in users
+    )
+    if not already_active:
+        users.append({
+            "email": target.get("email", ""),
+            "hash": target.get("hash", ""),
+            "role": target.get("role", ""),
+            "name": target.get("name", ""),
+            "department": target.get("department", "ALL"),
+            "profile_pic": target.get("profile_pic", ""),
+            "phone": target.get("phone", "")
+        })
+
+    save_users(users)
+    save_disabled_users(kept_disabled)
+    return redirect(
+        "/admin/dashboard?"
+        "section=dashboard-section&"
+        "access_action_msg=Login+access+restored+successfully.&"
+        "access_action_tone=ok"
     )
 
 
